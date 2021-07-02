@@ -1,10 +1,10 @@
-package com.clone.demo;
+package com.manager.transaction;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PaperspleaseApplicationTests {
+class TransactionManagerApplicationTests {
 
     @Test
     void contextLoads() {
