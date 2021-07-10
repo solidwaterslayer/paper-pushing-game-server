@@ -47,8 +47,4 @@ public abstract class Account {
     public void applyAPR() {
         deposit(balance * apr / 100 / 12);
     }
-
-    public void applyMinBalanceFee() {
-        withdraw(25);
-    }
 }

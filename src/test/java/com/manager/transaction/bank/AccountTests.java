@@ -162,12 +162,4 @@ public class AccountTests {
 
         return finalBalance;
     }
-
-    @Test
-    void apply_min_balance_fee_should_be_possible() {
-        savings.deposit(100);
-        savings.applyMinBalanceFee();
-
-        assertEquals(100 - 25, savings.getBalance());
-    }
 }

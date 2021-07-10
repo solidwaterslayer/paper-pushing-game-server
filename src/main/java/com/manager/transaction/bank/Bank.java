@@ -6,17 +6,23 @@ import java.util.HashMap;
 
 public class Bank {
     protected Map<String, Account> accounts;
+    protected double minBalanceFee;
 
     public Bank() {
-        accounts = new HashMap<>();
+        initializeBank();
     }
 
     public Bank(ArrayList<Account> accounts) {
-        this.accounts = new HashMap<>();
+        initializeBank();
 
         for (Account account : accounts) {
             this.accounts.put(account.getID(), account);
         }
+    }
+
+    protected void initializeBank() {
+        this.accounts = new HashMap<>();
+        minBalanceFee = 25;
     }
 
     public void putChecking(String id, double apr) {
@@ -49,6 +55,10 @@ public class Bank {
 
     public boolean containsAccount(String id) {
         return accounts.containsKey(id);
+    }
+
+    public double getMinBalanceFee() {
+        return minBalanceFee;
     }
 
     public void deposit(String id, double depositAmount) {
@@ -89,8 +99,8 @@ public class Bank {
                     accounts.remove(id);
                     continue;
                 }
-                if (accountBalance < 100) {
-                    account.applyMinBalanceFee();
+                if (accountBalance <= 100) {
+                    account.withdraw(minBalanceFee);
                 }
 
                 account.applyAPR();
