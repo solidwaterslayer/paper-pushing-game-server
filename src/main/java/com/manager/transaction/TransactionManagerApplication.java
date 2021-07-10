@@ -11,7 +11,6 @@ import java.util.Arrays;
 
 @SpringBootApplication
 public class TransactionManagerApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(TransactionManagerApplication.class, args);
     }

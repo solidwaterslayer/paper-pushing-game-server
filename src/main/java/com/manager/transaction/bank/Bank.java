@@ -90,7 +90,7 @@ public class Bank {
                     continue;
                 }
                 if (accountBalance < 100) {
-                    account.applyMinimumBalanceFee();
+                    account.applyMinBalanceFee();
                 }
 
                 account.applyAPR();

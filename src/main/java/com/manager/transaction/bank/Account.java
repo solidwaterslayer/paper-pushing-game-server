@@ -29,7 +29,7 @@ public abstract class Account {
 
     public void withdraw(double withdrawAmount) {
         if (withdrawAmount > this.balance) {
-            withdraw(withdrawAmount);
+            withdraw(this.balance);
             return;
         }
 
@@ -48,7 +48,7 @@ public abstract class Account {
         deposit(balance * apr / 100 / 12);
     }
 
-    public void applyMinimumBalanceFee() {
+    public void applyMinBalanceFee() {
         withdraw(25);
     }
 }
