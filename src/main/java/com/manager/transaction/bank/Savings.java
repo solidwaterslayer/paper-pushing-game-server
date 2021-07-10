@@ -15,18 +15,18 @@ public class Savings extends Account {
     }
 
     @Override
-    public int maxDeposit() {
+    public void applyAPR() {
+        super.applyAPR();
+        isWithdrawValid = true;
+    }
+
+    @Override
+    protected double maxDeposit() {
         return 2500;
     }
 
     @Override
     public boolean isWithdrawValid(double balance) {
-        return 0 <= balance && balance <= 1000 && isWithdrawValid;
-    }
-
-    @Override
-    public void applyAPR() {
-        super.applyAPR();
-        isWithdrawValid = true;
+        return isWithdrawValid && 0 < balance && balance <= 1000;
     }
 }

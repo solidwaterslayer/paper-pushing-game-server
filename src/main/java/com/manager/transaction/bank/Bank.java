@@ -1,6 +1,7 @@
 package com.manager.transaction.bank;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -25,24 +26,16 @@ public class Bank {
         minBalanceFee = 25;
     }
 
-    public void putChecking(String id, double apr) {
+    public void createChecking(String id, double apr) {
         accounts.put(id, new Checking(id, apr));
     }
 
-    public void putSavings(String id, double apr) {
+    public void createSavings(String id, double apr) {
         accounts.put(id, new Savings(id, apr));
     }
 
-    public void putCD(String id, double apr, double balance) {
+    public void createCD(String id, double apr, double balance) {
         accounts.put(id, new CD(id, apr, balance));
-    }
-
-    public boolean isInitialCDBalanceValid(double balance) {
-        return 1000 <= balance && balance <= 10000;
-    }
-
-    public boolean isAPRValid(double apr) {
-        return 0 <= apr && apr <= 10;
     }
 
     public Map<String, Account> getAccounts() {
@@ -81,17 +74,9 @@ public class Bank {
         getAccount(toID).deposit(transferAmount);
     }
 
-    public boolean isDepositValid(double depositAmount, String id) {
-        return getAccount(id).isDepositValid(depositAmount);
-    }
-
-    public boolean isWithdrawValid(double withdrawAmount, String id) {
-        return getAccount(id).isWithdrawValid(withdrawAmount);
-    }
-
     public void passTime(int months) {
         for (int i = 0; i < months; i++) {
-            for (String id : accounts.keySet()) {
+            for (String id : new ArrayList<>(accounts.keySet())) {
                 Account account = getAccount(id);
                 double accountBalance = account.getBalance();
 
@@ -107,6 +92,30 @@ public class Bank {
             }
         }
     }
+
+    public boolean isIDValid(String id) {
+        return !containsAccount(id) && id.matches("[0-9]{8}");
+    }
+
+    public boolean isAPRValid(double apr) {
+        return 0 <= apr && apr <= 10;
+    }
+
+    public boolean isInitialCDBalanceValid(double balance) {
+        return 1000 <= balance && balance <= 10000;
+    }
+
+    public boolean isDepositValid(double depositAmount, String id) {
+        return getAccount(id).isDepositValid(depositAmount);
+    }
+
+    public boolean isWithdrawValid(double withdrawAmount, String id) {
+        return getAccount(id).isWithdrawValid(withdrawAmount);
+    }
+
+    public boolean isTransferValid(double transferAmount, String fromID, String toID) {
+        return !fromID.equals(toID) && isWithdrawValid(transferAmount, fromID) && isDepositValid(transferAmount, toID);
+    };
 
     public boolean isPassTimeValid(int months) {
         return 1 <= months && months <= 60;

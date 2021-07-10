@@ -10,21 +10,21 @@ public class CD extends Account {
     }
 
     @Override
-    public int maxDeposit() {
-        return 0;
-    }
-
-    @Override
-    public boolean isWithdrawValid(double balance) {
-        return balance >= this.balance && months >= 12;
-    }
-
-    @Override
     public void applyAPR() {
         for (int i = 0; i < 4; i++) {
             super.applyAPR();
         }
 
         months++;
+    }
+
+    @Override
+    protected double maxDeposit() {
+        return 0.0d;
+    }
+
+    @Override
+    public boolean isWithdrawValid(double balance) {
+        return months >= 12 && balance >= this.balance;
     }
 }

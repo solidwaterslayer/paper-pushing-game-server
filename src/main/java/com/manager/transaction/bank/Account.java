@@ -36,15 +36,15 @@ public abstract class Account {
         this.balance -= withdrawAmount;
     }
 
-    public boolean isDepositValid(double balance) {
-        return (0 <= balance && balance <= maxDeposit());
-    }
-
-    public abstract int maxDeposit();
-
-    public abstract boolean isWithdrawValid(double balance);
-
     public void applyAPR() {
         deposit(balance * apr / 100 / 12);
     }
+
+    public boolean isDepositValid(double balance) {
+        return 0 < balance && balance <= maxDeposit();
+    }
+
+    protected abstract double maxDeposit();
+
+    public abstract boolean isWithdrawValid(double balance);
 }
