@@ -6,12 +6,12 @@ public class Checking extends Account {
     }
 
     @Override
-    int maxDeposit() {
+    public int maxDeposit() {
         return 1000;
     }
 
     @Override
-    boolean isWithdrawValid(double balance) {
+    public boolean isWithdrawValid(double balance) {
         return 0 <= balance && balance <= 400;
     }
 }

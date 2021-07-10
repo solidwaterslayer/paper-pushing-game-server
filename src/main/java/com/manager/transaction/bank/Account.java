@@ -1,9 +1,9 @@
 package com.manager.transaction.bank;
 
 public abstract class Account {
-    String id;
-    double apr;
-    double balance;
+    protected String id;
+    protected double apr;
+    protected double balance;
 
     public Account(String id, double apr) {
         this.id = id;
@@ -23,26 +23,26 @@ public abstract class Account {
         return balance;
     }
 
-    public void deposit(double balance) {
-        this.balance += balance;
+    public void deposit(double depositAmount) {
+        this.balance += depositAmount;
     }
 
-    public void withdraw(double balance) {
-        if (balance > this.balance) {
-            withdraw(balance);
+    public void withdraw(double withdrawAmount) {
+        if (withdrawAmount > this.balance) {
+            withdraw(withdrawAmount);
             return;
         }
 
-        this.balance -= balance;
+        this.balance -= withdrawAmount;
     }
 
     public boolean isDepositValid(double balance) {
         return (0 <= balance && balance <= maxDeposit());
     }
 
-    abstract int maxDeposit();
+    public abstract int maxDeposit();
 
-    abstract boolean isWithdrawValid(double balance);
+    public abstract boolean isWithdrawValid(double balance);
 
     public void applyAPR() {
         deposit(balance * apr / 100 / 12);
