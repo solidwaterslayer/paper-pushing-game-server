@@ -281,18 +281,22 @@ public class AccountTests {
     @Test
     protected void withdraw_savings_should_be_greater_than_0() {
         assertFalse(savings.isWithdrawValid(-500));
+
         assertFalse(savings.isWithdrawValid(-100));
         assertFalse(savings.isWithdrawValid(0));
         assertTrue(savings.isWithdrawValid(100));
+
         assertTrue(savings.isWithdrawValid(500));
     }
 
     @Test
     protected void withdraw_savings_should_be_less_than_or_equal_to_1000() {
         assertTrue(savings.isWithdrawValid(600));
+
         assertTrue(savings.isWithdrawValid(900));
         assertTrue(savings.isWithdrawValid(1000));
         assertFalse(savings.isWithdrawValid(1100));
+
         assertFalse(savings.isWithdrawValid(2000));
     }
 
