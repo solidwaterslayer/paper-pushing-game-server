@@ -1,4 +1,4 @@
-package com.manager.transaction.bank;
+package server.game.pushing.paper.bank;
 
 public class Savings extends Account {
     protected boolean isWithdrawValid;

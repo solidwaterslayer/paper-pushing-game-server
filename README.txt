@@ -1,12 +1,12 @@
 paper pushing game fall 2020
-https://solidwaterslayer.github.io/transaction-manager-client/
+https://solidwaterslayer.github.io/paper-pushing-game-client/
 
 
 client code:
-https://github.com/solidwaterslayer/transaction-manager-client
+https://github.com/solidwaterslayer/paper-pushing-game-client
 server code:
-https://github.com/solidwaterslayer/transaction-manager-server
-https://transaction-manager-server.herokuapp.com/
+https://github.com/solidwaterslayer/paper-pushing-game-server
+https://paper-pushing-game-server.herokuapp.com/
 
 
 notes:
@@ -24,8 +24,8 @@ https://dashboard.heroku.com/apps/
 
 
 tags:
-100% mutation coverage
-tdd
 full stack
 angular
 spring boot
+100% mutation coverage
+tdd

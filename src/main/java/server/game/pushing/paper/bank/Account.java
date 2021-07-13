@@ -1,4 +1,4 @@
-package com.manager.transaction.bank;
+package server.game.pushing.paper.bank;
 
 public abstract class Account {
     protected String id;

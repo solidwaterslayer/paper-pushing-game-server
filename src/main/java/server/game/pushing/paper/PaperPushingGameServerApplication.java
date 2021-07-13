@@ -1,4 +1,4 @@
-package com.manager.transaction;
+package server.game.pushing.paper;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,9 +10,9 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Arrays;
 
 @SpringBootApplication
-public class TransactionManagerApplication {
+public class PaperPushingGameServerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(TransactionManagerApplication.class, args);
+        SpringApplication.run(PaperPushingGameServerApplication.class, args);
     }
 
     @Bean

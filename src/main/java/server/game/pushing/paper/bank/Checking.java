@@ -1,4 +1,4 @@
-package com.manager.transaction.bank;
+package server.game.pushing.paper.bank;
 
 public class Checking extends Account {
     public Checking(String id, double apr) {

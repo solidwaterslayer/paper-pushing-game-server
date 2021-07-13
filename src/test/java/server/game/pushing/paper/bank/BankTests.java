@@ -1,4 +1,4 @@
-package com.manager.transaction.bank;
+package server.game.pushing.paper.bank;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

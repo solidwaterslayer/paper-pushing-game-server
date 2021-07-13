@@ -8,11 +8,11 @@
         <version>2.5.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.manager</groupId>
-    <artifactId>transaction</artifactId>
+    <groupId>server</groupId>
+    <artifactId>game.pushing.paper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>transaction-manager</name>
-    <description>transaction manager</description>
+    <name>paper-pushing-game-server</name>
+    <description>paper pushing game server</description>
     <properties>
         <java.version>11</java.version>
     </properties>

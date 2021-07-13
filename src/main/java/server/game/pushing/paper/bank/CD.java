@@ -1,4 +1,4 @@
-package com.manager.transaction.bank;
+package server.game.pushing.paper.bank;
 
 public class CD extends Account {
     protected int months;
