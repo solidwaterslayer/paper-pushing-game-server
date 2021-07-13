@@ -1,4 +1,4 @@
-transaction manager [papers please clone] fall 2020
+paper pushing game fall 2020
 https://solidwaterslayer.github.io/transaction-manager-client/
 
 
