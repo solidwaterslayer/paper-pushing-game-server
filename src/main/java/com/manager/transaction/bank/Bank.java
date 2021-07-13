@@ -106,15 +106,15 @@ public class Bank {
     }
 
     public boolean isDepositValid(String id, double depositAmount) {
-        return getAccount(id).isDepositValid(depositAmount);
+        return containsAccount(id) && getAccount(id).isDepositValid(depositAmount);
     }
 
     public boolean isWithdrawValid(String id, double withdrawAmount) {
-        return getAccount(id).isWithdrawValid(withdrawAmount);
+        return containsAccount(id) && getAccount(id).isWithdrawValid(withdrawAmount);
     }
 
     public boolean isTransferValid(String fromID, String toID, double transferAmount) {
-        return !fromID.equals(toID) && isWithdrawValid(fromID, transferAmount) && isDepositValid(toID, transferAmount);
+        return containsAccount(fromID) && containsAccount(toID) && !fromID.equals(toID) && isWithdrawValid(fromID, transferAmount) && isDepositValid(toID, transferAmount);
     }
 
     public boolean isPassTimeValid(int months) {

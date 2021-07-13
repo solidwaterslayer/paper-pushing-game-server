@@ -291,6 +291,24 @@ public class BankTests {
     }
 
     @Test
+    protected void apr_should_be_between_0_and_10_inclusive() {
+        assertFalse(bank.isAPRValid(-10));
+
+        assertFalse(bank.isAPRValid(-1));
+        assertTrue(bank.isAPRValid(0));
+        assertTrue(bank.isAPRValid(1));
+
+        assertTrue(bank.isAPRValid(5));
+        assertTrue(bank.isAPRValid(6));
+
+        assertTrue(bank.isAPRValid(9));
+        assertTrue(bank.isAPRValid(10));
+        assertFalse(bank.isAPRValid(11));
+
+        assertFalse(bank.isAPRValid(20));
+    }
+
+    @Test
     protected void initial_cd_balance_should_be_between_1000_and_10000_inclusive() {
         assertFalse(bank.isInitialCDBalanceValid(-20000));
         assertFalse(bank.isInitialCDBalanceValid(0));
@@ -310,6 +328,19 @@ public class BankTests {
         assertFalse(bank.isInitialCDBalanceValid(11000));
 
         assertFalse(bank.isInitialCDBalanceValid(20000));
+    }
+
+    @Test
+    protected void deposit_should_contain_id() {
+        checkingDepositAmount = 1000;
+        savingsDepositAmount = 1000;
+
+        assertFalse(bank.isDepositValid("24793180", checkingDepositAmount));
+        assertFalse(bank.isDepositValid("08243478", savingsDepositAmount));
+        assertTrue(bank.isDepositValid(CHECKING_ID_0, checkingDepositAmount));
+        assertTrue(bank.isDepositValid(CHECKING_ID_1, checkingDepositAmount));
+        assertTrue(bank.isDepositValid(SAVINGS_ID_0, savingsDepositAmount));
+        assertTrue(bank.isDepositValid(SAVINGS_ID_1, savingsDepositAmount));
     }
 
     @Test
@@ -372,6 +403,31 @@ public class BankTests {
         assertFalse(bank.isDepositValid(CD_ID, 2600));
 
         assertFalse(bank.isDepositValid(CD_ID, 5000));
+    }
+
+    @Test
+    protected void withdraw_should_contain_id() {
+        checkingDepositAmount = 1000;
+        savingsDepositAmount = 1000;
+        checkingWithdrawAmount = 400;
+        savingsWithdrawAmount = 400;
+        cdWithdrawAmount = 2000;
+
+        bank.deposit(CHECKING_ID_0, checkingDepositAmount);
+        bank.deposit(CHECKING_ID_1, checkingDepositAmount);
+        bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
+        bank.deposit(SAVINGS_ID_1, savingsDepositAmount);
+        bank.passTime(12);
+
+        assertFalse(bank.isWithdrawValid("34784792", checkingWithdrawAmount));
+        assertFalse(bank.isWithdrawValid("34784792", cdWithdrawAmount));
+        assertFalse(bank.isWithdrawValid("94280578", savingsWithdrawAmount));
+        assertFalse(bank.isWithdrawValid("94280578", cdWithdrawAmount));
+        assertTrue(bank.isWithdrawValid(CHECKING_ID_0, checkingWithdrawAmount));
+        assertTrue(bank.isWithdrawValid(CHECKING_ID_1, checkingWithdrawAmount));
+        assertTrue(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount));
+        assertTrue(bank.isWithdrawValid(SAVINGS_ID_1, savingsWithdrawAmount));
+        assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount));
     }
 
     @Test
@@ -459,5 +515,168 @@ public class BankTests {
         assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount));
         assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount + 100));
         assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount + 500));
+    }
+
+    @Test
+    protected void transfer_should_contain_unique_fromID_and_toID() {
+        assertFalse(bank.isTransferValid("34782794", CHECKING_ID_1, 400));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, "78344279", 400));
+        assertFalse(bank.isTransferValid("53794289", "08344279", 400));
+
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_0, 400));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_1, SAVINGS_ID_1, 1000));
+
+        assertTrue(bank.isTransferValid(SAVINGS_ID_1, CHECKING_ID_1, 1000));
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 400));
+    }
+
+    @Test
+    protected void transfer_from_checking_to_checking_should_be_greater_than_0() {
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, -300));
+
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, -100));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, 0));
+        assertTrue(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, 100));
+
+        assertTrue(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, 250));
+    }
+
+    @Test
+    protected void transfer_from_checking_to_checking_should_be_less_than_or_equal_to_400() {
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 150));
+
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 300));
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 400));
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 500));
+
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 1000));
+    }
+
+    @Test
+    protected void transfer_from_checking_to_savings_should_be_greater_than_0() {
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, -300));
+
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, -100));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, 0));
+        assertTrue(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, 100));
+
+        assertTrue(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, 250));
+    }
+
+    @Test
+    protected void transfer_from_checking_to_savings_should_be_less_than_or_equal_to_400() {
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 150));
+
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 300));
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 400));
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 500));
+
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 1000));
+    }
+
+    @Test
+    protected void transfer_from_savings_twice_a_month_or_more_should_not_be_possible() {
+        checkingDepositAmount = 1000;
+        savingsDepositAmount = 2000;
+        transferAmount = 400;
+
+        bank.deposit(CHECKING_ID_1, checkingDepositAmount);
+        bank.deposit(SAVINGS_ID_1, savingsDepositAmount);
+        assertTrue(bank.isTransferValid(SAVINGS_ID_1, CHECKING_ID_1, transferAmount));
+
+        bank.passTime(1);
+        bank.transfer(SAVINGS_ID_1, CHECKING_ID_1, transferAmount);
+        assertFalse(bank.isTransferValid(SAVINGS_ID_1, CHECKING_ID_1, transferAmount));
+
+        bank.passTime(1);
+        bank.transfer(SAVINGS_ID_1, CHECKING_ID_1, transferAmount);
+        bank.passTime(1);
+        assertTrue(bank.isTransferValid(SAVINGS_ID_1, CHECKING_ID_1, transferAmount));
+    }
+
+    @Test
+    protected void transfer_from_savings_to_checking_should_be_greater_than_0() {
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, -300));
+
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, -100));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, 0));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, 100));
+
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, 500));
+    }
+
+    @Test
+    protected void transfer_from_savings_to_savings_should_be_less_than_or_equal_to_1000() {
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 600));
+
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 900));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 1000));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 1100));
+
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 2000));
+    }
+
+    @Test
+    protected void transfer_to_cd_should_not_be_possible() {
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CD_ID, -1000));
+
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, CD_ID, -100));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CD_ID, 0));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_1, CD_ID, 100));
+
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CD_ID, 1200));
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, CD_ID, 1300));
+
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CD_ID, 2400));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_1, CD_ID, 2500));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CD_ID, 2600));
+
+        assertFalse(bank.isTransferValid(SAVINGS_ID_1, CD_ID, 5000));
+    }
+
+    @Test
+    protected void transfer_from_cd_to_savings_before_12_month_should_not_be_possible() {
+        bank.deposit(SAVINGS_ID_0, 2500);
+        for (int i = 0; i < 24; i++) {
+            assertEquals(i >= 12, bank.isTransferValid(CD_ID, SAVINGS_ID_0, 2000));
+
+            bank.passTime(1);
+        }
+    }
+
+    @Test
+    protected void transfer_from_cd_to_savings_should_be_greater_than_or_equal_to_balance() {
+        int months = 12;
+        cdWithdrawAmount = passTime(APR, bank.getMinBalanceFee(), "CD", INITIAL_CD_BALANCE, months);
+
+        bank.deposit(SAVINGS_ID_1, 2500);
+        bank.passTime(months);
+
+        assertFalse(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount - 500));
+
+        assertFalse(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount - 100));
+        assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID).getBalance());
+        assertTrue(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount));
+        assertTrue(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount + 100));
+
+        assertTrue(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount + 500));
+    }
+
+    @Test
+    protected void pass_time_should_be_between_1_and_60_inclusive() {
+        assertFalse(bank.isPassTimeValid(-10));
+
+        assertFalse(bank.isPassTimeValid(0));
+        assertTrue(bank.isPassTimeValid(1));
+        assertTrue(bank.isPassTimeValid(2));
+
+        assertTrue(bank.isPassTimeValid(30));
+        assertTrue(bank.isPassTimeValid(40));
+
+        assertTrue(bank.isPassTimeValid(50));
+        assertTrue(bank.isPassTimeValid(60));
+        assertFalse(bank.isPassTimeValid(70));
+
+        assertFalse(bank.isPassTimeValid(100));
     }
 }

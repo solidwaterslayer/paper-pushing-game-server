@@ -273,6 +273,7 @@ public class AccountTests {
         savings.withdraw(savingsWithdrawAmount);
         assertFalse(savings.isWithdrawValid(savingsWithdrawAmount));
 
+        savings.applyAPR();
         savings.withdraw(savingsWithdrawAmount);
         savings.applyAPR();
         assertTrue(savings.isWithdrawValid(savingsWithdrawAmount));
@@ -301,7 +302,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void withdraw_cd_before_12_month_should_be_possible() {
+    protected void withdraw_cd_before_12_month_should_not_be_possible() {
         for (int i = 0; i < 24; i++) {
             assertEquals(i >= 12, cd.isWithdrawValid(2000));
 
@@ -319,10 +320,12 @@ public class AccountTests {
         }
 
         assertFalse(cd.isWithdrawValid(cdWithdrawAmount - 500));
+
         assertFalse(cd.isWithdrawValid(cdWithdrawAmount - 100));
         assertEquals(cdWithdrawAmount, cd.getBalance());
         assertTrue(cd.isWithdrawValid(cdWithdrawAmount));
         assertTrue(cd.isWithdrawValid(cdWithdrawAmount + 100));
+
         assertTrue(cd.isWithdrawValid(cdWithdrawAmount + 500));
     }
 }
