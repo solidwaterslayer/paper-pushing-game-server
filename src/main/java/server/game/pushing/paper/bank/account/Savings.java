@@ -1,10 +1,11 @@
-package server.game.pushing.paper.bank;
+package server.game.pushing.paper.bank.account;
 
 public class Savings extends Account {
     protected boolean isWithdrawValid;
 
     public Savings(String id, double apr) {
         super(id, apr);
+        accountType = AccountType.Savings;
         isWithdrawValid = true;
     }
 

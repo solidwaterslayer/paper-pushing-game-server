@@ -1,8 +1,9 @@
-package server.game.pushing.paper.bank;
+package server.game.pushing.paper.bank.account;
 
 public class Checking extends Account {
     public Checking(String id, double apr) {
         super(id, apr);
+        accountType = AccountType.Checking;
     }
 
     @Override

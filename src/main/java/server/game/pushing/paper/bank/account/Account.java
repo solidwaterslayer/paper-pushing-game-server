@@ -1,6 +1,7 @@
-package server.game.pushing.paper.bank;
+package server.game.pushing.paper.bank.account;
 
 public abstract class Account {
+    protected AccountType accountType;
     protected String id;
     protected double apr;
     protected double balance;
@@ -9,6 +10,10 @@ public abstract class Account {
         this.id = id;
         this.apr = apr;
         balance = 0;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
     }
 
     public String getID() {

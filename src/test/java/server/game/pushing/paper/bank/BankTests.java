@@ -2,6 +2,10 @@ package server.game.pushing.paper.bank;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.game.pushing.paper.bank.account.Account;
+import server.game.pushing.paper.bank.account.AccountType;
+import server.game.pushing.paper.bank.account.Checking;
+import server.game.pushing.paper.bank.account.Savings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +51,7 @@ public class BankTests {
     protected void create_checking_should_be_possible() {
         Account checkingAccount0 = bank.getAccount(CHECKING_ID_0);
 
-        assertEquals("Checking", checkingAccount0.getClass().getSimpleName());
+        assertEquals(AccountType.Checking, checkingAccount0.getAccountType());
         assertEquals(CHECKING_ID_0, checkingAccount0.getID());
         assertEquals(APR, checkingAccount0.getAPR());
         assertEquals(INITIAL_BALANCE, checkingAccount0.getBalance());
@@ -57,7 +61,7 @@ public class BankTests {
     protected void create_savings_should_be_possible() {
         Account savingsAccount0 = bank.getAccount(SAVINGS_ID_0);
 
-        assertEquals("Savings", savingsAccount0.getClass().getSimpleName());
+        assertEquals(AccountType.Savings, savingsAccount0.getAccountType());
         assertEquals(SAVINGS_ID_0, savingsAccount0.getID());
         assertEquals(APR, savingsAccount0.getAPR());
         assertEquals(INITIAL_BALANCE, savingsAccount0.getBalance());
@@ -67,7 +71,7 @@ public class BankTests {
     protected void create_cd_should_be_possible() {
         Account cdAccount = bank.getAccount(CD_ID);
 
-        assertEquals("CD", cdAccount.getClass().getSimpleName());
+        assertEquals(AccountType.CD, cdAccount.getAccountType());
         assertEquals(CD_ID, cdAccount.getID());
         assertEquals(APR, cdAccount.getAPR());
         assertEquals(INITIAL_CD_BALANCE, cdAccount.getBalance());

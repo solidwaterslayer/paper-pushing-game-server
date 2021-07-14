@@ -1,10 +1,11 @@
-package server.game.pushing.paper.bank;
+package server.game.pushing.paper.bank.account;
 
 public class CD extends Account {
     protected int months;
 
     public CD(String id, double apr, double balance) {
         super(id, apr);
+        accountType = AccountType.CD;
         this.balance = balance;
         months = 0;
     }

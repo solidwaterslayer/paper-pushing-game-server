@@ -2,6 +2,7 @@ package server.game.pushing.paper.bank;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.game.pushing.paper.bank.account.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,6 +37,7 @@ public class AccountTests {
 
     @Test
     protected void initialize_checking_should_have_0_balance() {
+        assertEquals(AccountType.Checking, checking.getAccountType());
         assertEquals(CHECKING_ID, checking.getID());
         assertEquals(CHECKING_APR, checking.getAPR());
         assertEquals(INITIAL_BALANCE, checking.getBalance());
@@ -43,6 +45,7 @@ public class AccountTests {
 
     @Test
     protected void initialize_savings_should_have_0_balance() {
+        assertEquals(AccountType.Savings, savings.getAccountType());
         assertEquals(SAVINGS_ID, savings.getID());
         assertEquals(SAVINGS_APR, savings.getAPR());
         assertEquals(INITIAL_BALANCE, savings.getBalance());
@@ -50,6 +53,7 @@ public class AccountTests {
 
     @Test
     protected void initialize_cd_should_be_possible() {
+        assertEquals(AccountType.CD, cd.getAccountType());
         assertEquals(CD_ID, cd.getID());
         assertEquals(CD_APR, cd.getAPR());
         assertEquals(INITIAL_CD_BALANCE, cd.getBalance());
