@@ -1,9 +1,6 @@
 package server.game.pushing.paper.bank;
 
-import server.game.pushing.paper.bank.account.Account;
-import server.game.pushing.paper.bank.account.CD;
-import server.game.pushing.paper.bank.account.Checking;
-import server.game.pushing.paper.bank.account.Savings;
+import server.game.pushing.paper.bank.account.*;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -95,6 +92,16 @@ public class Bank {
                 account.applyAPR();
             }
         }
+    }
+
+    public boolean isAccountTypeValid(String string) {
+        for (AccountType accountType : AccountType.values()) {
+            if (string.equalsIgnoreCase(accountType.name())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean isIDValid(String id) {
