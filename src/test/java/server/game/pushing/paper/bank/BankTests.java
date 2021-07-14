@@ -347,8 +347,7 @@ public class BankTests {
         checkingDepositAmount = 1000;
         savingsDepositAmount = 1000;
 
-        assertFalse(bank.isDepositValid("24793180", checkingDepositAmount));
-        assertFalse(bank.isDepositValid("08243478", savingsDepositAmount));
+        assertFalse(bank.isDepositValid("08243478", checkingDepositAmount));
         assertTrue(bank.isDepositValid(CHECKING_ID_0, checkingDepositAmount));
         assertTrue(bank.isDepositValid(CHECKING_ID_1, checkingDepositAmount));
         assertTrue(bank.isDepositValid(SAVINGS_ID_0, savingsDepositAmount));
@@ -432,9 +431,6 @@ public class BankTests {
         bank.passTime(12);
 
         assertFalse(bank.isWithdrawValid("34784792", checkingWithdrawAmount));
-        assertFalse(bank.isWithdrawValid("34784792", cdWithdrawAmount));
-        assertFalse(bank.isWithdrawValid("94280578", savingsWithdrawAmount));
-        assertFalse(bank.isWithdrawValid("94280578", cdWithdrawAmount));
         assertTrue(bank.isWithdrawValid(CHECKING_ID_0, checkingWithdrawAmount));
         assertTrue(bank.isWithdrawValid(CHECKING_ID_1, checkingWithdrawAmount));
         assertTrue(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount));
@@ -533,13 +529,10 @@ public class BankTests {
     protected void transfer_should_contain_unique_fromID_and_toID() {
         assertFalse(bank.isTransferValid("34782794", CHECKING_ID_1, 400));
         assertFalse(bank.isTransferValid(CHECKING_ID_0, "78344279", 400));
-        assertFalse(bank.isTransferValid("53794289", "08344279", 400));
 
         assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_0, 400));
-        assertFalse(bank.isTransferValid(SAVINGS_ID_1, SAVINGS_ID_1, 1000));
 
-        assertTrue(bank.isTransferValid(SAVINGS_ID_1, CHECKING_ID_1, 1000));
-        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 400));
+        assertTrue(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, 400));
     }
 
     @Test

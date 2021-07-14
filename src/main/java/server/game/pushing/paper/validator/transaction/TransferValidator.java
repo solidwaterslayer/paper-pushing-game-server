@@ -14,7 +14,7 @@ public class TransferValidator extends TransactionValidator {
             } else {
                 return nextHandler.isTransactionValid(transactionArguments);
             }
-        } catch (IndexOutOfBoundsException | IllegalArgumentException exception) {
+        } catch (IndexOutOfBoundsException | IllegalArgumentException | NullPointerException exception) {
             return false;
         }
     }
