@@ -26,6 +26,8 @@ https://dashboard.heroku.com/apps/
 tags:
 full stack
 angular
+
 spring boot
 100% mutation coverage
 tdd
+chain of responsibility design pattern

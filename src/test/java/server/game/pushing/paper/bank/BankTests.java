@@ -269,29 +269,37 @@ public class BankTests {
     }
 
     @Test
-    protected void id_should_be_unique_and_8_digits() {
-        assertFalse(bank.isIDValid("00000010"));
-        assertFalse(bank.isIDValid("10000000"));
+    protected void account_type_should_be_checking_savings_or_cd() {
+        assertFalse(bank.isAccountTypeValid(""));
 
+        assertFalse(bank.isAccountTypeValid("nuke"));
+        assertTrue(bank.isAccountTypeValid("checking"));
+        assertTrue(bank.isAccountTypeValid("savings"));
+        assertTrue(bank.isAccountTypeValid("cd"));
+    }
+
+    @Test
+    protected void account_type_should_be_case_insensitive() {
+        assertTrue(bank.isAccountTypeValid("cHecKIng"));
+        assertTrue(bank.isAccountTypeValid("sAVingS"));
+        assertTrue(bank.isAccountTypeValid("cD"));
+    }
+
+    @Test
+    protected void id_should_be_unique_and_8_digits() {
+        assertFalse(bank.isIDValid("00000000"));
 
         assertFalse(bank.isIDValid(""));
-        assertFalse(bank.isIDValid("nuke"));
-        assertFalse(bank.isIDValid("&^F%yg7"));
-
-        assertFalse(bank.isIDValid("8G73mU*)"));
-
-        assertFalse(bank.isIDValid("*H()j89j("));
-        assertFalse(bank.isIDValid("h8920891hgH&*282j8"));
-
 
         assertFalse(bank.isIDValid("48"));
+
         assertFalse(bank.isIDValid("7834972"));
-
-        assertTrue(bank.isIDValid("05793729"));
         assertTrue(bank.isIDValid("24793478"));
-
         assertFalse(bank.isIDValid("783447992"));
+
         assertFalse(bank.isIDValid("973957845729385729375"));
+
+        assertFalse(bank.isIDValid("8G73mU*)"));
     }
 
     @Test

@@ -7,5 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class PaperPushingGameServerApplicationTests {
     @Test
     void contextLoads() {
+
     }
 }

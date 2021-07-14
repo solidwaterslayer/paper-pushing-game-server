@@ -69,10 +69,10 @@
                 </dependencies>
                 <configuration>
                     <targetClasses>
-                        <param>com.manager.transaction.*</param>
+                        <param>server.game.pushing.paper.*</param>
                     </targetClasses>
                     <targetTests>
-                        <param>com.manager.transaction.*</param>
+                        <param>server.game.pushing.paper.*</param>
                     </targetTests>
                 </configuration>
             </plugin>
