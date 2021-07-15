@@ -12,9 +12,9 @@ public class TransferValidator extends TransactionValidator {
             if (transactionArguments[0].equalsIgnoreCase("transfer") && bank.isTransferValid(transactionArguments[1], transactionArguments[2], Double.parseDouble(transactionArguments[3]))) {
                 return true;
             } else {
-                return nextHandler.isTransactionValid(transactionArguments);
+                return nextHandler != null && nextHandler.isTransactionValid(transactionArguments);
             }
-        } catch (IndexOutOfBoundsException | IllegalArgumentException | NullPointerException exception) {
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException exception) {
             return false;
         }
     }

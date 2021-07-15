@@ -7,16 +7,17 @@ public class CreateValidator extends TransactionValidator {
         super(nextHandler, bank);
     }
 
-    public boolean isTransactionValid(String[] transactionArguments) {
+    protected boolean isTransactionValid(String[] transactionArguments) {
         try {
             if (transactionArguments[0].equalsIgnoreCase("create")
-                    && bank.isAccountTypeValid(transactionArguments[1])
-                    && (isCreateCheckingTransactionValid(transactionArguments) || isCreateSavingsTransactionValid(transactionArguments) || isCreateCDTransactionValid(transactionArguments))) {
+                    && (isCreateCheckingTransactionValid(transactionArguments)
+                    || isCreateSavingsTransactionValid(transactionArguments)
+                    || isCreateCDTransactionValid(transactionArguments))) {
                 return true;
             } else {
-                return nextHandler.isTransactionValid(transactionArguments);
+                return nextHandler != null && nextHandler.isTransactionValid(transactionArguments);
             }
-        } catch (IndexOutOfBoundsException | IllegalArgumentException | NullPointerException exception) {
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException exception) {
             return false;
         }
     }

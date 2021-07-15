@@ -41,7 +41,18 @@ public class DepositValidatorTests {
     @Test
     protected void transaction_should_contain_a_taken_id_as_the_second_argument() {
         assertFalse(depositValidator.isTransactionValid("deposit 47386825 1000"));
+
+        assertFalse(depositValidator.isTransactionValid("deposit"));
+        assertFalse(depositValidator.isTransactionValid("deposit  1000"));
+
         assertTrue(depositValidator.isTransactionValid(String.format("deposit %s 1000", CHECKING_ID)));
+        assertTrue(depositValidator.isTransactionValid(String.format("deposit %s 2500", SAVINGS_ID)));
+    }
+
+    @Test
+    protected void transaction_should_contain_a_deposit_amount_as_the_third_argument() {
+        assertFalse(depositValidator.isTransactionValid(String.format("deposit %s 7g8Y&*", SAVINGS_ID)));
+        assertFalse(depositValidator.isTransactionValid(String.format("deposit %s", SAVINGS_ID)));
         assertTrue(depositValidator.isTransactionValid(String.format("deposit %s 2500", SAVINGS_ID)));
     }
 

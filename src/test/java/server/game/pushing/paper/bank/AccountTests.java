@@ -266,7 +266,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void withdraw_savings_twice_a_month_or_more_should_not_be_possible() {
+    protected void withdraw_savings_should_be_possible_once_a_month() {
         savingsDepositAmount = 1500;
         savingsWithdrawAmount = 500;
 
@@ -306,7 +306,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void withdraw_cd_before_12_month_should_not_be_possible() {
+    protected void withdraw_cd_should_be_possible_after_12_month_inclusive() {
         for (int i = 0; i < 24; i++) {
             assertEquals(i >= 12, cd.isWithdrawValid(2000));
 

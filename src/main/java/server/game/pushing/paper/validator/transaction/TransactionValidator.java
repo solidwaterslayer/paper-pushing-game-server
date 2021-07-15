@@ -11,9 +11,9 @@ public abstract class TransactionValidator {
         this.bank = bank;
     }
 
-    public abstract boolean isTransactionValid(String[] transactionArguments);
-
     public boolean isTransactionValid(String transaction) {
         return isTransactionValid(transaction.split(" "));
     }
+
+    protected abstract boolean isTransactionValid(String[] transactionArguments);
 }

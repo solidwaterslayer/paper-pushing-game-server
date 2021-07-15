@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static server.game.pushing.paper.bank.AccountTests.applyAPR;
 
 public class BankTests {
     protected Bank bank;
@@ -33,10 +34,10 @@ public class BankTests {
 
     @BeforeEach
     protected void setUp() {
-        bank = new Bank(new ArrayList<>(Arrays.asList(
+        bank = new Bank(Arrays.asList(
                 new Checking(CHECKING_ID_1, APR),
                 new Savings(SAVINGS_ID_1, APR)
-        )));
+        ));
         bank.createChecking(CHECKING_ID_0, APR);
         bank.createSavings(SAVINGS_ID_0, APR);
         bank.createCD(CD_ID, APR, INITIAL_CD_BALANCE);
@@ -194,7 +195,7 @@ public class BankTests {
         bank.transfer(CD_ID, SAVINGS_ID_0, 2000);
 
         assertEquals(0, bank.getAccount(CD_ID).getBalance());
-        assertEquals(AccountTests.applyAPR(APR, savingsDepositAmount, 12) + AccountTests.applyAPR(APR, INITIAL_CD_BALANCE, 12 * 4), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(applyAPR(APR, savingsDepositAmount, 12) + applyAPR(APR, INITIAL_CD_BALANCE, 12 * 4), bank.getAccount(SAVINGS_ID_0).getBalance());
     }
 
     @Test
@@ -207,9 +208,9 @@ public class BankTests {
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
         bank.passTime(months);
 
-        assertEquals(AccountTests.applyAPR(APR, checkingDepositAmount, months), bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(AccountTests.applyAPR(APR, savingsDepositAmount, months), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(AccountTests.applyAPR(APR, INITIAL_CD_BALANCE, months * 4), bank.getAccount(CD_ID).getBalance());
+        assertEquals(applyAPR(APR, checkingDepositAmount, months), bank.getAccount(CHECKING_ID_0).getBalance());
+        assertEquals(applyAPR(APR, savingsDepositAmount, months), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(applyAPR(APR, INITIAL_CD_BALANCE, months * 4), bank.getAccount(CD_ID).getBalance());
     }
 
     @Test
@@ -259,30 +260,13 @@ public class BankTests {
             }
 
             if (accountType.equals("CD")) {
-                balance = AccountTests.applyAPR(apr, balance, 4);
+                balance = applyAPR(apr, balance, 4);
             } else {
-                balance = AccountTests.applyAPR(apr, balance, 1);
+                balance = applyAPR(apr, balance, 1);
             }
         }
 
         return balance;
-    }
-
-    @Test
-    protected void account_type_should_be_checking_savings_or_cd() {
-        assertFalse(bank.isAccountTypeValid(""));
-
-        assertFalse(bank.isAccountTypeValid("nuke"));
-        assertTrue(bank.isAccountTypeValid("checking"));
-        assertTrue(bank.isAccountTypeValid("savings"));
-        assertTrue(bank.isAccountTypeValid("cd"));
-    }
-
-    @Test
-    protected void account_type_should_be_case_insensitive() {
-        assertTrue(bank.isAccountTypeValid("cHecKIng"));
-        assertTrue(bank.isAccountTypeValid("sAVingS"));
-        assertTrue(bank.isAccountTypeValid("cD"));
     }
 
     @Test
@@ -461,7 +445,7 @@ public class BankTests {
     }
 
     @Test
-    protected void withdraw_savings_twice_a_month_or_more_should_not_be_possible() {
+    protected void withdraw_savings_should_be_possible_once_a_month() {
         savingsDepositAmount = 1500;
         savingsWithdrawAmount = 500;
 
@@ -500,7 +484,7 @@ public class BankTests {
     }
 
     @Test
-    protected void withdraw_cd_before_12_month_should_be_possible() {
+    protected void withdraw_cd_should_be_possible_after_12_month() {
         for (int i = 0; i < 24; i++) {
             assertEquals(i >= 12, bank.isWithdrawValid(CD_ID, 2000));
 
@@ -513,9 +497,7 @@ public class BankTests {
         int months = 12;
         cdWithdrawAmount = passTime(APR, bank.getMinBalanceFee(), "CD", INITIAL_CD_BALANCE, months);
 
-        for (int i = 0; i < months; i++) {
-            bank.passTime(1);
-        }
+        bank.passTime(months);
 
         assertFalse(bank.isWithdrawValid(CD_ID, cdWithdrawAmount - 500));
         assertFalse(bank.isWithdrawValid(CD_ID, cdWithdrawAmount - 100));
@@ -640,7 +622,7 @@ public class BankTests {
     }
 
     @Test
-    protected void transfer_from_cd_to_savings_before_12_month_should_not_be_possible() {
+    protected void transfer_from_cd_to_savings_should_be_possible_after_12_month_inclusive() {
         bank.deposit(SAVINGS_ID_0, 2500);
         for (int i = 0; i < 24; i++) {
             assertEquals(i >= 12, bank.isTransferValid(CD_ID, SAVINGS_ID_0, 2000));

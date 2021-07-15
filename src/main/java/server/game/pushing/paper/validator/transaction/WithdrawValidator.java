@@ -12,9 +12,9 @@ public class WithdrawValidator extends TransactionValidator {
             if (transactionArguments[0].equalsIgnoreCase("withdraw") && bank.isWithdrawValid(transactionArguments[1], Double.parseDouble(transactionArguments[2]))) {
                 return true;
             } else {
-                return nextHandler.isTransactionValid(transactionArguments);
+                return nextHandler != null && nextHandler.isTransactionValid(transactionArguments);
             }
-        } catch (IndexOutOfBoundsException | IllegalArgumentException | NullPointerException exception) {
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException exception) {
             return false;
         }
     }

@@ -3,6 +3,7 @@ package server.game.pushing.paper.bank;
 import server.game.pushing.paper.bank.account.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -10,16 +11,16 @@ public class Bank {
     protected Map<String, Account> accounts;
     protected double minBalanceFee;
 
-    public Bank() {
-        initializeBank();
-    }
-
-    public Bank(ArrayList<Account> accounts) {
+    public Bank(List<Account> accounts) {
         initializeBank();
 
         for (Account account : accounts) {
             this.accounts.put(account.getID(), account);
         }
+    }
+
+    public Bank() {
+        initializeBank();
     }
 
     protected void initializeBank() {
@@ -92,16 +93,6 @@ public class Bank {
                 account.applyAPR();
             }
         }
-    }
-
-    public boolean isAccountTypeValid(String string) {
-        for (AccountType accountType : AccountType.values()) {
-            if (string.equalsIgnoreCase(accountType.name())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public boolean isIDValid(String id) {

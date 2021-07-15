@@ -27,6 +27,7 @@ public class CreateValidatorTests {
     @Test
     protected void transaction_should_contain_a_account_type_as_the_second_argument() {
         assertFalse(createValidator.isTransactionValid("create"));
+        assertFalse(createValidator.isTransactionValid("create  00000001 0.1"));
         assertFalse(createValidator.isTransactionValid("create g68G*(^ 00000001 0.1"));
         assertTrue(createValidator.isTransactionValid("create checking 00000000 0"));
         assertTrue(createValidator.isTransactionValid("create savings 00000001 0.1"));
@@ -39,6 +40,7 @@ public class CreateValidatorTests {
         assertFalse(createValidator.isTransactionValid("create savings 00000000 0.1"));
 
         assertFalse(createValidator.isTransactionValid("create savings"));
+        assertFalse(createValidator.isTransactionValid("create savings  0.1"));
 
         assertFalse(createValidator.isTransactionValid("create savings 48 0.1"));
 
@@ -53,6 +55,10 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_contain_an_apr_between_0_and_10_inclusive_as_the_fourth_argument() {
+        assertFalse(createValidator.isTransactionValid("create cd 00000000  1000"));
+        assertFalse(createValidator.isTransactionValid("create cd 00000000 78g& 1000"));
+
+
         assertFalse(createValidator.isTransactionValid("create cd 00000000 -10 1000"));
 
         assertFalse(createValidator.isTransactionValid("create cd 00000000 -1 1000"));
@@ -71,6 +77,9 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_when_account_type_is_cd_should_contain_an_initial_balance_between_1000_and_10000_inclusive_as_the_fifth_argument() {
+        assertFalse(createValidator.isTransactionValid("create cd 00000000 0 g78*(uU"));
+
+
         assertFalse(createValidator.isTransactionValid("create cd 00000000 0 -20000"));
         assertFalse(createValidator.isTransactionValid("create cd 00000000 0 0"));
 
