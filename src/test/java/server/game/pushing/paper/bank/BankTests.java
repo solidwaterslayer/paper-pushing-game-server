@@ -22,7 +22,6 @@ public class BankTests {
     protected final String SAVINGS_ID_1 = "10000001";
     protected final String CD_ID = "00000010";
     protected final double APR = 0.1;
-    protected final double INITIAL_BALANCE = 0;
     protected final double INITIAL_CD_BALANCE = 1000;
 
     protected double checkingDepositAmount;
@@ -55,7 +54,7 @@ public class BankTests {
         assertEquals(AccountType.Checking, checkingAccount0.getAccountType());
         assertEquals(CHECKING_ID_0, checkingAccount0.getID());
         assertEquals(APR, checkingAccount0.getAPR());
-        assertEquals(INITIAL_BALANCE, checkingAccount0.getBalance());
+        assertEquals(0, checkingAccount0.getBalance());
     }
 
     @Test
@@ -65,7 +64,7 @@ public class BankTests {
         assertEquals(AccountType.Savings, savingsAccount0.getAccountType());
         assertEquals(SAVINGS_ID_0, savingsAccount0.getID());
         assertEquals(APR, savingsAccount0.getAPR());
-        assertEquals(INITIAL_BALANCE, savingsAccount0.getBalance());
+        assertEquals(0, savingsAccount0.getBalance());
     }
 
     @Test
@@ -327,7 +326,7 @@ public class BankTests {
     }
 
     @Test
-    protected void deposit_should_contain_id() {
+    protected void deposit_should_contain_a_taken_id() {
         checkingDepositAmount = 1000;
         savingsDepositAmount = 1000;
 
@@ -401,7 +400,7 @@ public class BankTests {
     }
 
     @Test
-    protected void withdraw_should_contain_id() {
+    protected void withdraw_should_contain_a_taken_id() {
         checkingDepositAmount = 1000;
         savingsDepositAmount = 1000;
         checkingWithdrawAmount = 400;
@@ -508,13 +507,15 @@ public class BankTests {
     }
 
     @Test
-    protected void transfer_should_contain_unique_fromID_and_toID() {
-        assertFalse(bank.isTransferValid("34782794", CHECKING_ID_1, 400));
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, "78344279", 400));
+    protected void transfer_should_contain_unique_and_taken_fromID_and_toID() {
+        transferAmount = 400;
 
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_0, 400));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_0, transferAmount));
 
-        assertTrue(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, 400));
+        assertFalse(bank.isTransferValid("34782794", CHECKING_ID_1, transferAmount));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, "78344279", transferAmount));
+
+        assertTrue(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, transferAmount));
     }
 
     @Test
@@ -593,7 +594,7 @@ public class BankTests {
     }
 
     @Test
-    protected void transfer_from_savings_to_savings_should_be_less_than_or_equal_to_1000() {
+    protected void transfer_from_savings_to_checking_should_be_less_than_or_equal_to_1000() {
         assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 600));
 
         assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 900));
@@ -601,6 +602,28 @@ public class BankTests {
         assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 1100));
 
         assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 2000));
+    }
+
+    @Test
+    protected void transfer_from_savings_to_savings_should_be_greater_than_0() {
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, -300));
+
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, -100));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 0));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 100));
+
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 500));
+    }
+
+    @Test
+    protected void transfer_from_savings_to_savings_should_be_less_than_or_equal_to_1000() {
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 600));
+
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 900));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 1000));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 1100));
+
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 2000));
     }
 
     @Test

@@ -30,9 +30,10 @@ public class WithdrawValidatorTests {
                 new Savings(SAVINGS_ID, APR),
                 new CD(CD_ID, APR, INITIAL_CD_BALANCE)
         )));
-        withdrawValidator = new WithdrawValidator(null, bank);
         bank.deposit(CHECKING_ID, 200);
         bank.deposit(SAVINGS_ID, 1500);
+
+        withdrawValidator = new WithdrawValidator(null, bank);
     }
 
     @Test

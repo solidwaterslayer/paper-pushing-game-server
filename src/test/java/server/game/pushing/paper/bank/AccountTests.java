@@ -7,20 +7,17 @@ import server.game.pushing.paper.bank.account.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AccountTests {
-    protected final String CHECKING_ID = "00000000";
-    protected final String SAVINGS_ID = "00000001";
-    protected final String CD_ID = "00000010";
-
-    protected final double CHECKING_APR = 0.2;
-    protected final double SAVINGS_APR = 0.8;
-    protected final double CD_APR = 0.4;
-
-    protected final double INITIAL_BALANCE = 0;
-    protected final double INITIAL_CD_BALANCE = 1000;
-
     protected Account checking;
     protected Account savings;
     protected Account cd;
+
+    protected final String CHECKING_ID = "00000000";
+    protected final String SAVINGS_ID = "00000001";
+    protected final String CD_ID = "00000010";
+    protected final double CHECKING_APR = 0.2;
+    protected final double SAVINGS_APR = 0.8;
+    protected final double CD_APR = 0.4;
+    protected final double INITIAL_CD_BALANCE = 1000;
 
     protected double checkingDepositAmount;
     protected double checkingWithdrawAmount;
@@ -40,7 +37,7 @@ public class AccountTests {
         assertEquals(AccountType.Checking, checking.getAccountType());
         assertEquals(CHECKING_ID, checking.getID());
         assertEquals(CHECKING_APR, checking.getAPR());
-        assertEquals(INITIAL_BALANCE, checking.getBalance());
+        assertEquals(0, checking.getBalance());
     }
 
     @Test
@@ -48,7 +45,7 @@ public class AccountTests {
         assertEquals(AccountType.Savings, savings.getAccountType());
         assertEquals(SAVINGS_ID, savings.getID());
         assertEquals(SAVINGS_APR, savings.getAPR());
-        assertEquals(INITIAL_BALANCE, savings.getBalance());
+        assertEquals(0, savings.getBalance());
     }
 
     @Test

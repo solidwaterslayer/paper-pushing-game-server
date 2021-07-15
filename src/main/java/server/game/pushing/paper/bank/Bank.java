@@ -116,7 +116,7 @@ public class Bank {
     }
 
     public boolean isTransferValid(String fromID, String toID, double transferAmount) {
-        return containsAccount(fromID) && containsAccount(toID) && !fromID.equals(toID) && isWithdrawValid(fromID, transferAmount) && isDepositValid(toID, transferAmount);
+        return !fromID.equals(toID) && isWithdrawValid(fromID, transferAmount) && isDepositValid(toID, transferAmount);
     }
 
     public boolean isPassTimeValid(int months) {
