@@ -18,8 +18,19 @@ public class CreateValidatorTests {
     }
 
     @Test
+    protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+        createValidator = new CreateValidator(new DepositValidator(null, bank), bank);
+
+        bank.createSavings("00000000", 0);
+
+        assertTrue(createValidator.isTransactionValid("deposit 00000000 2500"));
+        assertFalse(createValidator.isTransactionValid("withdraw 00000000 1000"));
+    }
+
+    @Test
     protected void transaction_should_contain_the_transaction_type_create_as_the_first_argument() {
         assertFalse(createValidator.isTransactionValid(""));
+        assertFalse(createValidator.isTransactionValid(" checking 00000000 0"));
         assertFalse(createValidator.isTransactionValid("nuke checking 00000000 0"));
         assertTrue(createValidator.isTransactionValid("create checking 00000000 0"));
     }

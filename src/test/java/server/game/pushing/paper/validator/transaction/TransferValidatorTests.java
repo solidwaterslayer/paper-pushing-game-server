@@ -43,8 +43,20 @@ public class TransferValidatorTests {
     }
 
     @Test
+    protected void transfer_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+        transferValidator = new TransferValidator(new PassTimeValidator(null, bank), bank);
+
+        bank.createSavings("00000000", 0);
+        bank.createChecking("00000001", 0);
+
+        assertTrue(transferValidator.isTransactionValid("pass time 60"));
+        assertFalse(transferValidator.isTransactionValid("create cd 0 10000"));
+    }
+
+    @Test
     protected void transaction_should_contain_the_transaction_type_transfer_as_the_first_argument() {
         assertFalse(transferValidator.isTransactionValid(""));
+        assertFalse(transferValidator.isTransactionValid(String.format(" %s %s 400", CHECKING_ID_1, CHECKING_ID_0)));
         assertFalse(transferValidator.isTransactionValid(String.format("nuke %s %s 400", CHECKING_ID_1, CHECKING_ID_0)));
         assertTrue(transferValidator.isTransactionValid(String.format("transfer %s %s 400", CHECKING_ID_1, CHECKING_ID_0)));
     }
@@ -224,12 +236,13 @@ public class TransferValidatorTests {
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        assertTrue(transferValidator.isTransactionValid(String.format("transfer %s %s 400", CHECKING_ID_1, CHECKING_ID_0)));
+        assertTrue(transferValidator.isTransactionValid(String.format("traNSFer %s %s 400", CHECKING_ID_1, CHECKING_ID_0)));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
         bank.passTime(12);
-        assertTrue(transferValidator.isTransactionValid(String.format("transfer %s %s 2000 nuke 0 0 0     0  0 0  0 0", CD_ID, SAVINGS_ID_1)));
+        assertTrue(transferValidator.isTransactionValid(String.format("transfer %s %s 2000 nuke", CD_ID, SAVINGS_ID_1)));
+        assertTrue(transferValidator.isTransactionValid(String.format("transfer %s %s 2000 0    0 0     0  0 0  0 0", CD_ID, SAVINGS_ID_1)));
     }
 }

@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DepositValidatorTests {
     protected DepositValidator depositValidator;
+    protected Bank bank;
 
     protected final String CHECKING_ID = "00000000";
     protected final String SAVINGS_ID = "00000001";
@@ -24,16 +25,30 @@ public class DepositValidatorTests {
 
     @BeforeEach
     protected void setUp() {
-        depositValidator = new DepositValidator(null, new Bank(new ArrayList<>(Arrays.asList(
-            new Checking(CHECKING_ID, APR),
-            new Savings(SAVINGS_ID, APR),
-            new CD(CD_ID, APR, INITIAL_CD_BALANCE)
-        ))));
+        bank = new Bank(Arrays.asList(
+                new Checking(CHECKING_ID, APR),
+                new Savings(SAVINGS_ID, APR),
+                new CD(CD_ID, APR, INITIAL_CD_BALANCE)
+        ));
+
+        depositValidator = new DepositValidator(null, bank);
+    }
+
+    @Test
+    protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+        depositValidator = new DepositValidator(new WithdrawValidator(null, bank), bank);
+
+        bank.createSavings("00000000", 0);
+        bank.createChecking("00000001", 0);
+
+        assertTrue(depositValidator.isTransactionValid("withdraw 00000000 1000"));
+        assertFalse(depositValidator.isTransactionValid("transfer 00000000 00000001 1000"));
     }
 
     @Test
     protected void transaction_should_contain_the_transaction_type_deposit_as_the_first_argument() {
         assertFalse(depositValidator.isTransactionValid(""));
+        assertFalse(depositValidator.isTransactionValid(String.format(" %s 1000", CHECKING_ID)));
         assertFalse(depositValidator.isTransactionValid(String.format("nuke %s 1000", CHECKING_ID)));
         assertTrue(depositValidator.isTransactionValid(String.format("deposit %s 1000", CHECKING_ID)));
     }

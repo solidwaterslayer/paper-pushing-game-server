@@ -37,8 +37,20 @@ public class WithdrawValidatorTests {
     }
 
     @Test
+    protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+        withdrawValidator = new WithdrawValidator(new TransferValidator(null, bank), bank);
+
+        bank.createSavings("00000000", 0);
+        bank.createChecking("00000001", 0);
+
+        assertTrue(withdrawValidator.isTransactionValid("transfer 00000000 00000001 1000"));
+        assertFalse(withdrawValidator.isTransactionValid("pass time 60"));
+    }
+
+    @Test
     protected void transaction_should_contain_the_transaction_type_withdraw_as_the_first_argument() {
         assertFalse(withdrawValidator.isTransactionValid(""));
+        assertFalse(withdrawValidator.isTransactionValid(String.format(" %s 400", CHECKING_ID)));
         assertFalse(withdrawValidator.isTransactionValid(String.format("nuke %s 400", CHECKING_ID)));
         assertTrue(withdrawValidator.isTransactionValid(String.format("withdraw %s 400", CHECKING_ID)));
     }
