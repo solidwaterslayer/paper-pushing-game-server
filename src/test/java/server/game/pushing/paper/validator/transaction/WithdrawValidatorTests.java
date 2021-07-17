@@ -3,6 +3,7 @@ package server.game.pushing.paper.validator.transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.bank.Bank;
+import server.game.pushing.paper.bank.account.AccountType;
 import server.game.pushing.paper.bank.account.CD;
 import server.game.pushing.paper.bank.account.Checking;
 import server.game.pushing.paper.bank.account.Savings;
@@ -144,7 +145,7 @@ public class WithdrawValidatorTests {
     @Test
     protected void withdraw_cd_should_be_greater_than_or_equal_to_balance() {
         int months = 12;
-        double cdWithdrawAmount = passTime(APR, bank.getMinBalanceFee(), "CD", INITIAL_CD_BALANCE, months);
+        double cdWithdrawAmount = passTime(APR, bank.getMinBalanceFee(), AccountType.CD, INITIAL_CD_BALANCE, months);
 
         bank.passTime(months);
 
