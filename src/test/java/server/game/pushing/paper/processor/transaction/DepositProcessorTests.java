@@ -3,6 +3,10 @@ package server.game.pushing.paper.processor.transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.bank.Bank;
+import server.game.pushing.paper.bank.account.Checking;
+import server.game.pushing.paper.bank.account.Savings;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -15,14 +19,12 @@ public class DepositProcessorTests {
     protected final double APR = 0.1;
 
     @BeforeEach
-    void setUp() {
-        bank = new Bank();
+    protected void setUp() {
+        bank = new Bank(Arrays.asList(
+                new Checking(CHECKING_ID, APR),
+                new Savings(SAVINGS_ID, APR)
+        ));
         depositProcessor = new DepositProcessor(bank);
-
-        depositProcessor.setNextHandler(new CreateProcessor(bank));
-        depositProcessor.handle(String.format("create checking %s %f", CHECKING_ID, APR));
-        depositProcessor.handle(String.format("create savings %s %f", SAVINGS_ID, APR));
-        depositProcessor.setNextHandler(null);
     }
 
     @Test
@@ -39,7 +41,7 @@ public class DepositProcessorTests {
     }
 
     @Test
-    void deposit_checking_transaction_should_be_process() {
+    protected void deposit_checking_transaction_should_be_process() {
         double checkingDepositAmount = 200;
 
         depositProcessor.handle(String.format("deposit %s %f", CHECKING_ID, checkingDepositAmount));
@@ -48,7 +50,7 @@ public class DepositProcessorTests {
     }
 
     @Test
-    void deposit_savings_transaction_should_be_process() {
+    protected void deposit_savings_transaction_should_be_process() {
         double savingsDepositAmount = 300;
 
         depositProcessor.handle(String.format("deposit %s %f", SAVINGS_ID, savingsDepositAmount));

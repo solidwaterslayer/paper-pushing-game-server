@@ -2,13 +2,13 @@ package server.game.pushing.paper.bank.account;
 
 public abstract class Account {
     protected AccountType accountType;
-    protected final String id;
-    protected final double apr;
+    protected final String ID;
+    protected final double APR;
     protected double balance;
 
     public Account(String id, double apr) {
-        this.id = id;
-        this.apr = apr;
+        this.ID = id;
+        this.APR = apr;
         balance = 0;
     }
 
@@ -17,11 +17,11 @@ public abstract class Account {
     }
 
     public String getID() {
-        return id;
+        return ID;
     }
 
     public double getAPR() {
-        return apr;
+        return APR;
     }
 
     public double getBalance() {
@@ -42,7 +42,7 @@ public abstract class Account {
     }
 
     public void applyAPR() {
-        deposit(balance * apr / 100 / 12);
+        deposit(balance * APR / 100 / 12);
     }
 
     public boolean isDepositValid(double balance) {
