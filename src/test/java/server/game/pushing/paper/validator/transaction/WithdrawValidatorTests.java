@@ -21,8 +21,8 @@ public class WithdrawValidatorTests {
     protected final String CHECKING_ID = "00000000";
     protected final String SAVINGS_ID = "00000001";
     protected final String CD_ID = "00000010";
-    protected final double APR = 0.1;
-    protected final double INITIAL_CD_BALANCE = 1000;
+    protected final double APR = 0.2;
+    protected final double INITIAL_CD_BALANCE = 5000;
 
     @BeforeEach
     protected void setUp() {
@@ -71,7 +71,7 @@ public class WithdrawValidatorTests {
 
         assertFalse(withdrawValidator.handle(String.format("withdraw %s 7g8Y&*", CD_ID)));
         assertFalse(withdrawValidator.handle(String.format("withdraw %s", CD_ID)));
-        assertTrue(withdrawValidator.handle(String.format("withdraw %s 2000", CD_ID)));
+        assertTrue(withdrawValidator.handle(String.format("withdraw %s %f", CD_ID, INITIAL_CD_BALANCE + 1000)));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class WithdrawValidatorTests {
     @Test
     protected void withdraw_cd_before_12_month_should_be_possible() {
         for (int i = 0; i < 24; i++) {
-            assertEquals(i >= 12, withdrawValidator.handle(String.format("withdraw %s %f", CD_ID, 2000.0f)));
+            assertEquals(i >= 12, withdrawValidator.handle(String.format("withdraw %s %f", CD_ID, INITIAL_CD_BALANCE + 1000)));
 
             bank.passTime(1);
         }

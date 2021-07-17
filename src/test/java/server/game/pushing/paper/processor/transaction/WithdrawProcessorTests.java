@@ -20,7 +20,7 @@ public class WithdrawProcessorTests {
     protected final String CHECKING_ID = "00000000";
     protected final String SAVINGS_ID = "00000001";
     protected final String CD_ID = "00000010";
-    protected final double APR = 0.1;
+    protected final double APR = 8;
     protected final double CHECKING_DEPOSIT_AMOUNT = 500;
     protected final double SAVINGS_DEPOSIT_AMOUNT = 700;
     protected final double INITIAL_CD_BALANCE = 700;

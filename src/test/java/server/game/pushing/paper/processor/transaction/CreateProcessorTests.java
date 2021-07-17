@@ -16,7 +16,7 @@ public class CreateProcessorTests {
     protected final String CHECKING_ID = "00000000";
     protected final String SAVINGS_ID = "00000001";
     protected final String CD_ID = "00000010";
-    protected final double APR = 0.1;
+    protected final double APR = 10;
     protected final double INITIAL_CD_BALANCE = 1000;
 
     @BeforeEach

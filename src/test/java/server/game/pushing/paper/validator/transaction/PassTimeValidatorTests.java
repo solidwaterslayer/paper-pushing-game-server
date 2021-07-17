@@ -11,6 +11,7 @@ public class PassTimeValidatorTests {
     protected PassTimeValidator passTimeValidator;
     protected Bank bank;
 
+    // TODO: add pass time amount variable
     @BeforeEach
     protected void setUp() {
         bank = new Bank();

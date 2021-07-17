@@ -20,7 +20,7 @@ public class DepositValidatorTests {
     protected final String SAVINGS_ID = "00000001";
     protected final String CD_ID = "00000010";
     protected final double APR = 0.1;
-    protected final double INITIAL_CD_BALANCE = 1000;
+    protected final double INITIAL_CD_BALANCE = 10000;
 
     @BeforeEach
     protected void setUp() {
@@ -133,13 +133,13 @@ public class DepositValidatorTests {
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        assertTrue(depositValidator.handle("DEPOSIT 00000000 1000"));
-        assertTrue(depositValidator.handle("dePOSit 00000001 2500"));
+        assertTrue(depositValidator.handle(String.format("DEPOSIT %s 1000", CHECKING_ID)));
+        assertTrue(depositValidator.handle(String.format("dePOSit %s 2500", SAVINGS_ID)));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        assertTrue(depositValidator.handle("deposit 00000000 1000 0 0 0 0 0 0 0"));
-        assertTrue(depositValidator.handle("deposit 00000001 2500 nuke"));
+        assertTrue(depositValidator.handle(String.format("deposit %s 1000 0 0 0 0 0 0 0", CHECKING_ID)));
+        assertTrue(depositValidator.handle(String.format("deposit %s 2500 nuke", SAVINGS_ID)));
     }
 }

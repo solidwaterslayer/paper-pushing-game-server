@@ -16,7 +16,7 @@ public class DepositProcessorTests {
     protected Bank bank;
     protected final String CHECKING_ID = "00000000";
     protected final String SAVINGS_ID = "00000001";
-    protected final double APR = 0.1;
+    protected final double APR = 9;
 
     @BeforeEach
     protected void setUp() {
