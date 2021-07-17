@@ -33,13 +33,12 @@ public class WithdrawValidatorTests {
         bank.deposit(CHECKING_ID, 200);
         bank.deposit(SAVINGS_ID, 1500);
 
-        withdrawValidator = new WithdrawValidator(null, bank);
+        withdrawValidator = new WithdrawValidator(bank);
     }
 
     @Test
     protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        withdrawValidator = new WithdrawValidator(new TransferValidator(null, bank), bank);
-
+        withdrawValidator.setNextHandler(new TransferValidator(bank));
         bank.createSavings("00000000", 0);
         bank.createChecking("00000001", 0);
 

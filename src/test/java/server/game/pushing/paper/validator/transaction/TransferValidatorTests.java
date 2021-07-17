@@ -39,13 +39,12 @@ public class TransferValidatorTests {
         bank.deposit(SAVINGS_ID_0, 2500);
         bank.deposit(SAVINGS_ID_1, 2500);
 
-        transferValidator = new TransferValidator(null, bank);
+        transferValidator = new TransferValidator(bank);
     }
 
     @Test
     protected void transfer_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        transferValidator = new TransferValidator(new PassTimeValidator(null, bank), bank);
-
+        transferValidator.setNextHandler(new PassTimeValidator(bank));
         bank.createSavings("00000000", 0);
         bank.createChecking("00000001", 0);
 

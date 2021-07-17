@@ -4,8 +4,8 @@ import server.game.pushing.paper.TransactionHandler;
 import server.game.pushing.paper.bank.Bank;
 
 public class WithdrawValidator extends TransactionHandler {
-    public WithdrawValidator(TransactionHandler nextHandler, Bank bank) {
-        super(nextHandler, bank);
+    public WithdrawValidator(Bank bank) {
+        super(bank);
     }
 
     @Override

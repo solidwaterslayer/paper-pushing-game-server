@@ -4,8 +4,8 @@ import server.game.pushing.paper.TransactionHandler;
 import server.game.pushing.paper.bank.Bank;
 
 public class DepositValidator extends TransactionHandler {
-    public DepositValidator(TransactionHandler nextHandler, Bank bank) {
-        super(nextHandler, bank);
+    public DepositValidator(Bank bank) {
+        super(bank);
     }
 
     @Override

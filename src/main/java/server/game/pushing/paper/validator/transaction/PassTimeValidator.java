@@ -4,8 +4,8 @@ import server.game.pushing.paper.TransactionHandler;
 import server.game.pushing.paper.bank.Bank;
 
 public class PassTimeValidator extends TransactionHandler {
-    public PassTimeValidator(TransactionHandler nextHandler, Bank bank) {
-        super(nextHandler, bank);
+    public PassTimeValidator(Bank bank) {
+        super(bank);
     }
 
     @Override

@@ -30,13 +30,12 @@ public class DepositValidatorTests {
                 new CD(CD_ID, APR, INITIAL_CD_BALANCE)
         ));
 
-        depositValidator = new DepositValidator(null, bank);
+        depositValidator = new DepositValidator(bank);
     }
 
     @Test
     protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        depositValidator = new DepositValidator(new WithdrawValidator(null, bank), bank);
-
+        depositValidator.setNextHandler(new WithdrawValidator(bank));
         bank.createSavings("00000000", 0);
         bank.createChecking("00000001", 0);
 

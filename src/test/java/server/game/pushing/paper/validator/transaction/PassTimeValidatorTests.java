@@ -14,13 +14,12 @@ public class PassTimeValidatorTests {
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        passTimeValidator = new PassTimeValidator(null, bank);
+        passTimeValidator = new PassTimeValidator(bank);
     }
 
     @Test
     protected void pass_time_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        passTimeValidator = new PassTimeValidator(new CreateValidator(null, bank), bank);
-
+        passTimeValidator.setNextHandler(new CreateValidator(bank));
         bank.createChecking("00000000", 0.5);
 
         assertFalse(passTimeValidator.handle("create cd 0 10000"));

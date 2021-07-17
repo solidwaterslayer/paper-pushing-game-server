@@ -14,13 +14,12 @@ public class CreateValidatorTests {
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        createValidator = new CreateValidator(null, bank);
+        createValidator = new CreateValidator(bank);
     }
 
     @Test
     protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        createValidator = new CreateValidator(new DepositValidator(null, bank), bank);
-
+        createValidator.setNextHandler(new DepositValidator(bank));
         bank.createSavings("00000000", 0);
 
         assertTrue(createValidator.handle("deposit 00000000 2500"));
