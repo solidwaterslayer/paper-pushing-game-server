@@ -116,7 +116,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void withdraw_when_greater_than_balance_should_create_0_balance() {
+    protected void withdraw_when_greater_than_balance_should_withdraw_amount_equal_to_balance() {
         checkingDepositAmount = 300;
         checkingWithdrawAmount = 1000;
         savingsDepositAmount = 400;

@@ -51,18 +51,62 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    void withdraw_transaction_should_be_process() {
+    protected void withdraw_checking_transaction_when_withdraw_amount_is_less_than_balance_should_process() {
         double checkingWithdrawAmount = 200;
+
+        withdrawProcessor.handle(String.format("withdraw %s %f", CHECKING_ID, checkingWithdrawAmount));
+
+        assertEquals(CHECKING_DEPOSIT_AMOUNT - checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());
+    }
+
+    @Test
+    protected void withdraw_savings_transaction_when_withdraw_amount_is_less_than_balance_should_process() {
         double savingsWithdrawAmount = 300;
-        double cdWithdrawAmount = 2000;
+
+        withdrawProcessor.handle(String.format("withdraw %s %f", SAVINGS_ID, savingsWithdrawAmount));
+
+        assertEquals(SAVINGS_DEPOSIT_AMOUNT - savingsWithdrawAmount, bank.getAccount(SAVINGS_ID).getBalance());
+    }
+
+    @Test
+    protected void withdraw_transaction_when_withdraw_amount_is_equal_to_balance_should_process() {
+        double minBalanceFee = bank.getMinBalanceFee();
+        int months = 12;
+        double checkingWithdrawAmount = passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months);
+        double savingsWithdrawAmount = passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months);
+        double cdWithdrawAmount = passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months);
+
+
+        bank.passTime(months);
+
+
+        assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());
+        withdrawProcessor.handle(String.format("withdraw %s %.20f", CHECKING_ID, checkingWithdrawAmount));
+
+        assertEquals(savingsWithdrawAmount, bank.getAccount(SAVINGS_ID).getBalance());
+        withdrawProcessor.handle(String.format("withdraw %s %.20f", SAVINGS_ID, savingsWithdrawAmount));
+
+        assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID).getBalance());
+        withdrawProcessor.handle(String.format("withdraw %s %.20f", CD_ID, cdWithdrawAmount));
+
+        assertEquals(0, bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(0, bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(0, bank.getAccount(CD_ID).getBalance());
+    }
+
+    @Test
+    protected void withdraw_transaction_when_withdraw_amount_is_greater_than_balance_should_withdraw_amount_equal_to_balance() {
+        double checkingWithdrawAmount = 1000;
+        double savingsWithdrawAmount = 2000;
+        double cdWithdrawAmount = 3000;
 
         bank.passTime(12);
         withdrawProcessor.handle(String.format("withdraw %s %f", CHECKING_ID, checkingWithdrawAmount));
         withdrawProcessor.handle(String.format("withdraw %s %f", SAVINGS_ID, savingsWithdrawAmount));
         withdrawProcessor.handle(String.format("withdraw %s %f", CD_ID, cdWithdrawAmount));
 
-        assertEquals(passTime(APR, bank.getMinBalanceFee(), AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, 12) - checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(passTime(APR, bank.getMinBalanceFee(), AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, 12) - savingsWithdrawAmount, bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(0, bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(0, bank.getAccount(SAVINGS_ID).getBalance());
         assertEquals(0, bank.getAccount(CD_ID).getBalance());
     }
 }

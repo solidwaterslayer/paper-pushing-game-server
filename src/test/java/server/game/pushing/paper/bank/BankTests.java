@@ -126,7 +126,7 @@ public class BankTests {
     }
 
     @Test
-    protected void transfer_when_greater_than_balance_should_transfer_balance() {
+    protected void transfer_when_greater_than_balance_should_transfer_amount_equal_to_balance() {
         savingsDepositAmount = 100;
         transferAmount = 1000;
 

@@ -38,7 +38,7 @@ public class CreateProcessorTests {
     }
 
     @Test
-    protected void create_checking_transaction_should_be_process() {
+    protected void create_checking_transaction_should_process() {
         createProcessor.handle(String.format("create checking %s %f", CHECKING_ID, APR));
 
         assertEquals(AccountType.Checking, bank.getAccount(CHECKING_ID).getAccountType());
@@ -48,7 +48,7 @@ public class CreateProcessorTests {
     }
 
     @Test
-    protected void create_savings_transaction_should_be_process() {
+    protected void create_savings_transaction_should_process() {
         createProcessor.handle(String.format("create savings %s %f", SAVINGS_ID, APR));
 
         assertEquals(AccountType.Savings, bank.getAccount(SAVINGS_ID).getAccountType());
@@ -58,7 +58,7 @@ public class CreateProcessorTests {
     }
 
     @Test
-    protected void create_cd_transaction_should_be_process() {
+    protected void create_cd_transaction_should_process() {
         createProcessor.handle(String.format("create cd %s %f %f", CD_ID, APR, INITIAL_CD_BALANCE));
 
         assertEquals(AccountType.CD, bank.getAccount(CD_ID).getAccountType());
