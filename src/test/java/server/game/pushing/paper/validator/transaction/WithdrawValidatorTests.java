@@ -41,7 +41,7 @@ public class WithdrawValidatorTests {
 
     @Test
     protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        withdrawValidator.setNextHandler(new TransferValidator(bank));
+        withdrawValidator.setNext(new TransferValidator(bank));
         bank.createSavings("00000000", 0);
         bank.createChecking("00000001", 0);
 

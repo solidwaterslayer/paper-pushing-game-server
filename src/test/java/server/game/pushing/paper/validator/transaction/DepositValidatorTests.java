@@ -35,7 +35,7 @@ public class DepositValidatorTests {
 
     @Test
     protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        depositValidator.setNextHandler(new WithdrawValidator(bank));
+        depositValidator.setNext(new WithdrawValidator(bank));
         bank.createSavings("00000000", 0);
         bank.createChecking("00000001", 0);
 

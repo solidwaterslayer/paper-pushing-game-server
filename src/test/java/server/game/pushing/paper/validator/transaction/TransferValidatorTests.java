@@ -47,7 +47,7 @@ public class TransferValidatorTests {
 
     @Test
     protected void transfer_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        transferValidator.setNextHandler(new PassTimeValidator(bank));
+        transferValidator.setNext(new PassTimeValidator(bank));
         bank.createSavings("00000000", 0);
         bank.createChecking("00000001", 0);
 

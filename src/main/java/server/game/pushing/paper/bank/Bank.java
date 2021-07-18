@@ -1,5 +1,6 @@
 package server.game.pushing.paper.bank;
 
+import org.springframework.stereotype.Component;
 import server.game.pushing.paper.bank.account.*;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+@Component
 public class Bank {
     protected Map<String, Account> accounts;
     protected double minBalanceFee;

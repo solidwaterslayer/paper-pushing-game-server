@@ -19,7 +19,7 @@ public class CreateValidatorTests {
 
     @Test
     protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        createValidator.setNextHandler(new DepositValidator(bank));
+        createValidator.setNext(new DepositValidator(bank));
         bank.createSavings("00000000", 0);
 
         assertTrue(createValidator.handle("deposit 00000000 2500"));

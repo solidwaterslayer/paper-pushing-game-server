@@ -1,9 +1,11 @@
 package server.game.pushing.paper.processor.transaction;
 
-import server.game.pushing.paper.TransactionHandler;
+import server.game.pushing.paper.TransactionChain;
 import server.game.pushing.paper.bank.Bank;
 
-public class CreateProcessor extends TransactionHandler {
+import static java.lang.Double.parseDouble;
+
+public class CreateProcessor extends TransactionChain {
     public CreateProcessor(Bank bank) {
         super(bank);
     }
@@ -15,7 +17,7 @@ public class CreateProcessor extends TransactionHandler {
                 || transactionArguments[1].equalsIgnoreCase("savings")
                 || transactionArguments[1].equalsIgnoreCase("cd"))) {
             String id = transactionArguments[2];
-            double apr = Double.parseDouble(transactionArguments[3]);
+            double apr = parseDouble(transactionArguments[3]);
 
             switch (transactionArguments[1].toLowerCase()) {
                 case "checking":
@@ -25,12 +27,12 @@ public class CreateProcessor extends TransactionHandler {
                     bank.createSavings(id, apr);
                     break;
                 default:
-                    bank.createCD(id, apr, Double.parseDouble(transactionArguments[4]));
+                    bank.createCD(id, apr, parseDouble(transactionArguments[4]));
             }
 
             return true;
         } else {
-            return nextHandler != null && nextHandler.handle(transactionArguments);
+            return next != null && next.handle(transactionArguments);
         }
     }
 }

@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.bank.Bank;
 import server.game.pushing.paper.bank.account.AccountType;
-import server.game.pushing.paper.validator.transaction.CreateValidator;
-import server.game.pushing.paper.validator.transaction.DepositValidator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +27,7 @@ public class CreateProcessorTests {
     protected void create_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
         double savingsDepositAmount = 2500;
 
-        createProcessor.setNextHandler(new DepositProcessor(bank));
+        createProcessor.setNext(new DepositProcessor(bank));
         createProcessor.handle(String.format("create savings %s %f", SAVINGS_ID, APR));
         assertTrue(createProcessor.handle(String.format("deposit %s %f", SAVINGS_ID, savingsDepositAmount)));
 

@@ -41,7 +41,7 @@ public class WithdrawProcessorTests {
     protected void withdraw_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
         double transferAmount = 400;
 
-        withdrawProcessor.setNextHandler(new TransferProcessor(bank));
+        withdrawProcessor.setNext(new TransferProcessor(bank));
         assertTrue(withdrawProcessor.handle(String.format("transfer %s %s %f", SAVINGS_ID, CHECKING_ID, transferAmount)));
 
         assertEquals(SAVINGS_DEPOSIT_AMOUNT - transferAmount, bank.getAccount(SAVINGS_ID).getBalance());

@@ -49,7 +49,7 @@ public class TransferProcessorTests {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = 60;
 
-        transferProcessor.setNextHandler(new PassTimeProcessor(bank));
+        transferProcessor.setNext(new PassTimeProcessor(bank));
         assertTrue(transferProcessor.handle(String.format("pass time %d", months)));
 
         assertEquals(passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months), bank.getAccount(CHECKING_ID_0).getBalance());

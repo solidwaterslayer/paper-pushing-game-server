@@ -37,7 +37,7 @@ public class PassTimeProcessorTests {
     protected void pass_time_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
         String id = "10000010";
 
-        passTimeProcessor.setNextHandler(new CreateProcessor(bank));
+        passTimeProcessor.setNext(new CreateProcessor(bank));
         assertTrue(passTimeProcessor.handle(String.format("create cd %s %f %f", id, APR, INITIAL_CD_BALANCE)));
 
         assertEquals(AccountType.CD, bank.getAccount(id).getAccountType());

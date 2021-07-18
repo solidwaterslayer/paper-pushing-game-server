@@ -31,7 +31,7 @@ public class DepositProcessorTests {
         double savingsDepositAmount = 2500;
         double savingsWithdrawAmount = 1000;
 
-        depositProcessor.setNextHandler(new WithdrawProcessor(bank));
+        depositProcessor.setNext(new WithdrawProcessor(bank));
         depositProcessor.handle(String.format("deposit %s %f", SAVINGS_ID, savingsDepositAmount));
         assertTrue(depositProcessor.handle(String.format("withdraw %s %f", SAVINGS_ID, savingsWithdrawAmount)));
 
