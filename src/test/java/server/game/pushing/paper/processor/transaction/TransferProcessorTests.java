@@ -10,9 +10,7 @@ import server.game.pushing.paper.bank.account.Savings;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.bank.BankTests.passTime;
 
 public class TransferProcessorTests {
@@ -52,14 +50,14 @@ public class TransferProcessorTests {
         int months = 60;
 
         transferProcessor.setNextHandler(new PassTimeProcessor(bank));
-        transferProcessor.handle(String.format("pass time %d", months));
+        assertTrue(transferProcessor.handle(String.format("pass time %d", months)));
 
         assertEquals(passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months), bank.getAccount(CHECKING_ID_0).getBalance());
         assertEquals(passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months), bank.getAccount(CHECKING_ID_1).getBalance());
         assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months), bank.getAccount(SAVINGS_ID_0).getBalance());
         assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months), bank.getAccount(SAVINGS_ID_1).getBalance());
         assertEquals(passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(CD_ID).getBalance());
-        assertFalse(transferProcessor.handle("create cd 10 10000"));
+        assertFalse(transferProcessor.handle("create cd 10000010 6 6000"));
     }
 
     @Test
@@ -105,7 +103,7 @@ public class TransferProcessorTests {
     @Test
     protected void transfer_from_cd_to_savings_transaction_should_process() {
         int months = 14;
-        double transferAmount = 2000;
+        double transferAmount = INITIAL_CD_BALANCE * 2;
 
         bank.passTime(months);
         transferProcessor.handle(String.format("transfer %s %s %.20f", CD_ID, SAVINGS_ID_1, transferAmount));
@@ -116,10 +114,14 @@ public class TransferProcessorTests {
 
     @Test
     protected void transfer_transaction_when_transaction_amount_is_less_than_or_equal_to_balance_should_process() {
-        double checkingWithdrawAmount = 300;
+        double checkingWithdrawAmount = CHECKING_DEPOSIT_AMOUNT - 100;
         double savingsWithdrawAmount = SAVINGS_DEPOSIT_AMOUNT;
 
+
+        assertEquals(savingsWithdrawAmount, bank.getAccount(SAVINGS_ID_0).getBalance());
         bank.transfer(SAVINGS_ID_0, CHECKING_ID_1, savingsWithdrawAmount);
+
+        assertTrue(checkingWithdrawAmount < bank.getAccount(CHECKING_ID_1).getBalance());
         bank.transfer(CHECKING_ID_1, SAVINGS_ID_0, checkingWithdrawAmount);
 
         assertEquals(SAVINGS_DEPOSIT_AMOUNT - savingsWithdrawAmount + checkingWithdrawAmount, bank.getAccount(SAVINGS_ID_0).getBalance());
@@ -128,8 +130,9 @@ public class TransferProcessorTests {
 
     @Test
     protected void transfer_transaction_when_transfer_amount_is_greater_than_balance_should_transfer_amount_equal_to_balance() {
-        double transferAmount = SAVINGS_DEPOSIT_AMOUNT + 500;
+        double transferAmount = 1000;
 
+        assertTrue(transferAmount > bank.getAccount(SAVINGS_ID_0).getBalance());
         bank.transfer(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount);
 
         assertEquals(0, bank.getAccount(SAVINGS_ID_0).getBalance());

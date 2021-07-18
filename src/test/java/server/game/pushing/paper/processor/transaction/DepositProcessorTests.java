@@ -8,8 +8,7 @@ import server.game.pushing.paper.bank.account.Savings;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DepositProcessorTests {
     protected DepositProcessor depositProcessor;
@@ -34,7 +33,7 @@ public class DepositProcessorTests {
 
         depositProcessor.setNextHandler(new WithdrawProcessor(bank));
         depositProcessor.handle(String.format("deposit %s %f", SAVINGS_ID, savingsDepositAmount));
-        depositProcessor.handle(String.format("withdraw %s %f", SAVINGS_ID, savingsWithdrawAmount));
+        assertTrue(depositProcessor.handle(String.format("withdraw %s %f", SAVINGS_ID, savingsWithdrawAmount)));
 
         assertEquals(savingsDepositAmount - savingsWithdrawAmount, bank.getAccount(SAVINGS_ID).getBalance());
         assertFalse(depositProcessor.handle(String.format("transfer %s %s %f", SAVINGS_ID, CHECKING_ID, 400.0f)));

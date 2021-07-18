@@ -10,8 +10,7 @@ import server.game.pushing.paper.bank.account.Savings;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.bank.BankTests.passTime;
 
 public class WithdrawProcessorTests {
@@ -21,9 +20,9 @@ public class WithdrawProcessorTests {
     protected final String SAVINGS_ID = "00000001";
     protected final String CD_ID = "00000010";
     protected final double APR = 8;
-    protected final double CHECKING_DEPOSIT_AMOUNT = 500;
+    protected final double CHECKING_DEPOSIT_AMOUNT = 300;
     protected final double SAVINGS_DEPOSIT_AMOUNT = 700;
-    protected final double INITIAL_CD_BALANCE = 700;
+    protected final double INITIAL_CD_BALANCE = 7000;
 
     @BeforeEach
     void setUp() {
@@ -43,7 +42,7 @@ public class WithdrawProcessorTests {
         double transferAmount = 400;
 
         withdrawProcessor.setNextHandler(new TransferProcessor(bank));
-        withdrawProcessor.handle(String.format("transfer %s %s %f", SAVINGS_ID, CHECKING_ID, transferAmount));
+        assertTrue(withdrawProcessor.handle(String.format("transfer %s %s %f", SAVINGS_ID, CHECKING_ID, transferAmount)));
 
         assertEquals(SAVINGS_DEPOSIT_AMOUNT - transferAmount, bank.getAccount(SAVINGS_ID).getBalance());
         assertEquals(CHECKING_DEPOSIT_AMOUNT + transferAmount, bank.getAccount(CHECKING_ID).getBalance());
@@ -76,9 +75,7 @@ public class WithdrawProcessorTests {
         double savingsWithdrawAmount = passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months);
         double cdWithdrawAmount = passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months);
 
-
         bank.passTime(months);
-
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());
         withdrawProcessor.handle(String.format("withdraw %s %.20f", CHECKING_ID, checkingWithdrawAmount));
@@ -96,13 +93,19 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void withdraw_transaction_when_withdraw_amount_is_greater_than_balance_should_withdraw_amount_equal_to_balance() {
-        double checkingWithdrawAmount = 1000;
-        double savingsWithdrawAmount = 2000;
-        double cdWithdrawAmount = 3000;
+        double checkingWithdrawAmount = 400;
+        double savingsWithdrawAmount = 1000;
+        double cdWithdrawAmount = INITIAL_CD_BALANCE * 2;
 
         bank.passTime(12);
+
+        assertTrue(checkingWithdrawAmount > bank.getAccount(CHECKING_ID).getBalance());
         withdrawProcessor.handle(String.format("withdraw %s %f", CHECKING_ID, checkingWithdrawAmount));
+
+        assertTrue(savingsWithdrawAmount > bank.getAccount(SAVINGS_ID).getBalance());
         withdrawProcessor.handle(String.format("withdraw %s %f", SAVINGS_ID, savingsWithdrawAmount));
+
+        assertTrue(cdWithdrawAmount > bank.getAccount(CD_ID).getBalance());
         withdrawProcessor.handle(String.format("withdraw %s %f", CD_ID, cdWithdrawAmount));
 
         assertEquals(0, bank.getAccount(CHECKING_ID).getBalance());

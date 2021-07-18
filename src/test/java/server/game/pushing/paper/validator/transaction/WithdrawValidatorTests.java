@@ -24,7 +24,7 @@ public class WithdrawValidatorTests {
     protected final double APR = 0.2;
     protected final double INITIAL_CD_BALANCE = 9000;
 
-    protected final double CD_WITHDRAW_AMOUNT = INITIAL_CD_BALANCE + 1000;
+    protected final double CD_WITHDRAW_AMOUNT = INITIAL_CD_BALANCE * 2;
 
     @BeforeEach
     protected void setUp() {

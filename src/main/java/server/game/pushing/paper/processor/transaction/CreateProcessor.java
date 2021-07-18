@@ -10,23 +10,25 @@ public class CreateProcessor extends TransactionHandler {
 
     @Override
     public boolean handle(String[] transactionArguments) {
-        if (transactionArguments[0].equalsIgnoreCase("create")) {
+        if (transactionArguments[0].equalsIgnoreCase("create")
+                && (transactionArguments[1].equalsIgnoreCase("checking")
+                || transactionArguments[1].equalsIgnoreCase("savings")
+                || transactionArguments[1].equalsIgnoreCase("cd"))) {
             String id = transactionArguments[2];
             double apr = Double.parseDouble(transactionArguments[3]);
 
             switch (transactionArguments[1].toLowerCase()) {
                 case "checking":
                     bank.createChecking(id, apr);
-                    return true;
+                    break;
                 case "savings":
                     bank.createSavings(id, apr);
-                    return true;
-                case "cd":
-                    bank.createCD(id, apr, Double.parseDouble(transactionArguments[4]));
-                    return true;
+                    break;
                 default:
-                    return false;
+                    bank.createCD(id, apr, Double.parseDouble(transactionArguments[4]));
             }
+
+            return true;
         } else {
             return nextHandler != null && nextHandler.handle(transactionArguments);
         }

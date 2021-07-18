@@ -28,16 +28,20 @@ public class PassTimeValidatorTests {
 
     @Test
     protected void transaction_should_contain_the_transaction_type_pass_time_as_the_first_and_second_argument() {
+        int months = 10;
+
+
         assertFalse(passTimeValidator.handle(""));
-        assertFalse(passTimeValidator.handle("  10"));
+        assertFalse(passTimeValidator.handle(String.format("  %d", months)));
 
         assertFalse(passTimeValidator.handle("pass"));
-        assertFalse(passTimeValidator.handle("pass  10"));
-        assertFalse(passTimeValidator.handle("pass nuke 10"));
-        assertFalse(passTimeValidator.handle("  time 10"));
-        assertFalse(passTimeValidator.handle("nuke time 10"));
+        assertFalse(passTimeValidator.handle(String.format("pass  %d", months)));
+        assertFalse(passTimeValidator.handle(String.format("pass nuke %d", months)));
 
-        assertTrue(passTimeValidator.handle("pass time 10"));
+        assertFalse(passTimeValidator.handle(String.format(" time %d", months)));
+        assertFalse(passTimeValidator.handle(String.format("nuke time %d", months)));
+
+        assertTrue(passTimeValidator.handle(String.format("pass time %d", months)));
     }
 
     @Test
@@ -67,14 +71,18 @@ public class PassTimeValidatorTests {
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        assertTrue(passTimeValidator.handle("pAss time 20"));
-        assertTrue(passTimeValidator.handle("pass tiMe 20"));
-        assertTrue(passTimeValidator.handle("pAss tiMe 20"));
+        int months = 20;
+
+        assertTrue(passTimeValidator.handle(String.format("pAss time %d", months)));
+        assertTrue(passTimeValidator.handle(String.format("pass tiMe %d", months)));
+        assertTrue(passTimeValidator.handle(String.format("pAss tiMe %d", months)));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        assertTrue(passTimeValidator.handle("pass time 30 nuke"));
-        assertTrue(passTimeValidator.handle("pass time 30 38 38 uFjh%d fdu 8 3 o2 j djf fj8 2"));
+        int months = 30;
+
+        assertTrue(passTimeValidator.handle(String.format("pass time %d nuke", months)));
+        assertTrue(passTimeValidator.handle(String.format("pass time %d 38 38 uFjH$d fdu 8 3 o2 j djf fj8 2", months)));
     }
 }

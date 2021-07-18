@@ -17,7 +17,7 @@ public class CreateProcessorTests {
     protected final String SAVINGS_ID = "00000001";
     protected final String CD_ID = "00000010";
     protected final double APR = 10;
-    protected final double INITIAL_CD_BALANCE = 1000;
+    protected final double INITIAL_CD_BALANCE = 8000;
 
     @BeforeEach
     protected void setUp() {
@@ -31,7 +31,7 @@ public class CreateProcessorTests {
 
         createProcessor.setNextHandler(new DepositProcessor(bank));
         createProcessor.handle(String.format("create savings %s %f", SAVINGS_ID, APR));
-        createProcessor.handle(String.format("deposit %s %f", SAVINGS_ID, savingsDepositAmount));
+        assertTrue(createProcessor.handle(String.format("deposit %s %f", SAVINGS_ID, savingsDepositAmount)));
 
         assertEquals(savingsDepositAmount, bank.getAccount(SAVINGS_ID).getBalance());
         assertFalse(createProcessor.handle(String.format("withdraw %s %f", SAVINGS_ID, 1000.0f)));

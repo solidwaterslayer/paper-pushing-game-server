@@ -77,9 +77,13 @@ public class AccountTests {
     @Test
     protected void withdraw_checking_when_less_than_balance_should_be_possible() {
         checkingDepositAmount = 500;
-        checkingWithdrawAmount = 300;
+        checkingWithdrawAmount = checkingDepositAmount - 100;
+
 
         checking.deposit(checkingDepositAmount);
+
+
+        assertTrue(checkingWithdrawAmount < checking.getBalance());
         checking.withdraw(checkingWithdrawAmount);
 
         assertEquals(checkingDepositAmount - checkingWithdrawAmount, checking.getBalance());
@@ -88,9 +92,13 @@ public class AccountTests {
     @Test
     protected void withdraw_savings_when_less_than_balance_should_be_possible() {
         savingsDepositAmount = 700;
-        savingsWithdrawAmount = 400;
+        savingsWithdrawAmount = savingsDepositAmount - 200;
+
 
         savings.deposit(savingsDepositAmount);
+
+
+        assertTrue(savingsWithdrawAmount < savings.getBalance());
         savings.withdraw(savingsWithdrawAmount);
 
         assertEquals(savingsDepositAmount - savingsWithdrawAmount, savings.getBalance());
@@ -100,9 +108,9 @@ public class AccountTests {
     protected void withdraw_when_equal_to_balance_should_be_possible() {
         int months = 12;
         checkingDepositAmount = 300;
-        checkingWithdrawAmount = 300;
+        checkingWithdrawAmount = checkingDepositAmount;
         savingsDepositAmount = 400;
-        savingsWithdrawAmount = 400;
+        savingsWithdrawAmount = savingsDepositAmount;
         cdWithdrawAmount = applyAPR(CD_APR, INITIAL_CD_BALANCE, months * 4);
 
         for (int i = 0; i < months; i++) {
@@ -118,9 +126,9 @@ public class AccountTests {
     @Test
     protected void withdraw_when_greater_than_balance_should_withdraw_amount_equal_to_balance() {
         checkingDepositAmount = 300;
-        checkingWithdrawAmount = 1000;
+        checkingWithdrawAmount = 400;
         savingsDepositAmount = 400;
-        savingsWithdrawAmount = 700;
+        savingsWithdrawAmount = 1000;
         cdWithdrawAmount = 2000;
 
         for (int i = 0; i < 12; i++) {
