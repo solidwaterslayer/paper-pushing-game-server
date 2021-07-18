@@ -115,29 +115,6 @@ public class BankTests {
     }
 
     @Test
-    protected void transfer_when_equal_to_balance_should_be_possible() {
-        checkingDepositAmount = 500;
-
-        bank.deposit(CHECKING_ID_1, checkingDepositAmount);
-        bank.transfer(CHECKING_ID_1, SAVINGS_ID_0, checkingDepositAmount);
-
-        assertEquals(0, bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(checkingDepositAmount, bank.getAccount(SAVINGS_ID_0).getBalance());
-    }
-
-    @Test
-    protected void transfer_when_greater_than_balance_should_transfer_amount_equal_to_balance() {
-        savingsDepositAmount = 100;
-        transferAmount = 1000;
-
-        bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
-        bank.transfer(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount);
-
-        assertEquals(0, bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(savingsDepositAmount, bank.getAccount(SAVINGS_ID_1).getBalance());
-    }
-
-    @Test
     protected void transfer_from_checking_to_checking_should_be_possible() {
         checkingDepositAmount = 500;
         transferAmount = 200;
@@ -195,6 +172,34 @@ public class BankTests {
 
         assertEquals(0, bank.getAccount(CD_ID).getBalance());
         assertEquals(applyAPR(APR, savingsDepositAmount, 12) + applyAPR(APR, INITIAL_CD_BALANCE, 12 * 4), bank.getAccount(SAVINGS_ID_0).getBalance());
+    }
+
+    @Test
+    protected void transfer_when_less_than_or_equal_to_balance_should_be_possible() {
+        checkingDepositAmount = 500;
+        savingsDepositAmount = 700;
+        checkingWithdrawAmount = 300;
+        savingsWithdrawAmount = savingsDepositAmount;
+
+        bank.deposit(CHECKING_ID_1, checkingDepositAmount);
+        bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
+        bank.transfer(SAVINGS_ID_0, CHECKING_ID_1, savingsWithdrawAmount);
+        bank.transfer(CHECKING_ID_1, SAVINGS_ID_0, checkingWithdrawAmount);
+
+        assertEquals(savingsDepositAmount - savingsWithdrawAmount + checkingWithdrawAmount, bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(checkingDepositAmount + savingsWithdrawAmount - checkingWithdrawAmount, bank.getAccount(CHECKING_ID_1).getBalance());
+    }
+
+    @Test
+    protected void transfer_when_greater_than_balance_should_transfer_amount_equal_to_balance() {
+        savingsDepositAmount = 100;
+        transferAmount = savingsDepositAmount + 900;
+
+        bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
+        bank.transfer(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount);
+
+        assertEquals(0, bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(savingsDepositAmount, bank.getAccount(SAVINGS_ID_1).getBalance());
     }
 
     @Test
@@ -496,14 +501,20 @@ public class BankTests {
         int months = 12;
         cdWithdrawAmount = passTime(APR, bank.getMinBalanceFee(), AccountType.CD, INITIAL_CD_BALANCE, months);
 
+
         bank.passTime(months);
 
-        assertFalse(bank.isWithdrawValid(CD_ID, cdWithdrawAmount - 500));
+
+        assertFalse(bank.isWithdrawValid(CD_ID, -10000));
+        assertFalse(bank.isWithdrawValid(CD_ID, 0));
+        assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount + 9999999999999999999999999999999999999.99999999999999999999f));
+
+        assertFalse(bank.isWithdrawValid(CD_ID, cdWithdrawAmount - 5000));
         assertFalse(bank.isWithdrawValid(CD_ID, cdWithdrawAmount - 100));
         assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID).getBalance());
         assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount));
         assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount + 100));
-        assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount + 500));
+        assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount + 5000));
     }
 
     @Test

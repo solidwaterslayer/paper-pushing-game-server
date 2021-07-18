@@ -11,6 +11,7 @@ import server.game.pushing.paper.bank.account.Savings;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static server.game.pushing.paper.bank.BankTests.passTime;
 
@@ -25,10 +26,9 @@ public class TransferProcessorTests {
     protected final String CD_ID = "00000010";
     protected final double APR = 7;
     protected final double CHECKING_DEPOSIT_AMOUNT = 1000;
-    protected final double SAVINGS_DEPOSIT_AMOUNT = 1000;
+    protected final double SAVINGS_DEPOSIT_AMOUNT = 500;
     protected final double INITIAL_CD_BALANCE = 1000;
 
-    // TODO: add transfer mechanics tests
     @BeforeEach
     protected void setUp() {
         bank = new Bank(Arrays.asList(
@@ -112,5 +112,27 @@ public class TransferProcessorTests {
 
         assertEquals(0, bank.getAccount(CD_ID).getBalance());
         assertEquals(passTime(APR, bank.getMinBalanceFee(), AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months) + passTime(APR, bank.getMinBalanceFee(), AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(SAVINGS_ID_1).getBalance());
+    }
+
+    @Test
+    protected void transfer_transaction_when_transaction_amount_is_less_than_or_equal_to_balance_should_process() {
+        double checkingWithdrawAmount = 300;
+        double savingsWithdrawAmount = SAVINGS_DEPOSIT_AMOUNT;
+
+        bank.transfer(SAVINGS_ID_0, CHECKING_ID_1, savingsWithdrawAmount);
+        bank.transfer(CHECKING_ID_1, SAVINGS_ID_0, checkingWithdrawAmount);
+
+        assertEquals(SAVINGS_DEPOSIT_AMOUNT - savingsWithdrawAmount + checkingWithdrawAmount, bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(CHECKING_DEPOSIT_AMOUNT + savingsWithdrawAmount - checkingWithdrawAmount, bank.getAccount(CHECKING_ID_1).getBalance());
+    }
+
+    @Test
+    protected void transfer_transaction_when_transfer_amount_is_greater_than_balance_should_transfer_amount_equal_to_balance() {
+        double transferAmount = SAVINGS_DEPOSIT_AMOUNT + 500;
+
+        bank.transfer(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount);
+
+        assertEquals(0, bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(SAVINGS_DEPOSIT_AMOUNT * 2, bank.getAccount(SAVINGS_ID_1).getBalance());
     }
 }
