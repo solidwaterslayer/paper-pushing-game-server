@@ -42,14 +42,14 @@ public class PassTimeValidatorTests {
     }
 
     @Test
-    protected void transaction_should_contain_a_pass_time_as_the_third_argument() {
+    protected void transaction_should_contain_months_as_the_third_argument() {
         assertFalse(passTimeValidator.handle("pass time"));
         assertFalse(passTimeValidator.handle("pass time T^*23"));
         assertTrue(passTimeValidator.handle("pass time 50"));
     }
 
     @Test
-    protected void transaction_should_contain_a_pass_time_between_1_and_60_inclusive() {
+    protected void transaction_should_contain_months_between_1_and_60_inclusive() {
         assertFalse(passTimeValidator.handle("pass time -10"));
 
         assertFalse(passTimeValidator.handle("pass time 0"));
