@@ -22,7 +22,9 @@ public class WithdrawValidatorTests {
     protected final String SAVINGS_ID = "00000001";
     protected final String CD_ID = "00000010";
     protected final double APR = 0.2;
-    protected final double INITIAL_CD_BALANCE = 5000;
+    protected final double INITIAL_CD_BALANCE = 9000;
+
+    protected final double CD_WITHDRAW_AMOUNT = INITIAL_CD_BALANCE + 1000;
 
     @BeforeEach
     protected void setUp() {
@@ -71,7 +73,7 @@ public class WithdrawValidatorTests {
 
         assertFalse(withdrawValidator.handle(String.format("withdraw %s 7g8Y&*", CD_ID)));
         assertFalse(withdrawValidator.handle(String.format("withdraw %s", CD_ID)));
-        assertTrue(withdrawValidator.handle(String.format("withdraw %s %f", CD_ID, INITIAL_CD_BALANCE + 1000)));
+        assertTrue(withdrawValidator.handle(String.format("withdraw %s %f", CD_ID, CD_WITHDRAW_AMOUNT)));
     }
 
     @Test
@@ -136,7 +138,7 @@ public class WithdrawValidatorTests {
     @Test
     protected void withdraw_cd_before_12_month_should_be_possible() {
         for (int i = 0; i < 24; i++) {
-            assertEquals(i >= 12, withdrawValidator.handle(String.format("withdraw %s %f", CD_ID, INITIAL_CD_BALANCE + 1000)));
+            assertEquals(i >= 12, withdrawValidator.handle(String.format("withdraw %s %f", CD_ID, CD_WITHDRAW_AMOUNT)));
 
             bank.passTime(1);
         }
@@ -160,16 +162,16 @@ public class WithdrawValidatorTests {
     @Test
     protected void transaction_should_be_case_insensitive() {
         bank.passTime(12);
-        assertTrue(withdrawValidator.handle("wiThdRAw 00000000 400"));
-        assertTrue(withdrawValidator.handle("wITHdrAw 00000001 1000"));
-        assertTrue(withdrawValidator.handle("WITHDRAW 00000010 100000000000000"));
+        assertTrue(withdrawValidator.handle(String.format("wiThdRAw %s %f", CHECKING_ID, 400.0f)));
+        assertTrue(withdrawValidator.handle(String.format("wITHdrAw %s %f", SAVINGS_ID, 1000.0f)));
+        assertTrue(withdrawValidator.handle(String.format("WITHDRAW %s %f", CD_ID, CD_WITHDRAW_AMOUNT)));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
         bank.passTime(12);
-        assertTrue(withdrawValidator.handle("withdraw 00000000 400 nuke"));
-        assertTrue(withdrawValidator.handle("withdraw 00000001 1000 0 0 0 0 0 0 0 0"));
-        assertTrue(withdrawValidator.handle("withdraw 00000010 1000000 0  0  0   0 0     0     "));
+        assertTrue(withdrawValidator.handle(String.format("withdraw %s %f nuke", CHECKING_ID, 400.0f)));
+        assertTrue(withdrawValidator.handle(String.format("withdraw %s %f 0 0 0 0 0 0", SAVINGS_ID, 1000.0f)));
+        assertTrue(withdrawValidator.handle(String.format("withdraw %s %f 0 0    0 0  0 0  0 0    0 0 0 0 0  0 0   0 0 0 0", CD_ID, CD_WITHDRAW_AMOUNT)));
     }
 }
