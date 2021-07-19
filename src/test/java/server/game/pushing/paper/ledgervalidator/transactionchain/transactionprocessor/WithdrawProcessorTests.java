@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WithdrawProcessorTests {
     protected WithdrawProcessor withdrawProcessor;
     protected Bank bank;
+
     protected final String CHECKING_ID = "00000000";
     protected final String SAVINGS_ID = "00000001";
     protected final String CD_ID = "00000010";

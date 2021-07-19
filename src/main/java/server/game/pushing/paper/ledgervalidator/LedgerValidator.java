@@ -35,7 +35,7 @@ public class LedgerValidator {
         this.bank = bank;
     }
 
-    public List<String> exchange(List<String> invalidLedger) {
+    public List<String> validate(List<String> invalidLedger) {
         ValidLedger validLedger = new ValidLedger(bank);
 
         for (String transaction : invalidLedger) {

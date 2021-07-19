@@ -2,6 +2,7 @@ package server.game.pushing.paper.ledgervalidator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.game.pushing.paper.ledgervalidator.bank.Bank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,21 +11,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateLedgerValidatorTests {
     protected LedgerValidator ledgerValidator;
-    protected List<String> ledger;
+    protected List<String> invalidLedger;
     protected final String CHECKING_ID = "00000010";
     protected final double APR = 5;
 
     @BeforeEach
     protected void setUp() {
         ledgerValidator = new LedgerValidator(new Bank());
-        ledger = new ArrayList<>();
+        invalidLedger = new ArrayList<>();
     }
 
     @Test
     protected void create_checking_ledger_should_write_account_attributes_in_transaction_history() {
-        ledger.add(String.format("create checking %s %f", CHECKING_ID, APR));
+        invalidLedger.add(String.format("create checking %s %f", CHECKING_ID, APR));
 
-        List<String> transactionHistoryexchanger.exchange(ledger);
+        List<String> transactionHistoryexchanger.exchange(invalidLedger);
 
         assertEquals(AccountType.Checking, bank.getAccount(CHECKING_ID).getAccountType());
         assertEquals(CHECKING_ID, bank.getAccount(CHECKING_ID).getID());
@@ -34,7 +35,7 @@ public class CreateLedgerValidatorTests {
 
     @Test
     protected void create_savings_transaction_should_process() {
-        ledger.add(String.format("create savings %s %f", SAVINGS_ID, APR));
+        invalidLedger.add(String.format("create savings %s %f", SAVINGS_ID, APR));
 
         assertEquals(AccountType.Savings, bank.getAccount(SAVINGS_ID).getAccountType());
         assertEquals(SAVINGS_ID, bank.getAccount(SAVINGS_ID).getID());
@@ -44,7 +45,7 @@ public class CreateLedgerValidatorTests {
 
     @Test
     protected void create_cd_transaction_should_process() {
-        ledger.add(String.format("create cd %s %f %f", CD_ID, APR, INITIAL_CD_BALANCE));
+        invalidLedger.add(String.format("create cd %s %f %f", CD_ID, APR, INITIAL_CD_BALANCE));
 
         assertEquals(AccountType.CD, bank.getAccount(CD_ID).getAccountType());
         assertEquals(CD_ID, bank.getAccount(CD_ID).getID());

@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DepositProcessorTests {
     protected DepositProcessor depositProcessor;
     protected Bank bank;
+
     protected final String CHECKING_ID = "00000000";
     protected final String SAVINGS_ID = "00000001";
     protected final double APR = 9;

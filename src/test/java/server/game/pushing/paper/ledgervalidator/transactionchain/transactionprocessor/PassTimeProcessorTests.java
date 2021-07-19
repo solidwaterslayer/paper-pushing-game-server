@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class PassTimeProcessorTests {
     protected PassTimeProcessor passTimeProcessor;
     protected Bank bank;
+
     protected final String CHECKING_ID = "00000000";
     protected final String SAVINGS_ID = "00000001";
     protected final String CD_ID = "00000010";
