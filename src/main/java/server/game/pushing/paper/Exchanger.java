@@ -11,13 +11,11 @@ import java.util.List;
 
 import static server.game.pushing.paper.TransactionChain.createTransactionChain;
 
-@Component
 public class Exchanger {
     protected TransactionChain validator;
     protected TransactionChain processor;
     protected Bank bank;
 
-    @Autowired
     public Exchanger(Bank bank) {
         validator = createTransactionChain(Arrays.asList(
                 new CreateValidator(bank),
@@ -35,6 +33,7 @@ public class Exchanger {
                 new PassTimeProcessor(bank),
                 null
         ));
+        this.bank = bank;
     }
 
     public List<String> exchange(List<String> ledger) {

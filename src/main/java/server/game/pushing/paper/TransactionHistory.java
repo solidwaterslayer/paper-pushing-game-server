@@ -3,6 +3,7 @@ package server.game.pushing.paper;
 import server.game.pushing.paper.bank.Bank;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,8 @@ public class TransactionHistory {
     protected Bank bank;
 
     public TransactionHistory(Bank bank) {
+        transactions = new HashMap<>();
+        transactions.put(null, new ArrayList<>());
         this.bank = bank;
     }
 
