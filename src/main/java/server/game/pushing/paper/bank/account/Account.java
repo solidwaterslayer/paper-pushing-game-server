@@ -30,7 +30,7 @@ public abstract class Account {
 
     @Override
     public String toString() {
-        return String.format("%s %s %.2f %.2f", accountType, ID, balance, APR);
+        return String.format("%s %s %.2f %.2f", accountType, ID, APR, balance);
     }
 
     public void deposit(double depositAmount) {

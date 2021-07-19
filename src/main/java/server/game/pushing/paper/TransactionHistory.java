@@ -2,10 +2,7 @@ package server.game.pushing.paper;
 
 import server.game.pushing.paper.bank.Bank;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TransactionHistory {
     Map<String, List<String>> transactions;
@@ -18,10 +15,14 @@ public class TransactionHistory {
     }
 
     public void addTransaction(String transaction, boolean isTransactionValid) {
+        addTransaction(isTransactionValid, transaction.toLowerCase());
+    }
+
+    protected void addTransaction(boolean isTransactionValid, String transaction) {
         if (isTransactionValid) {
             String[] transactionArguments = transaction.split(" ");
 
-            switch (transactionArguments[0].toLowerCase()) {
+            switch (transactionArguments[0]) {
                 case "create":
                     transactions.put(transactionArguments[2], new ArrayList<>());
                     break;
@@ -35,7 +36,7 @@ public class TransactionHistory {
                     break;
             }
         } else {
-            transactions.get(null).add(transaction);
+            transactions.get(null).add("invalid " + transaction);
         }
     }
 
@@ -47,7 +48,7 @@ public class TransactionHistory {
                 continue;
             }
 
-            transactions.add(bank.getAccount(id).toString());
+            transactions.add(bank.getAccount(id).toString().toLowerCase());
             transactions.addAll(this.transactions.get(id));
         }
         transactions.addAll(this.transactions.get(null));
