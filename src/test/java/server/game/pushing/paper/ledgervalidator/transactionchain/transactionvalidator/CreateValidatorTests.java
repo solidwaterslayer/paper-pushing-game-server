@@ -3,6 +3,7 @@ package server.game.pushing.paper.ledgervalidator.transactionchain.transactionva
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
+import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,10 +29,14 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_contain_the_transaction_type_create_as_the_first_argument() {
+        String accountType = AccountType.Checking.toString().toLowerCase();
+        String id = "00000000";
+        double apr = 0;
+
         assertFalse(createValidator.handle(""));
-        assertFalse(createValidator.handle(" checking 00000000 0"));
-        assertFalse(createValidator.handle("nuke checking 00000000 0"));
-        assertTrue(createValidator.handle("create checking 00000000 0"));
+        assertFalse(createValidator.handle(String.format(" %s %s %f", accountType, id, apr)));
+        assertFalse(createValidator.handle(String.format("nuke %s %s %f", accountType, id, apr)));
+        assertTrue(createValidator.handle(String.format("create %s %s %f", accountType, id, apr)));
     }
 
     @Test
@@ -46,6 +51,12 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_contain_an_unique_8_digit_id_as_the_third_argument() {
+        // TODO: add transaction type enum
+        // TODO: refactor all
+        String transactionType = "create";
+        String accountType = AccountType.Savings.toString().toLowerCase();
+        double apr = 0.1;
+
         bank.createSavings("00000000", 0);
         assertFalse(createValidator.handle("create savings 00000000 0.1"));
 
