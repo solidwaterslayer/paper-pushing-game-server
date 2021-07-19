@@ -1,8 +1,8 @@
 package server.game.pushing.paper;
 
-import server.game.pushing.paper.bank.Bank;
-import server.game.pushing.paper.bank.account.Checking;
-import server.game.pushing.paper.bank.account.Savings;
+import server.game.pushing.paper.ledgervalidator.bank.Bank;
+import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
+import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
