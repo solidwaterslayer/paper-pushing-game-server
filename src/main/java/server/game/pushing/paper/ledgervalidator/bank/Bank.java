@@ -5,10 +5,7 @@ import server.game.pushing.paper.ledgervalidator.bank.account.CD;
 import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
 import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 public class Bank {
     protected Map<String, Account> accounts;
@@ -27,7 +24,7 @@ public class Bank {
     }
 
     protected void initializeBank() {
-        this.accounts = new HashMap<>();
+        this.accounts = new LinkedHashMap<>();
         minBalanceFee = 25;
     }
 

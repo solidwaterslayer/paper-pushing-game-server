@@ -43,12 +43,8 @@ public class ValidLedger {
     public List<String> getTransactions() {
         List<String> transactions = new ArrayList<>();
 
-        for (String id : this.transactions.keySet()) {
-            if (id == null || !bank.containsAccount(id)) {
-                continue;
-            }
-
-            transactions.add(bank.getAccount(id).toString().toLowerCase());
+        for (String id : bank.getAccounts().keySet()) {
+            transactions.add(bank.getAccount(id).toString());
             transactions.addAll(this.transactions.get(id));
         }
         transactions.addAll(this.transactions.get(null));
