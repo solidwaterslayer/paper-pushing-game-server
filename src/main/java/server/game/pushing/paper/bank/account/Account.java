@@ -28,6 +28,11 @@ public abstract class Account {
         return balance;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s %s %.2f %.2f", accountType, ID, balance, APR);
+    }
+
     public void deposit(double depositAmount) {
         this.balance += depositAmount;
     }

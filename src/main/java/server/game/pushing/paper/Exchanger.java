@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static server.game.pushing.paper.TransactionChain.createTransactionChain;
-import static server.game.pushing.paper.TransactionChain.createTransactionHandler;
 
 @Component
 public class Exchanger {
