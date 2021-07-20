@@ -4,8 +4,7 @@ public class Savings extends Account {
     protected boolean isWithdrawValid;
 
     public Savings(String id, double apr) {
-        super(id, apr);
-        accountType = AccountType.Savings;
+        super(AccountType.Savings, id, apr);
         isWithdrawValid = true;
     }
 
@@ -22,12 +21,20 @@ public class Savings extends Account {
     }
 
     @Override
-    public double maxDeposit() {
+    public boolean isDepositValid(double depositAmount) {
+        return 0 < depositAmount && depositAmount <= getMaxDeposit();
+    }
+
+    public static double getMaxDeposit() {
         return 2500;
     }
 
     @Override
-    public boolean isWithdrawValid(double balance) {
-        return isWithdrawValid && 0 < balance && balance <= 1000;
+    public boolean isWithdrawValid(double withdrawAmount) {
+        return isWithdrawValid && 0 < withdrawAmount && withdrawAmount <= getMaxWithdraw();
+    }
+
+    public static double getMaxWithdraw() {
+        return 1000;
     }
 }

@@ -2,42 +2,38 @@ package server.game.pushing.paper.ledgervalidator.bank;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
-import server.game.pushing.paper.ledgervalidator.bank.account.Account;
-import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
-import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
+import server.game.pushing.paper.ledgervalidator.bank.account.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static server.game.pushing.paper.ledgervalidator.bank.AccountTests.applyAPR;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
 
 public class BankTests {
     protected Bank bank;
 
-    protected final String CHECKING_ID_0 = "00000000";
-    protected final String CHECKING_ID_1 = "10000000";
-    protected final String SAVINGS_ID_0 = "00000001";
-    protected final String SAVINGS_ID_1 = "10000001";
-    protected final String CD_ID = "00000010";
-    protected final double APR = 0.1;
-    protected final double INITIAL_CD_BALANCE = 1000;
-
-    protected double checkingDepositAmount;
-    protected double checkingWithdrawAmount;
-    protected double savingsDepositAmount;
-    protected double savingsWithdrawAmount;
-    protected double cdWithdrawAmount;
-    protected double transferAmount;
+    protected final String CHECKING_ID_0 = "34792497";
+    protected final String CHECKING_ID_1 = "42793478";
+    protected final String SAVINGS_ID_0 = "00000000";
+    protected final String SAVINGS_ID_1 = "98340842";
+    protected final String CD_ID_0 = "54873935";
+    protected final String CD_ID_1 = "37599823";
+    protected final double APR = 0.6;
+    protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
 
     @BeforeEach
     protected void setUp() {
         bank = new Bank(Arrays.asList(
                 new Checking(CHECKING_ID_1, APR),
-                new Savings(SAVINGS_ID_1, APR)
+                new Savings(SAVINGS_ID_1, APR),
+                new CD(CD_ID_1, APR, INITIAL_CD_BALANCE)
         ));
         bank.createChecking(CHECKING_ID_0, APR);
         bank.createSavings(SAVINGS_ID_0, APR);
-        bank.createCD(CD_ID, APR, INITIAL_CD_BALANCE);
+        bank.createCD(CD_ID_0, APR, INITIAL_CD_BALANCE);
     }
 
     @Test
@@ -47,37 +43,37 @@ public class BankTests {
 
     @Test
     protected void create_checking_should_be_possible() {
-        Account checkingAccount0 = bank.getAccount(CHECKING_ID_0);
+        Account account = bank.getAccount(CHECKING_ID_0);
 
-        assertEquals(AccountType.Checking, checkingAccount0.getAccountType());
-        assertEquals(CHECKING_ID_0, checkingAccount0.getID());
-        assertEquals(APR, checkingAccount0.getAPR());
-        assertEquals(0, checkingAccount0.getBalance());
+        assertEquals(AccountType.Checking, account.getAccountType());
+        assertEquals(CHECKING_ID_0, account.getID());
+        assertEquals(APR, account.getAPR());
+        assertEquals(0, account.getBalance());
     }
 
     @Test
     protected void create_savings_should_be_possible() {
-        Account savingsAccount0 = bank.getAccount(SAVINGS_ID_0);
+        Account account = bank.getAccount(SAVINGS_ID_0);
 
-        assertEquals(AccountType.Savings, savingsAccount0.getAccountType());
-        assertEquals(SAVINGS_ID_0, savingsAccount0.getID());
-        assertEquals(APR, savingsAccount0.getAPR());
-        assertEquals(0, savingsAccount0.getBalance());
+        assertEquals(AccountType.Savings, account.getAccountType());
+        assertEquals(SAVINGS_ID_0, account.getID());
+        assertEquals(APR, account.getAPR());
+        assertEquals(0, account.getBalance());
     }
 
     @Test
     protected void create_cd_should_be_possible() {
-        Account cdAccount = bank.getAccount(CD_ID);
+        Account account = bank.getAccount(CD_ID_0);
 
-        assertEquals(AccountType.CD, cdAccount.getAccountType());
-        assertEquals(CD_ID, cdAccount.getID());
-        assertEquals(APR, cdAccount.getAPR());
-        assertEquals(INITIAL_CD_BALANCE, cdAccount.getBalance());
+        assertEquals(AccountType.CD, account.getAccountType());
+        assertEquals(CD_ID_0, account.getID());
+        assertEquals(APR, account.getAPR());
+        assertEquals(INITIAL_CD_BALANCE, account.getBalance());
     }
 
     @Test
     protected void deposit_checking_should_be_possible() {
-        checkingDepositAmount = 400;
+        double checkingDepositAmount = Checking.getMaxDeposit();
 
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
 
@@ -86,7 +82,7 @@ public class BankTests {
 
     @Test
     protected void deposit_savings_should_be_possible() {
-        savingsDepositAmount = 300;
+        double savingsDepositAmount = Savings.getMaxDeposit();
 
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
 
@@ -95,27 +91,27 @@ public class BankTests {
 
     @Test
     protected void withdraw_should_be_possible() {
-        checkingDepositAmount = 500;
-        checkingWithdrawAmount = 300;
-        savingsDepositAmount = 400;
-        savingsWithdrawAmount = 400;
-        cdWithdrawAmount = 2000;
+        double checkingDepositAmount = Checking.getMaxWithdraw();
+        double savingsDepositAmount = Savings.getMaxWithdraw();
+        double checkingWithdrawAmount = checkingDepositAmount - 100;
+        double savingsWithdrawAmount = savingsDepositAmount - 50;
+        double cdWithdrawAmount = CD.getMaxWithdraw();
 
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
-        bank.withdraw(CHECKING_ID_0, checkingWithdrawAmount);
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
+        bank.withdraw(CHECKING_ID_0, checkingWithdrawAmount);
         bank.withdraw(SAVINGS_ID_0, savingsWithdrawAmount);
-        bank.withdraw(CD_ID, cdWithdrawAmount);
+        bank.withdraw(CD_ID_0, cdWithdrawAmount);
 
         assertEquals(checkingDepositAmount - checkingWithdrawAmount, bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(0, bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(0, bank.getAccount(CD_ID).getBalance());
+        assertEquals(savingsDepositAmount - savingsWithdrawAmount, bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(0, bank.getAccount(CD_ID_0).getBalance());
     }
 
     @Test
     protected void transfer_from_checking_to_checking_should_be_possible() {
-        checkingDepositAmount = 500;
-        transferAmount = 200;
+        double checkingDepositAmount = Checking.getMaxDeposit();
+        double transferAmount = 200;
 
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
         bank.transfer(CHECKING_ID_0, CHECKING_ID_1, transferAmount);
@@ -126,8 +122,8 @@ public class BankTests {
 
     @Test
     protected void transfer_from_checking_to_savings_should_be_possible() {
-        checkingDepositAmount = 1000;
-        transferAmount = 400;
+        double checkingDepositAmount = Checking.getMaxDeposit();
+        double transferAmount = 400;
 
         bank.deposit(CHECKING_ID_1, checkingDepositAmount);
         bank.transfer(CHECKING_ID_1, SAVINGS_ID_1, transferAmount);
@@ -138,8 +134,8 @@ public class BankTests {
 
     @Test
     protected void transfer_from_savings_to_checking_should_be_possible() {
-        savingsDepositAmount = 1500;
-        transferAmount = 500;
+        double savingsDepositAmount = Savings.getMaxDeposit();
+        double transferAmount = 500;
 
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
         bank.transfer(SAVINGS_ID_0, CHECKING_ID_0, transferAmount);
@@ -150,8 +146,8 @@ public class BankTests {
 
     @Test
     protected void transfer_from_savings_to_savings_should_be_possible() {
-        savingsDepositAmount = 2000;
-        transferAmount = 1000;
+        double savingsDepositAmount = Savings.getMaxDeposit();
+        double transferAmount = 1000;
 
         bank.deposit(SAVINGS_ID_1, savingsDepositAmount);
         bank.transfer(SAVINGS_ID_1, SAVINGS_ID_0, transferAmount);
@@ -162,47 +158,48 @@ public class BankTests {
 
     @Test
     protected void transfer_from_cd_to_savings_should_be_possible() {
-        savingsDepositAmount = 2000;
-
+        double minBalanceFee = bank.getMinBalanceFee();
+        int months = getMonthsPerYear();
+        double savingsDepositAmount = Savings.getMaxDeposit();
+        double transferAmount = Savings.getMaxDeposit();
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
-        bank.passTime(12);
-        bank.transfer(CD_ID, SAVINGS_ID_0, 2000);
+        bank.passTime(months);
 
-        assertEquals(0, bank.getAccount(CD_ID).getBalance());
-        assertEquals(AccountTests.applyAPR(APR, savingsDepositAmount, 12) + AccountTests.applyAPR(APR, INITIAL_CD_BALANCE, 12 * 4), bank.getAccount(SAVINGS_ID_0).getBalance());
+        bank.transfer(CD_ID_0, SAVINGS_ID_0, transferAmount);
+
+        assertEquals(0, bank.getAccount(CD_ID_0).getBalance());
+        assertEquals(
+                passTime(APR, minBalanceFee, AccountType.Savings, savingsDepositAmount, months)
+                        + passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months),
+                bank.getAccount(SAVINGS_ID_0).getBalance()
+        );
     }
 
     @Test
     protected void transfer_when_less_than_or_equal_to_balance_should_be_possible() {
-        checkingDepositAmount = 500;
-        savingsDepositAmount = 700;
-        checkingWithdrawAmount = checkingDepositAmount - 100;
-        savingsWithdrawAmount = savingsDepositAmount;
+        double checkingWithdrawAmount = 400;
+        double savingsWithdrawAmount = 700;
+        bank.deposit(CHECKING_ID_1, checkingWithdrawAmount);
+        bank.deposit(SAVINGS_ID_0, savingsWithdrawAmount);
 
-
-        bank.deposit(CHECKING_ID_1, checkingDepositAmount);
-        bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
-
-
-        assertEquals(savingsWithdrawAmount, bank.getAccount(SAVINGS_ID_0).getBalance());
-        bank.transfer(SAVINGS_ID_0, CHECKING_ID_1, savingsWithdrawAmount);
-
-        assertTrue(checkingWithdrawAmount < bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID_1).getBalance());
         bank.transfer(CHECKING_ID_1, SAVINGS_ID_0, checkingWithdrawAmount);
 
-        assertEquals(savingsDepositAmount - savingsWithdrawAmount + checkingWithdrawAmount, bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(checkingDepositAmount + savingsWithdrawAmount - checkingWithdrawAmount, bank.getAccount(CHECKING_ID_1).getBalance());
+        assertTrue(savingsWithdrawAmount < bank.getAccount(SAVINGS_ID_0).getBalance());
+        bank.transfer(SAVINGS_ID_0, CHECKING_ID_1, savingsWithdrawAmount);
+
+        assertEquals(savingsWithdrawAmount, bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(checkingWithdrawAmount, bank.getAccount(SAVINGS_ID_0).getBalance());
     }
 
     @Test
     protected void transfer_when_greater_than_balance_should_transfer_amount_equal_to_balance() {
-        savingsDepositAmount = 100;
-        transferAmount = 1000;
-
+        double savingsDepositAmount = 100;
+        double savingsWithdrawAmount = Savings.getMaxWithdraw();
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
 
-        assertTrue(transferAmount > bank.getAccount(SAVINGS_ID_0).getBalance());
-        bank.transfer(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount);
+        assertTrue(savingsWithdrawAmount > bank.getAccount(SAVINGS_ID_0).getBalance());
+        bank.transfer(SAVINGS_ID_0, SAVINGS_ID_1, savingsWithdrawAmount);
 
         assertEquals(0, bank.getAccount(SAVINGS_ID_0).getBalance());
         assertEquals(savingsDepositAmount, bank.getAccount(SAVINGS_ID_1).getBalance());
@@ -212,54 +209,52 @@ public class BankTests {
     protected void pass_time_should_apply_apr() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = 6;
-        checkingDepositAmount = 1000;
-        savingsDepositAmount = 2500;
-
+        double checkingDepositAmount = Checking.getMaxDeposit();
+        double savingsDepositAmount = Savings.getMaxDeposit();
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
+
         bank.passTime(months);
 
         assertEquals(passTime(APR, minBalanceFee, AccountType.Checking, checkingDepositAmount, months), bank.getAccount(CHECKING_ID_0).getBalance());
         assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, savingsDepositAmount, months), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(CD_ID).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(CD_ID_0).getBalance());
     }
 
     @Test
     protected void pass_time_when_balance_is_less_than_or_equal_to_100_should_apply_min_balance_fee_then_apr() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = 2;
+        double checkingDepositAmount = 90;
+        double savingsDepositAmount = 100;
+        bank.deposit(CHECKING_ID_1, checkingDepositAmount);
+        bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
 
-        bank.deposit(CHECKING_ID_0, 75);
-        bank.deposit(CHECKING_ID_1, 90);
-        bank.deposit(SAVINGS_ID_0, 100);
-        bank.deposit(SAVINGS_ID_1, 110);
         bank.passTime(months);
 
-        assertEquals(passTime(APR, minBalanceFee, AccountType.Checking, 75, months), bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(passTime(APR, minBalanceFee, AccountType.Checking, 90, months), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, 100, months), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, 110, months), bank.getAccount(SAVINGS_ID_1).getBalance());
-        assertEquals(passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(CD_ID).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.Checking, checkingDepositAmount, months), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, savingsDepositAmount, months), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(CD_ID_0).getBalance());
     }
 
     @Test
     protected void pass_time_when_balance_is_0_should_remove_account() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = 2;
+        double checkingDepositAmount = 25;
+        double savingsDepositAmount = 50;
+        bank.deposit(CHECKING_ID_1, checkingDepositAmount);
+        bank.deposit(SAVINGS_ID_1, savingsDepositAmount);
 
-        bank.deposit(CHECKING_ID_1, 25);
-        bank.deposit(SAVINGS_ID_0, 50);
-        bank.deposit(SAVINGS_ID_1, 75);
         bank.passTime(months);
 
         assertFalse(bank.containsAccount(CHECKING_ID_0));
         assertFalse(bank.containsAccount(CHECKING_ID_1));
-        assertTrue(bank.containsAccount(SAVINGS_ID_0));
-        assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, 50, months), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertFalse(bank.containsAccount(SAVINGS_ID_0));
         assertTrue(bank.containsAccount(SAVINGS_ID_1));
-        assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, 75, months), bank.getAccount(SAVINGS_ID_1).getBalance());
-        assertTrue(bank.containsAccount(CD_ID));
-        assertEquals(passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(CD_ID).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, savingsDepositAmount, months), bank.getAccount(SAVINGS_ID_1).getBalance());
+        assertTrue(bank.containsAccount(CD_ID_0));
+        assertEquals(passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(CD_ID_0).getBalance());
     }
 
     public static double passTime(double apr, double minBalanceFee, AccountType accountType, double initialBalance, int months) {
@@ -271,9 +266,9 @@ public class BankTests {
             }
 
             if (accountType == AccountType.CD) {
-                balance = AccountTests.applyAPR(apr, balance, 4);
+                balance = applyAPR(apr, balance, 4);
             } else {
-                balance = AccountTests.applyAPR(apr, balance, 1);
+                balance = applyAPR(apr, balance, 1);
             }
         }
 
@@ -285,219 +280,181 @@ public class BankTests {
         assertFalse(bank.isIDValid("00000000"));
 
         assertFalse(bank.isIDValid(""));
+        assertFalse(bank.isIDValid("y"));
+        assertFalse(bank.isIDValid("3f8H6"));
+        assertFalse(bank.isIDValid("kw%K8r&"));
+        assertFalse(bank.isIDValid("df%KiUr*j"));
+        assertFalse(bank.isIDValid("9g3gG&(3fO&*f3"));
 
-        assertFalse(bank.isIDValid("48"));
-
-        assertFalse(bank.isIDValid("7834972"));
-        assertTrue(bank.isIDValid("24793478"));
-        assertFalse(bank.isIDValid("783447992"));
-
-        assertFalse(bank.isIDValid("973957845729385729375"));
-
-        assertFalse(bank.isIDValid("8G73mU*)"));
+        assertFalse(bank.isIDValid("welcomes"));
+        assertFalse(bank.isIDValid("POWERFUL"));
+        assertFalse(bank.isIDValid("$@^*#$*("));
+        assertTrue(bank.isIDValid("78349722"));
     }
 
     @Test
     protected void apr_should_be_between_0_and_10_inclusive() {
         assertFalse(bank.isAPRValid(-10));
-
         assertFalse(bank.isAPRValid(-1));
         assertTrue(bank.isAPRValid(0));
         assertTrue(bank.isAPRValid(1));
-
         assertTrue(bank.isAPRValid(5));
-        assertTrue(bank.isAPRValid(6));
 
+        assertTrue(bank.isAPRValid(6));
         assertTrue(bank.isAPRValid(9));
         assertTrue(bank.isAPRValid(10));
         assertFalse(bank.isAPRValid(11));
-
         assertFalse(bank.isAPRValid(20));
     }
 
     @Test
     protected void initial_cd_balance_should_be_between_1000_and_10000_inclusive() {
-        assertFalse(bank.isInitialCDBalanceValid(-20000));
+        assertFalse(bank.isInitialCDBalanceValid(-1000));
         assertFalse(bank.isInitialCDBalanceValid(0));
 
-
-        assertFalse(bank.isInitialCDBalanceValid(100));
-
+        assertFalse(bank.isInitialCDBalanceValid(500));
         assertFalse(bank.isInitialCDBalanceValid(900));
         assertTrue(bank.isInitialCDBalanceValid(1000));
         assertTrue(bank.isInitialCDBalanceValid(1100));
-
         assertTrue(bank.isInitialCDBalanceValid(5000));
-        assertTrue(bank.isInitialCDBalanceValid(6000));
 
+        assertTrue(bank.isInitialCDBalanceValid(6000));
         assertTrue(bank.isInitialCDBalanceValid(9000));
         assertTrue(bank.isInitialCDBalanceValid(10000));
         assertFalse(bank.isInitialCDBalanceValid(11000));
-
         assertFalse(bank.isInitialCDBalanceValid(20000));
     }
 
     @Test
     protected void deposit_should_contain_a_taken_id() {
-        checkingDepositAmount = 1000;
-        savingsDepositAmount = 1000;
+        double savingsDepositAmount = Savings.getMaxDeposit();
 
-        assertFalse(bank.isDepositValid("08243478", checkingDepositAmount));
-        assertTrue(bank.isDepositValid(CHECKING_ID_0, checkingDepositAmount));
-        assertTrue(bank.isDepositValid(CHECKING_ID_1, checkingDepositAmount));
+        assertFalse(bank.isDepositValid("08243478", savingsDepositAmount));
         assertTrue(bank.isDepositValid(SAVINGS_ID_0, savingsDepositAmount));
-        assertTrue(bank.isDepositValid(SAVINGS_ID_1, savingsDepositAmount));
     }
 
     @Test
     protected void deposit_checking_should_be_greater_than_0() {
-        assertFalse(bank.isDepositValid(CHECKING_ID_0, -500));
+        double checkingDepositAmount = 0;
 
-        assertFalse(bank.isDepositValid(CHECKING_ID_1, -100));
-        assertFalse(bank.isDepositValid(CHECKING_ID_0, 0));
-        assertTrue(bank.isDepositValid(CHECKING_ID_1, 100));
-
+        assertFalse(bank.isDepositValid(CHECKING_ID_0, checkingDepositAmount - 500));
+        assertFalse(bank.isDepositValid(CHECKING_ID_1, checkingDepositAmount - 100));
+        assertFalse(bank.isDepositValid(CHECKING_ID_0, checkingDepositAmount));
+        assertTrue(bank.isDepositValid(CHECKING_ID_1, checkingDepositAmount + 100));
         assertTrue(bank.isDepositValid(CHECKING_ID_0, 500));
     }
 
     @Test
     protected void deposit_checking_should_be_less_than_or_equal_to_1000() {
+        double checkingDepositAmount = 1000;
+
         assertTrue(bank.isDepositValid(CHECKING_ID_1, 600));
-
-        assertTrue(bank.isDepositValid(CHECKING_ID_0, 900));
-        assertTrue(bank.isDepositValid(CHECKING_ID_1, 1000));
-        assertFalse(bank.isDepositValid(CHECKING_ID_0, 1100));
-
-        assertFalse(bank.isDepositValid(CHECKING_ID_1, 2000));
+        assertTrue(bank.isDepositValid(CHECKING_ID_0, checkingDepositAmount - 100));
+        assertTrue(bank.isDepositValid(CHECKING_ID_1, checkingDepositAmount));
+        assertFalse(bank.isDepositValid(CHECKING_ID_0, checkingDepositAmount + 100));
+        assertFalse(bank.isDepositValid(CHECKING_ID_1, checkingDepositAmount + 500));
     }
 
     @Test
     protected void deposit_savings_should_be_greater_than_0() {
-        assertFalse(bank.isDepositValid(SAVINGS_ID_0, -1200));
+        double savingsDepositAmount = 0;
 
-        assertFalse(bank.isDepositValid(SAVINGS_ID_1, -50));
-        assertFalse(bank.isDepositValid(SAVINGS_ID_0, 0));
-        assertTrue(bank.isDepositValid(SAVINGS_ID_1, 50));
-
+        assertFalse(bank.isDepositValid(SAVINGS_ID_0, savingsDepositAmount - 1000));
+        assertFalse(bank.isDepositValid(SAVINGS_ID_1, savingsDepositAmount - 50));
+        assertFalse(bank.isDepositValid(SAVINGS_ID_0, savingsDepositAmount));
+        assertTrue(bank.isDepositValid(SAVINGS_ID_1, savingsDepositAmount + 50));
         assertTrue(bank.isDepositValid(SAVINGS_ID_0, 1200));
     }
 
     @Test
     protected void deposit_savings_should_be_less_than_or_equal_to_2500() {
+        double savingsDepositAmount = 2500;
+
         assertTrue(bank.isDepositValid(SAVINGS_ID_1, 1300));
-
-        assertTrue(bank.isDepositValid(SAVINGS_ID_0, 2400));
-        assertTrue(bank.isDepositValid(SAVINGS_ID_1, 2500));
-        assertFalse(bank.isDepositValid(SAVINGS_ID_0, 2600));
-
-        assertFalse(bank.isDepositValid(SAVINGS_ID_1, 5000));
+        assertTrue(bank.isDepositValid(SAVINGS_ID_0, savingsDepositAmount - 50));
+        assertTrue(bank.isDepositValid(SAVINGS_ID_1, savingsDepositAmount));
+        assertFalse(bank.isDepositValid(SAVINGS_ID_0, savingsDepositAmount + 50));
+        assertFalse(bank.isDepositValid(SAVINGS_ID_1, savingsDepositAmount + 1000));
     }
 
     @Test
     protected void deposit_cd_should_not_be_possible() {
-        assertFalse(bank.isDepositValid(CD_ID, -1000));
+        List<Double> depositAmounts = Arrays.asList(-500.0, -100.0, 0.0, 100.0, 1200.0, 1300.0, 2400.0, 2500.0, 2600.0, 3500.0);
 
-        assertFalse(bank.isDepositValid(CD_ID, -100));
-        assertFalse(bank.isDepositValid(CD_ID, 0));
-        assertFalse(bank.isDepositValid(CD_ID, 100));
-
-        assertFalse(bank.isDepositValid(CD_ID, 1200));
-        assertFalse(bank.isDepositValid(CD_ID, 1300));
-
-        assertFalse(bank.isDepositValid(CD_ID, 2400));
-        assertFalse(bank.isDepositValid(CD_ID, 2500));
-        assertFalse(bank.isDepositValid(CD_ID, 2600));
-
-        assertFalse(bank.isDepositValid(CD_ID, 5000));
+        for (Double depositAmount : depositAmounts) {
+            assertFalse(bank.isDepositValid(CD_ID_0, depositAmount));
+        }
     }
 
     @Test
     protected void withdraw_should_contain_a_taken_id() {
-        checkingDepositAmount = 1000;
-        savingsDepositAmount = 1000;
-        checkingWithdrawAmount = 400;
-        savingsWithdrawAmount = 400;
-        cdWithdrawAmount = 2000;
-
-        bank.deposit(CHECKING_ID_0, checkingDepositAmount);
-        bank.deposit(CHECKING_ID_1, checkingDepositAmount);
-        bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
-        bank.deposit(SAVINGS_ID_1, savingsDepositAmount);
-        bank.passTime(12);
+        double checkingWithdrawAmount = Checking.getMaxWithdraw();
 
         assertFalse(bank.isWithdrawValid("34784792", checkingWithdrawAmount));
         assertTrue(bank.isWithdrawValid(CHECKING_ID_0, checkingWithdrawAmount));
-        assertTrue(bank.isWithdrawValid(CHECKING_ID_1, checkingWithdrawAmount));
-        assertTrue(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount));
-        assertTrue(bank.isWithdrawValid(SAVINGS_ID_1, savingsWithdrawAmount));
-        assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount));
     }
 
     @Test
     protected void withdraw_checking_should_be_greater_than_0() {
-        assertFalse(bank.isWithdrawValid(CHECKING_ID_0, -1000));
+        double checkingWithdrawAmount = 0;
 
-        assertFalse(bank.isWithdrawValid(CHECKING_ID_1, -50));
-        assertFalse(bank.isWithdrawValid(CHECKING_ID_0, 0));
-        assertTrue(bank.isWithdrawValid(CHECKING_ID_1, 50));
-
-        assertTrue(bank.isWithdrawValid(CHECKING_ID_0, 200));
+        assertFalse(bank.isWithdrawValid(CHECKING_ID_0, checkingWithdrawAmount - 1000));
+        assertFalse(bank.isWithdrawValid(CHECKING_ID_1, checkingWithdrawAmount - 100));
+        assertFalse(bank.isWithdrawValid(CHECKING_ID_0, checkingWithdrawAmount));
+        assertTrue(bank.isWithdrawValid(CHECKING_ID_1, checkingWithdrawAmount + 100));
     }
 
     @Test
     protected void withdraw_checking_should_be_less_than_or_equal_to_400() {
-        assertTrue(bank.isWithdrawValid(CHECKING_ID_1, 100));
+        double checkingWithdrawAmount = 400;
 
-        assertTrue(bank.isWithdrawValid(CHECKING_ID_0, 300));
-        assertTrue(bank.isWithdrawValid(CHECKING_ID_1, 400));
-        assertFalse(bank.isWithdrawValid(CHECKING_ID_0, 500));
-
-        assertFalse(bank.isWithdrawValid(CHECKING_ID_1, 1000));
+        assertTrue(bank.isWithdrawValid(CHECKING_ID_0, checkingWithdrawAmount - 100));
+        assertTrue(bank.isWithdrawValid(CHECKING_ID_1, checkingWithdrawAmount));
+        assertFalse(bank.isWithdrawValid(CHECKING_ID_0, checkingWithdrawAmount + 100));
+        assertFalse(bank.isWithdrawValid(CHECKING_ID_1, checkingWithdrawAmount + 1000));
     }
 
     @Test
     protected void withdraw_savings_should_be_possible_once_a_month() {
-        savingsDepositAmount = 1500;
-        savingsWithdrawAmount = 500;
-
+        double savingsDepositAmount = Savings.getMaxWithdraw();
+        double savingsWithdrawAmount = savingsDepositAmount - 100;
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
-        assertTrue(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount));
 
-        bank.passTime(1);
+        assertTrue(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount));
         bank.withdraw(SAVINGS_ID_0, savingsWithdrawAmount);
+
         assertFalse(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount));
 
-        bank.withdraw(SAVINGS_ID_0, savingsWithdrawAmount);
         bank.passTime(1);
         assertTrue(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount));
     }
 
     @Test
     protected void withdraw_savings_should_be_greater_than_0() {
-        assertFalse(bank.isWithdrawValid(SAVINGS_ID_0, -500));
+        double savingsWithdrawAmount = 0;
 
-        assertFalse(bank.isWithdrawValid(SAVINGS_ID_1, -100));
-        assertFalse(bank.isWithdrawValid(SAVINGS_ID_0, 0));
-        assertTrue(bank.isWithdrawValid(SAVINGS_ID_1, 100));
-
+        assertFalse(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount - 500));
+        assertFalse(bank.isWithdrawValid(SAVINGS_ID_1, savingsWithdrawAmount - 50));
+        assertFalse(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount));
+        assertTrue(bank.isWithdrawValid(SAVINGS_ID_1, savingsWithdrawAmount + 50));
         assertTrue(bank.isWithdrawValid(SAVINGS_ID_0, 500));
     }
 
     @Test
     protected void withdraw_savings_should_be_less_than_or_equal_to_1000() {
+        double savingsWithdrawAmount = 1000;
+
         assertTrue(bank.isWithdrawValid(SAVINGS_ID_1, 600));
-
-        assertTrue(bank.isWithdrawValid(SAVINGS_ID_0, 900));
-        assertTrue(bank.isWithdrawValid(SAVINGS_ID_1, 1000));
-        assertFalse(bank.isWithdrawValid(SAVINGS_ID_0, 1100));
-
-        assertFalse(bank.isWithdrawValid(SAVINGS_ID_1, 2000));
+        assertTrue(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount - 50));
+        assertTrue(bank.isWithdrawValid(SAVINGS_ID_1, savingsWithdrawAmount));
+        assertFalse(bank.isWithdrawValid(SAVINGS_ID_0, savingsWithdrawAmount + 50));
+        assertFalse(bank.isWithdrawValid(SAVINGS_ID_1, savingsWithdrawAmount + 500));
     }
 
     @Test
     protected void withdraw_cd_should_be_possible_after_12_month() {
-        for (int i = 0; i < 24; i++) {
-            assertEquals(i >= 12, bank.isWithdrawValid(CD_ID, 2000));
+        for (int i = 0; i < getMonthsPerYear() + 12; i++) {
+            assertEquals(i >= getMonthsPerYear(), bank.isWithdrawValid(CD_ID_0, CD.getMaxWithdraw()));
 
             bank.passTime(1);
         }
@@ -505,206 +462,218 @@ public class BankTests {
 
     @Test
     protected void withdraw_cd_should_be_greater_than_or_equal_to_balance() {
-        int months = 12;
-        cdWithdrawAmount = passTime(APR, bank.getMinBalanceFee(), AccountType.CD, INITIAL_CD_BALANCE, months);
-
+        int months = getMonthsPerYear();
+        double cdWithdrawAmount = passTime(APR, bank.getMinBalanceFee(), AccountType.CD, INITIAL_CD_BALANCE, months);
 
         bank.passTime(months);
 
+        assertFalse(bank.isWithdrawValid(CD_ID_0, -1000));
+        assertFalse(bank.isWithdrawValid(CD_ID_0, 0));
+        assertTrue(bank.isWithdrawValid(CD_ID_0, Double.POSITIVE_INFINITY));
 
-        assertFalse(bank.isWithdrawValid(CD_ID, -10000));
-        assertFalse(bank.isWithdrawValid(CD_ID, 0));
-        assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount + 9999999999999999999999999999999999999.99999999999999999999f));
-
-        assertFalse(bank.isWithdrawValid(CD_ID, cdWithdrawAmount - 5000));
-        assertFalse(bank.isWithdrawValid(CD_ID, cdWithdrawAmount - 100));
-        assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID).getBalance());
-        assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount));
-        assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount + 100));
-        assertTrue(bank.isWithdrawValid(CD_ID, cdWithdrawAmount + 5000));
+        assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID_0).getBalance());
+        assertFalse(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount - 1000));
+        assertFalse(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount - 100));
+        assertTrue(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount));
+        assertTrue(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount + 100));
+        assertTrue(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount + 1000));
     }
 
     @Test
     protected void transfer_should_contain_unique_and_taken_fromID_and_toID() {
-        transferAmount = 400;
+        double transferAmount = 400;
 
         assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_0, transferAmount));
-
         assertFalse(bank.isTransferValid("34782794", CHECKING_ID_1, transferAmount));
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, "78344279", transferAmount));
-
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, "78344279", transferAmount));
         assertTrue(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, transferAmount));
     }
 
     @Test
     protected void transfer_from_checking_to_checking_should_be_greater_than_0() {
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, -300));
+        double transferAmount = 0;
 
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, -100));
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, 0));
-        assertTrue(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, 100));
-
-        assertTrue(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, 250));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, transferAmount - 500));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, transferAmount - 50));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, transferAmount));
+        assertTrue(bank.isTransferValid(CHECKING_ID_0, CHECKING_ID_1, transferAmount + 50));
     }
 
     @Test
     protected void transfer_from_checking_to_checking_should_be_less_than_or_equal_to_400() {
-        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 150));
+        double transferAmount = 400;
 
-        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 300));
-        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 400));
-        assertFalse(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 500));
-
-        assertFalse(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, 1000));
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, transferAmount - 50));
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, transferAmount));
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, transferAmount + 50));
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, CHECKING_ID_0, transferAmount + 500));
     }
 
     @Test
     protected void transfer_from_checking_to_savings_should_be_greater_than_0() {
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, -300));
+        double transferAmount = 0;
 
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, -100));
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, 0));
-        assertTrue(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, 100));
-
-        assertTrue(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, 250));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, transferAmount - 1000));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, transferAmount - 100));
+        assertFalse(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, transferAmount));
+        assertTrue(bank.isTransferValid(CHECKING_ID_0, SAVINGS_ID_1, transferAmount + 100));
     }
 
     @Test
     protected void transfer_from_checking_to_savings_should_be_less_than_or_equal_to_400() {
-        assertTrue(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 150));
+        double transferAmount = 400;
 
-        assertTrue(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 300));
-        assertTrue(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 400));
-        assertFalse(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 500));
-
-        assertFalse(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, 1000));
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, transferAmount - 100));
+        assertTrue(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, transferAmount));
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, transferAmount + 100));
+        assertFalse(bank.isTransferValid(CHECKING_ID_1, SAVINGS_ID_1, transferAmount + 1000));
     }
 
     @Test
     protected void transfer_from_savings_twice_a_month_or_more_should_not_be_possible() {
-        checkingDepositAmount = 1000;
-        savingsDepositAmount = 2000;
-        transferAmount = 400;
-
+        double checkingDepositAmount = Checking.getMaxDeposit();
+        double savingsDepositAmount = Savings.getMaxDeposit();
+        double transferAmount = 400;
         bank.deposit(CHECKING_ID_1, checkingDepositAmount);
         bank.deposit(SAVINGS_ID_1, savingsDepositAmount);
-        assertTrue(bank.isTransferValid(SAVINGS_ID_1, CHECKING_ID_1, transferAmount));
 
-        bank.passTime(1);
+        assertTrue(bank.isTransferValid(SAVINGS_ID_1, CHECKING_ID_1, transferAmount));
         bank.transfer(SAVINGS_ID_1, CHECKING_ID_1, transferAmount);
+
         assertFalse(bank.isTransferValid(SAVINGS_ID_1, CHECKING_ID_1, transferAmount));
 
-        bank.passTime(1);
-        bank.transfer(SAVINGS_ID_1, CHECKING_ID_1, transferAmount);
         bank.passTime(1);
         assertTrue(bank.isTransferValid(SAVINGS_ID_1, CHECKING_ID_1, transferAmount));
     }
 
     @Test
     protected void transfer_from_savings_to_checking_should_be_greater_than_0() {
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, -300));
+        double transferAmount = 0;
 
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, -100));
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, 0));
-        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, 100));
-
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, transferAmount - 500));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, transferAmount - 50));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, transferAmount));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, transferAmount + 50));
         assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_0, 500));
     }
 
     @Test
     protected void transfer_from_savings_to_checking_should_be_less_than_or_equal_to_1000() {
+        double transferAmount = 1000;
+
         assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 600));
-
-        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 900));
-        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 1000));
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 1100));
-
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, 2000));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, transferAmount - 50));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, transferAmount));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, transferAmount + 50));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CHECKING_ID_1, transferAmount + 500));
     }
 
     @Test
     protected void transfer_from_savings_to_savings_should_be_greater_than_0() {
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, -300));
+        double transferAmount = 0;
 
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, -100));
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 0));
-        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 100));
-
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount - 500));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount - 50));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount + 50));
         assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 500));
     }
 
     @Test
     protected void transfer_from_savings_to_savings_should_be_less_than_or_equal_to_1000() {
+        double transferAmount = 1000;
+
         assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 600));
-
-        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 900));
-        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 1000));
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 1100));
-
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, 2000));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount - 50));
+        assertTrue(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount + 50));
+        assertFalse(bank.isTransferValid(SAVINGS_ID_0, SAVINGS_ID_1, transferAmount + 500));
     }
 
     @Test
     protected void transfer_to_cd_should_not_be_possible() {
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, CD_ID, -1000));
+        List<Double> transferAmounts = Arrays.asList(-500.0, -100.0, 0.0, 100.0, 1200.0, 1300.0, 2400.0, 2500.0, 2600.0, 3500.0);
 
-        assertFalse(bank.isTransferValid(CHECKING_ID_1, CD_ID, -100));
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CD_ID, 0));
-        assertFalse(bank.isTransferValid(SAVINGS_ID_1, CD_ID, 100));
+        bank.passTime(getMonthsPerYear());
 
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, CD_ID, 1200));
-        assertFalse(bank.isTransferValid(CHECKING_ID_1, CD_ID, 1300));
-
-        assertFalse(bank.isTransferValid(SAVINGS_ID_0, CD_ID, 2400));
-        assertFalse(bank.isTransferValid(SAVINGS_ID_1, CD_ID, 2500));
-        assertFalse(bank.isTransferValid(CHECKING_ID_0, CD_ID, 2600));
-
-        assertFalse(bank.isTransferValid(SAVINGS_ID_1, CD_ID, 5000));
+        for (Double transferAmount : transferAmounts) {
+            assertFalse(bank.isTransferValid(CHECKING_ID_1, CD_ID_0, transferAmount));
+            assertFalse(bank.isTransferValid(SAVINGS_ID_1, CD_ID_0, transferAmount));
+            assertFalse(bank.isTransferValid(CD_ID_1, CD_ID_0, transferAmount));
+        }
     }
 
     @Test
     protected void transfer_from_cd_to_savings_should_be_possible_after_12_month_inclusive() {
-        bank.deposit(SAVINGS_ID_0, 2500);
-        for (int i = 0; i < 24; i++) {
-            assertEquals(i >= 12, bank.isTransferValid(CD_ID, SAVINGS_ID_0, 2000));
+        bank.deposit(SAVINGS_ID_0, Savings.getMaxDeposit());
+
+        for (int i = 0; i < getMonthsPerYear() + 12; i++) {
+            assertEquals(i >= getMonthsPerYear(), bank.isTransferValid(CD_ID_0, SAVINGS_ID_0, Savings.getMaxDeposit()));
 
             bank.passTime(1);
         }
     }
 
     @Test
-    protected void transfer_from_cd_to_savings_should_be_greater_than_or_equal_to_balance() {
-        int months = 12;
-        cdWithdrawAmount = passTime(APR, bank.getMinBalanceFee(), AccountType.CD, INITIAL_CD_BALANCE, months);
+    protected void transfer_from_cd_to_savings_should_be_between_balance_and_2500_inclusive() {
+        double cdAPR = 0.6;
+        double initialCDBalance = 2200;
+        int months = getMonthsPerYear();
+        double savingsWithdrawAmount = Savings.getMaxDeposit();
+        double cdWithdrawAmount = passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, initialCDBalance, months);
 
-        bank.deposit(SAVINGS_ID_1, 2500);
+        bank.removeAccount(CD_ID_0);
+        bank.createCD(CD_ID_0, 0.6, initialCDBalance);
+        bank.deposit(SAVINGS_ID_1, Savings.getMaxDeposit());
         bank.passTime(months);
 
-        assertFalse(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount - 500));
+        assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID_0).getBalance());
+        boolean isTransferFromCDToSavingsValid = cdWithdrawAmount <= savingsWithdrawAmount;
+        assertTrue(isTransferFromCDToSavingsValid);
 
-        assertFalse(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount - 100));
-        assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID).getBalance());
-        assertTrue(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount));
-        assertTrue(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount + 100));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, cdWithdrawAmount - 500));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, cdWithdrawAmount - 50));
+        assertTrue(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, cdWithdrawAmount));
+        assertTrue(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, cdWithdrawAmount + 50));
 
-        assertTrue(bank.isTransferValid(CD_ID, SAVINGS_ID_1, cdWithdrawAmount + 500));
+        assertTrue(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, savingsWithdrawAmount - 100));
+        assertTrue(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, savingsWithdrawAmount));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, savingsWithdrawAmount + 100));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, savingsWithdrawAmount + 1000));
+
+
+        months = 60;
+        cdWithdrawAmount = passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, cdWithdrawAmount, months);
+
+        bank.passTime(months);
+
+        assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID_0).getBalance());
+        isTransferFromCDToSavingsValid = cdWithdrawAmount <= savingsWithdrawAmount;
+        assertFalse(isTransferFromCDToSavingsValid);
+
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, cdWithdrawAmount - 500));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, cdWithdrawAmount - 50));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, cdWithdrawAmount));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, cdWithdrawAmount + 50));
+
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, savingsWithdrawAmount - 100));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, savingsWithdrawAmount));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, savingsWithdrawAmount + 100));
+        assertFalse(bank.isTransferValid(CD_ID_0, SAVINGS_ID_1, savingsWithdrawAmount + 1000));
     }
 
     @Test
     protected void pass_time_should_be_between_1_and_60_inclusive() {
         assertFalse(bank.isPassTimeValid(-10));
-
         assertFalse(bank.isPassTimeValid(0));
         assertTrue(bank.isPassTimeValid(1));
         assertTrue(bank.isPassTimeValid(2));
-
         assertTrue(bank.isPassTimeValid(30));
-        assertTrue(bank.isPassTimeValid(40));
 
+        assertTrue(bank.isPassTimeValid(40));
         assertTrue(bank.isPassTimeValid(50));
         assertTrue(bank.isPassTimeValid(60));
         assertFalse(bank.isPassTimeValid(70));
-
         assertFalse(bank.isPassTimeValid(100));
     }
 }

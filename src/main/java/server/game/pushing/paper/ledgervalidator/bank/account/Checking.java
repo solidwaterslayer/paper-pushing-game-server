@@ -2,17 +2,24 @@ package server.game.pushing.paper.ledgervalidator.bank.account;
 
 public class Checking extends Account {
     public Checking(String id, double apr) {
-        super(id, apr);
-        accountType = AccountType.Checking;
+        super(AccountType.Checking, id, apr);
     }
 
     @Override
-    public double maxDeposit() {
+    public boolean isDepositValid(double depositAmount) {
+        return 0 < depositAmount && depositAmount <= getMaxDeposit();
+    }
+
+    public static double getMaxDeposit() {
         return 1000;
     }
 
     @Override
-    public boolean isWithdrawValid(double balance) {
-        return 0 < balance && balance <= 400;
+    public boolean isWithdrawValid(double withdrawAmount) {
+        return 0 < withdrawAmount && withdrawAmount <= getMaxWithdraw();
+    }
+
+    public static double getMaxWithdraw() {
+        return 400;
     }
 }

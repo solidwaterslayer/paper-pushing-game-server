@@ -48,6 +48,10 @@ public class Bank {
         return accounts.get(id);
     }
 
+    public void removeAccount(String id) {
+        accounts.remove(id);
+    }
+
     public boolean containsAccount(String id) {
         return accounts.containsKey(id);
     }
@@ -64,8 +68,13 @@ public class Bank {
         getAccount(id).withdraw(withdrawAmount);
     }
 
+    public static int getMonthsPerYear() {
+        return 12;
+    }
+
     public void transfer(String fromID, String toID, double transferAmount) {
         Account fromAccount = getAccount(fromID);
+        Account toAccount = getAccount(toID);
 
         if (transferAmount > fromAccount.getBalance()) {
             transfer(fromID, toID, fromAccount.getBalance());
@@ -73,20 +82,15 @@ public class Bank {
         }
 
         fromAccount.withdraw(transferAmount);
-        getAccount(toID).deposit(transferAmount);
+        toAccount.deposit(transferAmount);
     }
 
     public void passTime(int months) {
         for (int i = 0; i < months; i++) {
-            for (String id : new ArrayList<>(accounts.keySet())) {
-                Account account = getAccount(id);
-                double accountBalance = account.getBalance();
-
-                if (accountBalance == 0) {
-                    accounts.remove(id);
-                    continue;
-                }
-                if (accountBalance <= 100) {
+            for (Account account : new ArrayList<>(accounts.values())) {
+                if (account.getBalance() == 0) {
+                    accounts.remove(account.getID());
+                } else if (account.getBalance() <= 100) {
                     account.withdraw(minBalanceFee);
                 }
 
@@ -104,7 +108,11 @@ public class Bank {
     }
 
     public boolean isInitialCDBalanceValid(double balance) {
-        return 1000 <= balance && balance <= 10000;
+        return getMinInitialCDBalance() <= balance && balance <= 10000;
+    }
+
+    public static double getMinInitialCDBalance() {
+        return 1000;
     }
 
     public boolean isDepositValid(String id, double depositAmount) {

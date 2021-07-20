@@ -1,15 +1,25 @@
 package server.game.pushing.paper.ledgervalidator.bank.account;
 
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
+
 public abstract class Account {
     protected AccountType accountType;
     protected final String ID;
     protected final double APR;
     protected double balance;
 
-    public Account(String id, double apr) {
+    protected Account(AccountType accountType, String id, double apr) {
+        this.accountType = accountType;
         this.ID = id;
         this.APR = apr;
         balance = 0;
+    }
+
+    protected Account(AccountType accountType, String id, double apr, double balance) {
+        this.accountType = accountType;
+        this.ID = id;
+        this.APR = apr;
+        this.balance = balance;
     }
 
     public AccountType getAccountType() {
@@ -47,14 +57,10 @@ public abstract class Account {
     }
 
     public void applyAPR() {
-        deposit(balance * APR / 100 / 12);
+        deposit(balance * APR / getMonthsPerYear() / 100);
     }
 
-    public boolean isDepositValid(double balance) {
-        return 0 < balance && balance <= maxDeposit();
-    }
+    public abstract boolean isDepositValid(double depositAmount);
 
-    public abstract double maxDeposit();
-
-    public abstract boolean isWithdrawValid(double balance);
+    public abstract boolean isWithdrawValid(double withdrawAmount);
 }
