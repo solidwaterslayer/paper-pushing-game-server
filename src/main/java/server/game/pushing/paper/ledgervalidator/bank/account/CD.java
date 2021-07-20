@@ -20,7 +20,7 @@ public class CD extends Account {
     }
 
     @Override
-    protected double maxDeposit() {
+    public double maxDeposit() {
         return 0.0d;
     }
 

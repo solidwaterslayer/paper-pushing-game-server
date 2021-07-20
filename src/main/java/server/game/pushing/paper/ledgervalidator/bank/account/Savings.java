@@ -22,7 +22,7 @@ public class Savings extends Account {
     }
 
     @Override
-    protected double maxDeposit() {
+    public double maxDeposit() {
         return 2500;
     }
 

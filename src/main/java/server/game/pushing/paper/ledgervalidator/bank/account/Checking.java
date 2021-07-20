@@ -7,7 +7,7 @@ public class Checking extends Account {
     }
 
     @Override
-    protected double maxDeposit() {
+    public double maxDeposit() {
         return 1000;
     }
 

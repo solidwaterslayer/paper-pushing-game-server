@@ -54,7 +54,7 @@ public abstract class Account {
         return 0 < balance && balance <= maxDeposit();
     }
 
-    protected abstract double maxDeposit();
+    public abstract double maxDeposit();
 
     public abstract boolean isWithdrawValid(double balance);
 }
