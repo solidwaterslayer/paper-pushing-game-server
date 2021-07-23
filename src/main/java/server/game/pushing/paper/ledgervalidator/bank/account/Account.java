@@ -60,7 +60,7 @@ public abstract class Account {
         deposit(balance * APR / getMonthsPerYear() / 100);
     }
 
-    public abstract boolean isDepositValid(double depositAmount);
+    public abstract boolean isDepositAmountValid(double depositAmount);
 
-    public abstract boolean isWithdrawValid(double withdrawAmount);
+    public abstract boolean isWithdrawAmountValid(double withdrawAmount);
 }

@@ -186,52 +186,52 @@ public class AccountTests {
     protected void deposit_checking_should_be_greater_than_0() {
         checkingDepositAmount = 0;
 
-        assertFalse(checking.isDepositValid(checkingDepositAmount - 500));
-        assertFalse(checking.isDepositValid(checkingDepositAmount - 100));
-        assertFalse(checking.isDepositValid(checkingDepositAmount));
-        assertTrue(checking.isDepositValid(checkingDepositAmount + 100));
-        assertTrue(checking.isDepositValid(500));
+        assertFalse(checking.isDepositAmountValid(checkingDepositAmount - 500));
+        assertFalse(checking.isDepositAmountValid(checkingDepositAmount - 100));
+        assertFalse(checking.isDepositAmountValid(checkingDepositAmount));
+        assertTrue(checking.isDepositAmountValid(checkingDepositAmount + 100));
+        assertTrue(checking.isDepositAmountValid(500));
     }
 
     @Test
     protected void deposit_checking_should_be_less_than_or_equal_to_1000() {
         checkingDepositAmount = 1000;
 
-        assertTrue(checking.isDepositValid(600));
-        assertTrue(checking.isDepositValid(checkingDepositAmount - 50));
-        assertTrue(checking.isDepositValid(checkingDepositAmount));
-        assertFalse(checking.isDepositValid(checkingDepositAmount + 50));
-        assertFalse(checking.isDepositValid(checkingDepositAmount + 500));
+        assertTrue(checking.isDepositAmountValid(600));
+        assertTrue(checking.isDepositAmountValid(checkingDepositAmount - 50));
+        assertTrue(checking.isDepositAmountValid(checkingDepositAmount));
+        assertFalse(checking.isDepositAmountValid(checkingDepositAmount + 50));
+        assertFalse(checking.isDepositAmountValid(checkingDepositAmount + 500));
     }
 
     @Test
     protected void deposit_savings_should_be_greater_than_0() {
         savingsDepositAmount = 0;
 
-        assertFalse(savings.isDepositValid(savingsDepositAmount - 1000));
-        assertFalse(savings.isDepositValid(savingsDepositAmount - 50));
-        assertFalse(savings.isDepositValid(savingsDepositAmount));
-        assertTrue(savings.isDepositValid(savingsDepositAmount + 50));
-        assertTrue(savings.isDepositValid(1200));
+        assertFalse(savings.isDepositAmountValid(savingsDepositAmount - 1000));
+        assertFalse(savings.isDepositAmountValid(savingsDepositAmount - 50));
+        assertFalse(savings.isDepositAmountValid(savingsDepositAmount));
+        assertTrue(savings.isDepositAmountValid(savingsDepositAmount + 50));
+        assertTrue(savings.isDepositAmountValid(1200));
     }
 
     @Test
     protected void deposit_savings_should_be_less_than_or_equal_to_2500() {
         savingsDepositAmount = 2500;
 
-        assertTrue(savings.isDepositValid(1300));
-        assertTrue(savings.isDepositValid(savingsDepositAmount - 100));
-        assertTrue(savings.isDepositValid(savingsDepositAmount));
-        assertFalse(savings.isDepositValid(savingsDepositAmount + 100));
-        assertFalse(savings.isDepositValid(savingsDepositAmount + 1000));
+        assertTrue(savings.isDepositAmountValid(1300));
+        assertTrue(savings.isDepositAmountValid(savingsDepositAmount - 100));
+        assertTrue(savings.isDepositAmountValid(savingsDepositAmount));
+        assertFalse(savings.isDepositAmountValid(savingsDepositAmount + 100));
+        assertFalse(savings.isDepositAmountValid(savingsDepositAmount + 1000));
     }
 
     @Test
     protected void deposit_cd_should_not_be_possible() {
-        List<Double> depositAmounts = Arrays.asList(-500.0, -100.0, 0.0, 100.0, 1200.0, 1300.0, 2400.0, 2500.0, 2600.0, 3500.0);
+        List<Double> depositAmounts = Arrays.asList(-500.0, -100.0, 0.0, 100.0, 1200.0, 1300.0, 2400.0, 2500.0, 2600.0, 3000.0);
 
         for (Double depositAmount : depositAmounts) {
-            assertFalse(cd.isDepositValid(depositAmount));
+            assertFalse(cd.isDepositAmountValid(depositAmount));
         }
     }
 
@@ -239,22 +239,22 @@ public class AccountTests {
     protected void withdraw_checking_should_be_greater_than_0() {
         checkingWithdrawAmount = 0;
 
-        assertFalse(checking.isWithdrawValid(checkingWithdrawAmount - 500));
-        assertFalse(checking.isWithdrawValid(checkingWithdrawAmount - 50));
-        assertFalse(checking.isWithdrawValid(checkingWithdrawAmount));
-        assertTrue(checking.isWithdrawValid(checkingWithdrawAmount + 50));
-        assertTrue(checking.isWithdrawValid(100));
+        assertFalse(checking.isWithdrawAmountValid(checkingWithdrawAmount - 500));
+        assertFalse(checking.isWithdrawAmountValid(checkingWithdrawAmount - 50));
+        assertFalse(checking.isWithdrawAmountValid(checkingWithdrawAmount));
+        assertTrue(checking.isWithdrawAmountValid(checkingWithdrawAmount + 50));
+        assertTrue(checking.isWithdrawAmountValid(100));
     }
 
     @Test
     protected void withdraw_checking_should_be_less_than_or_equal_to_400() {
         checkingWithdrawAmount = 400;
 
-        assertTrue(checking.isWithdrawValid(200));
-        assertTrue(checking.isWithdrawValid(checkingWithdrawAmount - 100));
-        assertTrue(checking.isWithdrawValid(checkingWithdrawAmount));
-        assertFalse(checking.isWithdrawValid(checkingWithdrawAmount + 100));
-        assertFalse(checking.isWithdrawValid(checkingWithdrawAmount + 500));
+        assertTrue(checking.isWithdrawAmountValid(200));
+        assertTrue(checking.isWithdrawAmountValid(checkingWithdrawAmount - 100));
+        assertTrue(checking.isWithdrawAmountValid(checkingWithdrawAmount));
+        assertFalse(checking.isWithdrawAmountValid(checkingWithdrawAmount + 100));
+        assertFalse(checking.isWithdrawAmountValid(checkingWithdrawAmount + 500));
     }
 
     @Test
@@ -263,41 +263,41 @@ public class AccountTests {
         savingsWithdrawAmount = savingsDepositAmount - 100;
         savings.deposit(savingsDepositAmount);
 
-        assertTrue(savings.isWithdrawValid(savingsWithdrawAmount));
+        assertTrue(savings.isWithdrawAmountValid(savingsWithdrawAmount));
         savings.withdraw(savingsWithdrawAmount);
 
-        assertFalse(savings.isWithdrawValid(savingsWithdrawAmount));
+        assertFalse(savings.isWithdrawAmountValid(savingsWithdrawAmount));
 
         savings.applyAPR();
-        assertTrue(savings.isWithdrawValid(savingsWithdrawAmount));
+        assertTrue(savings.isWithdrawAmountValid(savingsWithdrawAmount));
     }
 
     @Test
     protected void withdraw_savings_should_be_greater_than_0() {
         savingsWithdrawAmount = 0;
 
-        assertFalse(savings.isWithdrawValid(savingsWithdrawAmount - 1000));
-        assertFalse(savings.isWithdrawValid(savingsWithdrawAmount - 100));
-        assertFalse(savings.isWithdrawValid(savingsWithdrawAmount));
-        assertTrue(savings.isWithdrawValid(savingsWithdrawAmount + 100));
-        assertTrue(savings.isWithdrawValid(500));
+        assertFalse(savings.isWithdrawAmountValid(savingsWithdrawAmount - 1000));
+        assertFalse(savings.isWithdrawAmountValid(savingsWithdrawAmount - 100));
+        assertFalse(savings.isWithdrawAmountValid(savingsWithdrawAmount));
+        assertTrue(savings.isWithdrawAmountValid(savingsWithdrawAmount + 100));
+        assertTrue(savings.isWithdrawAmountValid(500));
     }
 
     @Test
     protected void withdraw_savings_should_be_less_than_or_equal_to_1000() {
         savingsWithdrawAmount = 1000;
 
-        assertTrue(savings.isWithdrawValid(600));
-        assertTrue(savings.isWithdrawValid(savingsWithdrawAmount - 50));
-        assertTrue(savings.isWithdrawValid(savingsWithdrawAmount));
-        assertFalse(savings.isWithdrawValid(savingsWithdrawAmount + 50));
-        assertFalse(savings.isWithdrawValid(savingsWithdrawAmount + 1000));
+        assertTrue(savings.isWithdrawAmountValid(600));
+        assertTrue(savings.isWithdrawAmountValid(savingsWithdrawAmount - 50));
+        assertTrue(savings.isWithdrawAmountValid(savingsWithdrawAmount));
+        assertFalse(savings.isWithdrawAmountValid(savingsWithdrawAmount + 50));
+        assertFalse(savings.isWithdrawAmountValid(savingsWithdrawAmount + 1000));
     }
 
     @Test
     protected void withdraw_cd_should_be_possible_after_a_year_inclusive() {
         for (int months = 0; months < getMonthsPerYear() + 12; months++) {
-            assertEquals(months >= getMonthsPerYear(), cd.isWithdrawValid(CD.getMaxWithdrawAmount()));
+            assertEquals(months >= getMonthsPerYear(), cd.isWithdrawAmountValid(CD.getMaxWithdrawAmount()));
 
             cd.applyAPR();
         }
@@ -313,14 +313,14 @@ public class AccountTests {
         }
 
         assertEquals(cdWithdrawAmount, cd.getBalance());
-        assertFalse(cd.isWithdrawValid(cdWithdrawAmount - 500));
-        assertFalse(cd.isWithdrawValid(cdWithdrawAmount - 100));
-        assertTrue(cd.isWithdrawValid(cdWithdrawAmount));
-        assertTrue(cd.isWithdrawValid(cdWithdrawAmount + 100));
-        assertTrue(cd.isWithdrawValid(cdWithdrawAmount + 500));
+        assertFalse(cd.isWithdrawAmountValid(cdWithdrawAmount - 500));
+        assertFalse(cd.isWithdrawAmountValid(cdWithdrawAmount - 100));
+        assertTrue(cd.isWithdrawAmountValid(cdWithdrawAmount));
+        assertTrue(cd.isWithdrawAmountValid(cdWithdrawAmount + 100));
+        assertTrue(cd.isWithdrawAmountValid(cdWithdrawAmount + 500));
 
-        assertFalse(cd.isWithdrawValid(-1000));
-        assertFalse(cd.isWithdrawValid(0));
-        assertTrue(cd.isWithdrawValid(Double.POSITIVE_INFINITY));
+        assertFalse(cd.isWithdrawAmountValid(-1000));
+        assertFalse(cd.isWithdrawAmountValid(0));
+        assertTrue(cd.isWithdrawAmountValid(Double.POSITIVE_INFINITY));
     }
 }

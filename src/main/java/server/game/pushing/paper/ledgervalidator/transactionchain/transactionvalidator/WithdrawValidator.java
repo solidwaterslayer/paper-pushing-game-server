@@ -15,7 +15,7 @@ public class WithdrawValidator extends TransactionChain {
     @Override
     public boolean handle(String[] transactionArguments) {
         try {
-            if (transactionArguments[0].equalsIgnoreCase("withdraw") && bank.isWithdrawValid(transactionArguments[1], parseDouble(transactionArguments[2]))) {
+            if (transactionArguments[0].equalsIgnoreCase("withdraw") && bank.isWithdrawAmountValid(transactionArguments[1], parseDouble(transactionArguments[2]))) {
                 return true;
             } else {
                 return next != null && next.handle(transactionArguments);

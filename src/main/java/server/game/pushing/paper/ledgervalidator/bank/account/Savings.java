@@ -21,7 +21,7 @@ public class Savings extends Account {
     }
 
     @Override
-    public boolean isDepositValid(double depositAmount) {
+    public boolean isDepositAmountValid(double depositAmount) {
         return 0 < depositAmount && depositAmount <= getMaxDepositAmount();
     }
 
@@ -30,7 +30,7 @@ public class Savings extends Account {
     }
 
     @Override
-    public boolean isWithdrawValid(double withdrawAmount) {
+    public boolean isWithdrawAmountValid(double withdrawAmount) {
         return isWithdrawValid && 0 < withdrawAmount && withdrawAmount <= getMaxWithdrawAmount();
     }
 

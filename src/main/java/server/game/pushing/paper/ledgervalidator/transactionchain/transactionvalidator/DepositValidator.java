@@ -15,7 +15,7 @@ public class DepositValidator extends TransactionChain {
     @Override
     public boolean handle(String[] transactionArguments) {
         try {
-            if (transactionArguments[0].equalsIgnoreCase("deposit") && bank.isDepositValid(transactionArguments[1], parseDouble(transactionArguments[2]))) {
+            if (transactionArguments[0].equalsIgnoreCase("deposit") && bank.isDepositAmountValid(transactionArguments[1], parseDouble(transactionArguments[2]))) {
                 return true;
             } else {
                 return next != null && next.handle(transactionArguments);
