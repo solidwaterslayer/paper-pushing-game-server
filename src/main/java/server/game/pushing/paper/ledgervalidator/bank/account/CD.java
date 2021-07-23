@@ -21,10 +21,10 @@ public class CD extends Account {
 
     @Override
     public boolean isDepositValid(double depositAmount) {
-        return 0 < depositAmount && depositAmount <= getMaxDeposit();
+        return 0 < depositAmount && depositAmount <= getMaxDepositAmount();
     }
 
-    public static double getMaxDeposit() {
+    public static double getMaxDepositAmount() {
         return 0.0d;
     }
 
@@ -33,7 +33,7 @@ public class CD extends Account {
         return months >= getMonthsPerYear() && withdrawAmount >= this.balance;
     }
 
-    public static double getMaxWithdraw() {
+    public static double getMaxWithdrawAmount() {
         return Double.POSITIVE_INFINITY;
     }
 }

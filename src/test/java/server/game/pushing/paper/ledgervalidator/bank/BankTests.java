@@ -73,7 +73,7 @@ public class BankTests {
 
     @Test
     protected void deposit_checking_should_be_possible() {
-        double checkingDepositAmount = Checking.getMaxDeposit();
+        double checkingDepositAmount = Checking.getMaxDepositAmount();
 
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
 
@@ -82,7 +82,7 @@ public class BankTests {
 
     @Test
     protected void deposit_savings_should_be_possible() {
-        double savingsDepositAmount = Savings.getMaxDeposit();
+        double savingsDepositAmount = Savings.getMaxDepositAmount();
 
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
 
@@ -91,11 +91,11 @@ public class BankTests {
 
     @Test
     protected void withdraw_should_be_possible() {
-        double checkingDepositAmount = Checking.getMaxWithdraw();
-        double savingsDepositAmount = Savings.getMaxWithdraw();
+        double checkingDepositAmount = Checking.getMaxWithdrawAmount();
+        double savingsDepositAmount = Savings.getMaxWithdrawAmount();
         double checkingWithdrawAmount = checkingDepositAmount - 100;
         double savingsWithdrawAmount = savingsDepositAmount - 50;
-        double cdWithdrawAmount = CD.getMaxWithdraw();
+        double cdWithdrawAmount = CD.getMaxWithdrawAmount();
 
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
@@ -110,7 +110,7 @@ public class BankTests {
 
     @Test
     protected void transfer_from_checking_to_checking_should_be_possible() {
-        double checkingDepositAmount = Checking.getMaxDeposit();
+        double checkingDepositAmount = Checking.getMaxDepositAmount();
         double transferAmount = 200;
 
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
@@ -122,7 +122,7 @@ public class BankTests {
 
     @Test
     protected void transfer_from_checking_to_savings_should_be_possible() {
-        double checkingDepositAmount = Checking.getMaxDeposit();
+        double checkingDepositAmount = Checking.getMaxDepositAmount();
         double transferAmount = 400;
 
         bank.deposit(CHECKING_ID_1, checkingDepositAmount);
@@ -134,7 +134,7 @@ public class BankTests {
 
     @Test
     protected void transfer_from_savings_to_checking_should_be_possible() {
-        double savingsDepositAmount = Savings.getMaxDeposit();
+        double savingsDepositAmount = Savings.getMaxDepositAmount();
         double transferAmount = 500;
 
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
@@ -146,7 +146,7 @@ public class BankTests {
 
     @Test
     protected void transfer_from_savings_to_savings_should_be_possible() {
-        double savingsDepositAmount = Savings.getMaxDeposit();
+        double savingsDepositAmount = Savings.getMaxDepositAmount();
         double transferAmount = 1000;
 
         bank.deposit(SAVINGS_ID_1, savingsDepositAmount);
@@ -160,8 +160,8 @@ public class BankTests {
     protected void transfer_from_cd_to_savings_should_be_possible() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = getMonthsPerYear();
-        double savingsDepositAmount = Savings.getMaxDeposit();
-        double transferAmount = Savings.getMaxDeposit();
+        double savingsDepositAmount = Savings.getMaxDepositAmount();
+        double transferAmount = Savings.getMaxDepositAmount();
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
         bank.passTime(months);
 
@@ -195,7 +195,7 @@ public class BankTests {
     @Test
     protected void transfer_when_greater_than_balance_should_transfer_amount_equal_to_balance() {
         double savingsDepositAmount = 100;
-        double savingsWithdrawAmount = Savings.getMaxWithdraw();
+        double savingsWithdrawAmount = Savings.getMaxWithdrawAmount();
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
 
         assertTrue(savingsWithdrawAmount > bank.getAccount(SAVINGS_ID_0).getBalance());
@@ -209,8 +209,8 @@ public class BankTests {
     protected void pass_time_should_apply_apr() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = 6;
-        double checkingDepositAmount = Checking.getMaxDeposit();
-        double savingsDepositAmount = Savings.getMaxDeposit();
+        double checkingDepositAmount = Checking.getMaxDepositAmount();
+        double savingsDepositAmount = Savings.getMaxDepositAmount();
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
 
@@ -281,7 +281,7 @@ public class BankTests {
 
         assertFalse(bank.isIDValid(""));
         assertFalse(bank.isIDValid("y"));
-        assertFalse(bank.isIDValid("3f8H6"));
+
         assertFalse(bank.isIDValid("kw%K8r&"));
         assertFalse(bank.isIDValid("df%KiUr*j"));
         assertFalse(bank.isIDValid("9g3gG&(3fO&*f3"));
@@ -309,9 +309,6 @@ public class BankTests {
 
     @Test
     protected void initial_cd_balance_should_be_between_1000_and_10000_inclusive() {
-        assertFalse(bank.isInitialCDBalanceValid(-1000));
-        assertFalse(bank.isInitialCDBalanceValid(0));
-
         assertFalse(bank.isInitialCDBalanceValid(500));
         assertFalse(bank.isInitialCDBalanceValid(900));
         assertTrue(bank.isInitialCDBalanceValid(1000));
@@ -323,11 +320,14 @@ public class BankTests {
         assertTrue(bank.isInitialCDBalanceValid(10000));
         assertFalse(bank.isInitialCDBalanceValid(11000));
         assertFalse(bank.isInitialCDBalanceValid(20000));
+
+        assertFalse(bank.isInitialCDBalanceValid(-1000));
+        assertFalse(bank.isInitialCDBalanceValid(0));
     }
 
     @Test
     protected void deposit_should_contain_a_taken_id() {
-        double savingsDepositAmount = Savings.getMaxDeposit();
+        double savingsDepositAmount = Savings.getMaxDepositAmount();
 
         assertFalse(bank.isDepositValid("08243478", savingsDepositAmount));
         assertTrue(bank.isDepositValid(SAVINGS_ID_0, savingsDepositAmount));
@@ -388,7 +388,7 @@ public class BankTests {
 
     @Test
     protected void withdraw_should_contain_a_taken_id() {
-        double checkingWithdrawAmount = Checking.getMaxWithdraw();
+        double checkingWithdrawAmount = Checking.getMaxWithdrawAmount();
 
         assertFalse(bank.isWithdrawValid("34784792", checkingWithdrawAmount));
         assertTrue(bank.isWithdrawValid(CHECKING_ID_0, checkingWithdrawAmount));
@@ -416,7 +416,7 @@ public class BankTests {
 
     @Test
     protected void withdraw_savings_should_be_possible_once_a_month() {
-        double savingsDepositAmount = Savings.getMaxWithdraw();
+        double savingsDepositAmount = Savings.getMaxWithdrawAmount();
         double savingsWithdrawAmount = savingsDepositAmount - 100;
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
 
@@ -454,7 +454,7 @@ public class BankTests {
     @Test
     protected void withdraw_cd_should_be_possible_after_12_month() {
         for (int i = 0; i < getMonthsPerYear() + 12; i++) {
-            assertEquals(i >= getMonthsPerYear(), bank.isWithdrawValid(CD_ID_0, CD.getMaxWithdraw()));
+            assertEquals(i >= getMonthsPerYear(), bank.isWithdrawValid(CD_ID_0, CD.getMaxWithdrawAmount()));
 
             bank.passTime(1);
         }
@@ -467,16 +467,16 @@ public class BankTests {
 
         bank.passTime(months);
 
-        assertFalse(bank.isWithdrawValid(CD_ID_0, -1000));
-        assertFalse(bank.isWithdrawValid(CD_ID_0, 0));
-        assertTrue(bank.isWithdrawValid(CD_ID_0, Double.POSITIVE_INFINITY));
-
         assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID_0).getBalance());
         assertFalse(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount - 1000));
         assertFalse(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount - 100));
         assertTrue(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount));
         assertTrue(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount + 100));
         assertTrue(bank.isWithdrawValid(CD_ID_0, cdWithdrawAmount + 1000));
+
+        assertFalse(bank.isWithdrawValid(CD_ID_0, -1000));
+        assertFalse(bank.isWithdrawValid(CD_ID_0, 0));
+        assertTrue(bank.isWithdrawValid(CD_ID_0, Double.POSITIVE_INFINITY));
     }
 
     @Test
@@ -531,8 +531,8 @@ public class BankTests {
 
     @Test
     protected void transfer_from_savings_twice_a_month_or_more_should_not_be_possible() {
-        double checkingDepositAmount = Checking.getMaxDeposit();
-        double savingsDepositAmount = Savings.getMaxDeposit();
+        double checkingDepositAmount = Checking.getMaxDepositAmount();
+        double savingsDepositAmount = Savings.getMaxDepositAmount();
         double transferAmount = 400;
         bank.deposit(CHECKING_ID_1, checkingDepositAmount);
         bank.deposit(SAVINGS_ID_1, savingsDepositAmount);
@@ -605,10 +605,10 @@ public class BankTests {
 
     @Test
     protected void transfer_from_cd_to_savings_should_be_possible_after_12_month_inclusive() {
-        bank.deposit(SAVINGS_ID_0, Savings.getMaxDeposit());
+        bank.deposit(SAVINGS_ID_0, Savings.getMaxDepositAmount());
 
         for (int i = 0; i < getMonthsPerYear() + 12; i++) {
-            assertEquals(i >= getMonthsPerYear(), bank.isTransferValid(CD_ID_0, SAVINGS_ID_0, Savings.getMaxDeposit()));
+            assertEquals(i >= getMonthsPerYear(), bank.isTransferValid(CD_ID_0, SAVINGS_ID_0, Savings.getMaxDepositAmount()));
 
             bank.passTime(1);
         }
@@ -619,12 +619,12 @@ public class BankTests {
         double cdAPR = 0.6;
         double initialCDBalance = 2200;
         int months = getMonthsPerYear();
-        double savingsWithdrawAmount = Savings.getMaxDeposit();
+        double savingsWithdrawAmount = Savings.getMaxDepositAmount();
         double cdWithdrawAmount = passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, initialCDBalance, months);
 
         bank.removeAccount(CD_ID_0);
         bank.createCD(CD_ID_0, 0.6, initialCDBalance);
-        bank.deposit(SAVINGS_ID_1, Savings.getMaxDeposit());
+        bank.deposit(SAVINGS_ID_1, Savings.getMaxDepositAmount());
         bank.passTime(months);
 
         assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID_0).getBalance());

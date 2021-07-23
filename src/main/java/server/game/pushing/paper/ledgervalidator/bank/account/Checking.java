@@ -7,19 +7,19 @@ public class Checking extends Account {
 
     @Override
     public boolean isDepositValid(double depositAmount) {
-        return 0 < depositAmount && depositAmount <= getMaxDeposit();
+        return 0 < depositAmount && depositAmount <= getMaxDepositAmount();
     }
 
-    public static double getMaxDeposit() {
+    public static double getMaxDepositAmount() {
         return 1000;
     }
 
     @Override
     public boolean isWithdrawValid(double withdrawAmount) {
-        return 0 < withdrawAmount && withdrawAmount <= getMaxWithdraw();
+        return 0 < withdrawAmount && withdrawAmount <= getMaxWithdrawAmount();
     }
 
-    public static double getMaxWithdraw() {
+    public static double getMaxWithdrawAmount() {
         return 400;
     }
 }

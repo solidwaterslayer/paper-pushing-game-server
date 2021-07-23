@@ -104,7 +104,11 @@ public class Bank {
     }
 
     public boolean isAPRValid(double apr) {
-        return 0 <= apr && apr <= 10;
+        return 0 <= apr && apr <= getMaxAPR();
+    }
+
+    public static double getMaxAPR() {
+        return 10;
     }
 
     public boolean isInitialCDBalanceValid(double balance) {
