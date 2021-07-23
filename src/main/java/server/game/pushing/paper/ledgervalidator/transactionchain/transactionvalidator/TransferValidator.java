@@ -2,12 +2,14 @@ package server.game.pushing.paper.ledgervalidator.transactionchain.transactionva
 
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionChain;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
+import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
 import static java.lang.Double.parseDouble;
 
 public class TransferValidator extends TransactionChain {
     public TransferValidator(Bank bank) {
         super(bank);
+        transactionType = TransactionType.Transfer;
     }
 
     @Override

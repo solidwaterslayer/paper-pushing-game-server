@@ -6,6 +6,7 @@ import java.util.List;
 
 public abstract class TransactionChain {
     protected TransactionChain next;
+    protected TransactionType transactionType;
     protected final Bank bank;
 
     public TransactionChain(Bank bank) {
@@ -27,6 +28,10 @@ public abstract class TransactionChain {
 
     public void setNext(TransactionChain next) {
         this.next = next;
+    }
+
+    public TransactionType getTransactionType() {
+        return transactionType;
     }
 
     public boolean handle(String transaction) {
