@@ -7,11 +7,13 @@ import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.CD;
 import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
 import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
+import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
 import static server.game.pushing.paper.ledgervalidator.bank.BankTests.passTime;
 
 public class WithdrawValidatorTests {
@@ -41,6 +43,16 @@ public class WithdrawValidatorTests {
 
     @Test
     protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+//        depositValidator.setNext(new WithdrawValidator(bank));
+//        String checkingID = "87439742";
+//        String savingsID = "84382734";
+//        double apr = getMaxAPR();
+//
+//        bank.createChecking(checkingID, apr);
+//        bank.createSavings(savingsID, apr);
+//
+//        assertTrue(depositValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, checkingID, Checking.getMaxWithdrawAmount())));
+//        assertFalse(depositValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, checkingID, savingsID, 400)));
         withdrawValidator.setNext(new TransferValidator(bank));
         bank.createSavings("00000000", 0);
         bank.createChecking("00000001", 0);
