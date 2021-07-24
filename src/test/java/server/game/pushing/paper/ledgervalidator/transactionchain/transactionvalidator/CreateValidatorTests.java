@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
 import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
-import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

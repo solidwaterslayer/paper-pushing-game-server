@@ -452,7 +452,7 @@ public class BankTests {
     }
 
     @Test
-    protected void withdraw_cd_should_be_possible_after_12_month() {
+    protected void withdraw_cd_should_be_possible_after_a_year_inclusive() {
         for (int i = 0; i < getMonthsPerYear() + 12; i++) {
             assertEquals(i >= getMonthsPerYear(), bank.isWithdrawAmountValid(CD_ID_0, CD.getMaxWithdrawAmount()));
 

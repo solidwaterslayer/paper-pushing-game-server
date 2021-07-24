@@ -13,7 +13,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
 
 public class DepositValidatorTests {
     protected DepositValidator depositValidator;
@@ -38,15 +37,9 @@ public class DepositValidatorTests {
     @Test
     protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         depositValidator.setNext(new WithdrawValidator(bank));
-        String checkingID = "87439742";
-        String savingsID = "84382734";
-        double apr = getMaxAPR();
 
-        bank.createChecking(checkingID, apr);
-        bank.createSavings(savingsID, apr);
-
-        assertTrue(depositValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, checkingID, Checking.getMaxWithdrawAmount())));
-        assertFalse(depositValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, checkingID, savingsID, 400)));
+        assertTrue(depositValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, CHECKING_ID, Checking.getMaxWithdrawAmount())));
+        assertFalse(depositValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID, SAVINGS_ID, 400)));
     }
 
     @Test
