@@ -9,8 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.AccountTests.applyAPR;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
 
 public class BankTests {
     protected Bank bank;
@@ -21,7 +20,7 @@ public class BankTests {
     protected final String SAVINGS_ID_1 = "98340842";
     protected final String CD_ID_0 = "54873935";
     protected final String CD_ID_1 = "37599823";
-    protected final double APR = 0.6;
+    protected final double APR = getMaxAPR();
     protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
 
     @BeforeEach
@@ -415,7 +414,7 @@ public class BankTests {
     }
 
     @Test
-    protected void withdraw_savings_should_be_possible_once_a_month() {
+    protected void withdraw_savings_should_not_be_possible_twice_a_month_or_more() {
         double savingsDepositAmount = Savings.getMaxWithdrawAmount();
         double savingsWithdrawAmount = savingsDepositAmount - 100;
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
@@ -453,8 +452,10 @@ public class BankTests {
 
     @Test
     protected void withdraw_cd_should_be_possible_after_a_year_inclusive() {
-        for (int i = 0; i < getMonthsPerYear() + 12; i++) {
-            assertEquals(i >= getMonthsPerYear(), bank.isWithdrawAmountValid(CD_ID_0, CD.getMaxWithdrawAmount()));
+        int months = getMonthsPerYear();
+
+        for (int month = 0; month < months + 12; month++) {
+            assertEquals(month >= getMonthsPerYear(), bank.isWithdrawAmountValid(CD_ID_0, CD.getMaxWithdrawAmount()));
 
             bank.passTime(1);
         }
@@ -480,7 +481,7 @@ public class BankTests {
     }
 
     @Test
-    protected void transfer_should_contain_unique_and_taken_fromID_and_toID() {
+    protected void transfer_should_contain_unique_and_taken_from_id_and_to_id() {
         double transferAmount = 400;
 
         assertFalse(bank.isTransferAmountValid(CHECKING_ID_0, CHECKING_ID_0, transferAmount));
@@ -530,7 +531,7 @@ public class BankTests {
     }
 
     @Test
-    protected void transfer_from_savings_twice_a_month_or_more_should_not_be_possible() {
+    protected void transfer_from_savings_should_not_be_possible_twice_a_month_or_more() {
         double checkingDepositAmount = Checking.getMaxDepositAmount();
         double savingsDepositAmount = Savings.getMaxDepositAmount();
         double transferAmount = 400;
@@ -605,10 +606,12 @@ public class BankTests {
 
     @Test
     protected void transfer_from_cd_to_savings_should_be_possible_after_12_month_inclusive() {
+        int months = getMonthsPerYear();
+
         bank.deposit(SAVINGS_ID_0, Savings.getMaxDepositAmount());
 
-        for (int i = 0; i < getMonthsPerYear() + 12; i++) {
-            assertEquals(i >= getMonthsPerYear(), bank.isTransferAmountValid(CD_ID_0, SAVINGS_ID_0, Savings.getMaxDepositAmount()));
+        for (int month = 0; month < months + 12; month++) {
+            assertEquals(month >= months, bank.isTransferAmountValid(CD_ID_0, SAVINGS_ID_0, Savings.getMaxDepositAmount()));
 
             bank.passTime(1);
         }
@@ -623,7 +626,7 @@ public class BankTests {
         double cdWithdrawAmount = passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, initialCDBalance, months);
 
         bank.removeAccount(CD_ID_0);
-        bank.createCD(CD_ID_0, 0.6, initialCDBalance);
+        bank.createCD(CD_ID_0, cdAPR, initialCDBalance);
         bank.deposit(SAVINGS_ID_1, Savings.getMaxDepositAmount());
         bank.passTime(months);
 

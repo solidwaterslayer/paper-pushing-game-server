@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
 import static server.game.pushing.paper.ledgervalidator.bank.BankTests.passTime;
 
 public class WithdrawValidatorTests {
@@ -23,8 +23,8 @@ public class WithdrawValidatorTests {
     protected final String CHECKING_ID = "34782479";
     protected final String SAVINGS_ID = "98430842";
     protected final String CD_ID = "43784268";
-    protected final double APR = 0.7;
-    protected final double INITIAL_CD_BALANCE = 9854;
+    protected final double APR = getMaxAPR();
+    protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
 
     @BeforeEach
     protected void setUp() {
@@ -108,18 +108,18 @@ public class WithdrawValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_savings_should_be_possible_once_a_month() {
-        TransactionType transactionType = TransactionType.Withdraw;
+    protected void transaction_when_account_type_is_savings_should_not_be_possible_twice_a_month_or_more() {
         String id = SAVINGS_ID;
         double withdrawAmount = Savings.getMaxWithdrawAmount();
+        String transaction = String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount);
 
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
-        bank.withdraw(SAVINGS_ID, withdrawAmount);
+        assertTrue(withdrawValidator.handle(transaction));
+        bank.withdraw(id, withdrawAmount);
 
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertFalse(withdrawValidator.handle(transaction));
 
         bank.passTime(1);
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertTrue(withdrawValidator.handle(transaction));
     }
 
     @Test
@@ -150,8 +150,10 @@ public class WithdrawValidatorTests {
 
     @Test
     protected void transaction_when_account_type_is_cd_should_be_possible_after_a_year_inclusive() {
-        for (int i = 0; i < getMonthsPerYear() + 12; i++) {
-            assertEquals(i >= getMonthsPerYear(), withdrawValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, CD_ID, CD.getMaxWithdrawAmount())));
+        int months = getMonthsPerYear();
+
+        for (int month = 0; month < months + 12; month++) {
+            assertEquals(month >= months, withdrawValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, CD_ID, CD.getMaxWithdrawAmount())));
 
             bank.passTime(1);
         }

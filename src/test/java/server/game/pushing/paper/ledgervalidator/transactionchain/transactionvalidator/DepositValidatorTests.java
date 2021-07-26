@@ -13,6 +13,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
 
 public class DepositValidatorTests {
     protected DepositValidator depositValidator;
@@ -21,8 +23,8 @@ public class DepositValidatorTests {
     protected final String CHECKING_ID = "09096564";
     protected final String SAVINGS_ID = "90438954";
     protected final String CD_ID = "98430842";
-    protected final double APR = 2;
-    protected final double INITIAL_CD_BALANCE = 3478;
+    protected final double APR = getMaxAPR();
+    protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
 
     @BeforeEach
     protected void setUp() {

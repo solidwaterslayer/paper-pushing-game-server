@@ -258,7 +258,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void withdraw_savings_should_be_possible_once_a_month() {
+    protected void withdraw_savings_should_not_be_possible_twice_a_month_or_more() {
         savingsDepositAmount = Savings.getMaxWithdrawAmount();
         savingsWithdrawAmount = savingsDepositAmount - 100;
         savings.deposit(savingsDepositAmount);
@@ -296,8 +296,10 @@ public class AccountTests {
 
     @Test
     protected void withdraw_cd_should_be_possible_after_a_year_inclusive() {
-        for (int months = 0; months < getMonthsPerYear() + 12; months++) {
-            assertEquals(months >= getMonthsPerYear(), cd.isWithdrawAmountValid(CD.getMaxWithdrawAmount()));
+        int months = getMonthsPerYear();
+
+        for (int month = 0; month < months + 12; month++) {
+            assertEquals(month >= months, cd.isWithdrawAmountValid(CD.getMaxWithdrawAmount()));
 
             cd.applyAPR();
         }
