@@ -53,7 +53,7 @@ public class TransferValidatorTests {
         transferValidator.setNext(new PassTimeValidator(bank));
 
         assertTrue(transferValidator.handle(String.format("%s %s %s", TransactionType.PassTime.split()[0], TransactionType.PassTime.split()[1], 60)));
-        assertFalse(transferValidator.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, getMaxAPR(), getMinInitialCDBalance())));
+        assertFalse(transferValidator.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "78437942", getMaxAPR(), getMinInitialCDBalance())));
     }
 
     @Test

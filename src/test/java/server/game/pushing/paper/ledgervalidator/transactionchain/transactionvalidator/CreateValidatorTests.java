@@ -7,8 +7,7 @@ import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
 import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
 
@@ -26,10 +25,11 @@ public class CreateValidatorTests {
     protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         createValidator.setNext(new DepositValidator(bank));
         String id = "87439742";
+        double depositAmount = Checking.getMaxDepositAmount();
 
         bank.createChecking(id, getMaxAPR());
 
-        assertTrue(createValidator.handle(String.format("%s %s %s", TransactionType.Deposit, id, Checking.getMaxDepositAmount())));
+        assertTrue(createValidator.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
         assertFalse(createValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, id, Checking.getMaxWithdrawAmount())));
     }
 
