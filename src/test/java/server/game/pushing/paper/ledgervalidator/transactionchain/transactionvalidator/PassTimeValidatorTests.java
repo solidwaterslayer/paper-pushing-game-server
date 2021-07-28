@@ -34,64 +34,54 @@ public class PassTimeValidatorTests {
 
     @Test
     protected void transaction_should_contain_the_transaction_type_pass_time_as_the_first_and_second_argument() {
-        String transactionType0 = TransactionType.PassTime.split()[0];
-        String transactionType1 = TransactionType.PassTime.split()[1];
+        TransactionType transactionType = TransactionType.PassTime;
         int months = getMonthsPerYear();
 
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", "", "", "")));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", "", "", months)));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", "", transactionType1, months)));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", transactionType0, "", "")));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", transactionType0, "", months)));
-
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", "transactionType0", transactionType1, months)));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", transactionType0, "dFJi", months)));
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, months)));
+        assertFalse(passTimeValidator.handle(String.format("%s %s", "", "")));
+        assertFalse(passTimeValidator.handle(String.format("%s %s", "", months)));
+        assertFalse(passTimeValidator.handle(String.format("%s %s", "yes no", months)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s", transactionType, months)));
     }
 
     @Test
     protected void transaction_should_contain_months_as_the_third_argument() {
-        String transactionType0 = TransactionType.PassTime.split()[0];
-        String transactionType1 = TransactionType.PassTime.split()[1];
+        TransactionType transactionType = TransactionType.PassTime;
 
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, "")));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, "months")));
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, getMonthsPerYear())));
+        assertFalse(passTimeValidator.handle(String.format("%s %s", transactionType, "")));
+        assertFalse(passTimeValidator.handle(String.format("%s %s", transactionType, "months")));
+        assertTrue(passTimeValidator.handle(String.format("%s %s", transactionType, getMonthsPerYear())));
     }
 
     @Test
     protected void transaction_should_contain_months_between_1_and_60_inclusive() {
-        String transactionType0 = TransactionType.PassTime.split()[0];
-        String transactionType1 = TransactionType.PassTime.split()[1];
+        TransactionType transactionType = TransactionType.PassTime;
 
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, -60)));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, -3)));
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, 1)));
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, 5)));
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, 30)));
+        assertFalse(passTimeValidator.handle(String.format("%s %s", transactionType, -60)));
+        assertFalse(passTimeValidator.handle(String.format("%s %s", transactionType, -3)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s", transactionType, 1)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s", transactionType, 5)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s", transactionType, 30)));
 
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, 40)));
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, 56)));
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, 60)));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, 64)));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", transactionType0, transactionType1, 120)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s", transactionType, 40)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s", transactionType, 56)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s", transactionType, 60)));
+        assertFalse(passTimeValidator.handle(String.format("%s %s", transactionType, 64)));
+        assertFalse(passTimeValidator.handle(String.format("%s %s", transactionType, 120)));
     }
 
     @Test
     protected void transaction_should_be_case_insensitive() {
         int months = getMonthsPerYear();
 
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", "PaSs", "time", months)));
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s", "pass", "tIMe", months)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s", "PaSs tIme", months)));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        String transactionType0 = TransactionType.PassTime.split()[0];
-        String transactionType1 = TransactionType.PassTime.split()[1];
+        TransactionType transactionType = TransactionType.PassTime;
         int months = getMonthsPerYear();
 
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s 0", transactionType0, transactionType1, months)));
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s 89 23892398 92839233 23", transactionType0, transactionType1, months)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s 0", transactionType, months)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s 89 23892398 92839233 23", transactionType, months)));
     }
 }

@@ -52,7 +52,7 @@ public class TransferValidatorTests {
     protected void transfer_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         transferValidator.setNext(new PassTimeValidator(bank));
 
-        assertTrue(transferValidator.handle(String.format("%s %s %s", TransactionType.PassTime.split()[0], TransactionType.PassTime.split()[1], 60)));
+        assertTrue(transferValidator.handle(String.format("%s %s", TransactionType.PassTime, 60)));
         assertFalse(transferValidator.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "78437942", getMaxAPR(), getMinInitialCDBalance())));
     }
 

@@ -15,8 +15,7 @@ public class PassTimeValidator extends TransactionChain {
     @Override
     public boolean handle(String[] transactionArguments) {
         try {
-            if (transactionArguments[0].equalsIgnoreCase("pass")
-                    && transactionArguments[1].equalsIgnoreCase("time")
+            if ((transactionArguments[0] + transactionArguments[1]).equalsIgnoreCase(transactionType.name())
                     && bank.isPassTimeValid(parseInt(transactionArguments[2]))) {
                 return true;
             } else {

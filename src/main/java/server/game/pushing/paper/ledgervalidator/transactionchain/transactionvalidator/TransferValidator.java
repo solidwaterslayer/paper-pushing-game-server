@@ -15,7 +15,8 @@ public class TransferValidator extends TransactionChain {
     @Override
     public boolean handle(String[] transactionArguments) {
         try {
-            if (transactionArguments[0].equalsIgnoreCase("transfer") && bank.isTransferAmountValid(transactionArguments[1], transactionArguments[2], parseDouble(transactionArguments[3]))) {
+            if (transactionArguments[0].equalsIgnoreCase(transactionType.name())
+                    && bank.isTransferAmountValid(transactionArguments[1], transactionArguments[2], parseDouble(transactionArguments[3]))) {
                 return true;
             } else {
                 return next != null && next.handle(transactionArguments);

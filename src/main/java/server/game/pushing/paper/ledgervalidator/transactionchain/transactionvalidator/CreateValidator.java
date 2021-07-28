@@ -15,10 +15,10 @@ public class CreateValidator extends TransactionChain {
     @Override
     public boolean handle(String[] transactionArguments) {
         try {
-            if (transactionArguments[0].equalsIgnoreCase("create")
-                    && (isCreateCheckingTransactionValid(transactionArguments)
-                    || isCreateSavingsTransactionValid(transactionArguments)
-                    || isCreateCDTransactionValid(transactionArguments))) {
+            if (transactionArguments[0].equalsIgnoreCase(transactionType.name())
+                    && (handleCreateCheckingTransaction(transactionArguments)
+                    || handleCreateSavingsTransaction(transactionArguments)
+                    || handleCreateCDTransaction(transactionArguments))) {
                 return true;
             } else {
                 return next != null && next.handle(transactionArguments);
@@ -28,19 +28,19 @@ public class CreateValidator extends TransactionChain {
         }
     }
 
-    protected boolean isCreateCheckingTransactionValid(String[] transactionArguments) {
+    protected boolean handleCreateCheckingTransaction(String[] transactionArguments) {
         return transactionArguments[1].equalsIgnoreCase("checking")
                 && bank.isIDValid(transactionArguments[2])
                 && bank.isAPRValid(parseDouble(transactionArguments[3]));
     }
 
-    protected boolean isCreateSavingsTransactionValid(String[] transactionArguments) {
+    protected boolean handleCreateSavingsTransaction(String[] transactionArguments) {
         return transactionArguments[1].equalsIgnoreCase("savings")
                 && bank.isIDValid(transactionArguments[2])
                 && bank.isAPRValid(parseDouble(transactionArguments[3]));
     }
 
-    protected boolean isCreateCDTransactionValid(String[] transactionArguments) {
+    protected boolean handleCreateCDTransaction(String[] transactionArguments) {
         return transactionArguments[1].equalsIgnoreCase("cd")
                 && bank.isIDValid(transactionArguments[2])
                 && bank.isAPRValid(parseDouble(transactionArguments[3]))
