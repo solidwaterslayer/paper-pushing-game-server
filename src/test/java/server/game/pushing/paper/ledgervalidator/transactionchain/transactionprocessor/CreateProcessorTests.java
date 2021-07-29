@@ -4,18 +4,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
+import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
+import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
 
 public class CreateProcessorTests {
     CreateProcessor createProcessor;
     protected Bank bank;
-
-    protected final String CHECKING_ID = "00000000";
-    protected final String SAVINGS_ID = "00000001";
-    protected final String CD_ID = "00000010";
-    protected final double APR = 10;
-    protected final double INITIAL_CD_BALANCE = 8000;
 
     @BeforeEach
     protected void setUp() {
@@ -25,43 +23,62 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        double savingsDepositAmount = 2500;
-
         createProcessor.setNext(new DepositProcessor(bank));
-        createProcessor.handle(String.format("create savings %s %f", SAVINGS_ID, APR));
-        assertTrue(createProcessor.handle(String.format("deposit %s %f", SAVINGS_ID, savingsDepositAmount)));
+        String id = "98430842";
+        double apr = getMaxAPR();
+        double depositAmount = Savings.getMaxDepositAmount();
+        double withdrawAmount = Savings.getMaxWithdrawAmount();
 
-        assertEquals(savingsDepositAmount, bank.getAccount(SAVINGS_ID).getBalance());
-        assertFalse(createProcessor.handle(String.format("withdraw %s %f", SAVINGS_ID, 1000.0f)));
+        bank.createSavings(id, apr);
+
+        assertTrue(createProcessor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
+        assertEquals(depositAmount, bank.getAccount(id).getBalance());
+        assertFalse(createProcessor.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
     }
 
     @Test
     protected void create_checking_transaction_should_process() {
-        createProcessor.handle(String.format("create checking %s %f", CHECKING_ID, APR));
+        TransactionType transactionType = TransactionType.Create;
+        AccountType accountType = AccountType.Checking;
+        String id = "87438743";
+        double apr = getMaxAPR();
 
-        assertEquals(AccountType.Checking, bank.getAccount(CHECKING_ID).getAccountType());
-        assertEquals(CHECKING_ID, bank.getAccount(CHECKING_ID).getID());
-        assertEquals(APR, bank.getAccount(CHECKING_ID).getAPR());
-        assertEquals(0, bank.getAccount(CHECKING_ID).getBalance());
+        createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr));
+
+        assertEquals(accountType, bank.getAccount(id).getAccountType());
+        assertEquals(id, bank.getAccount(id).getID());
+        assertEquals(apr, bank.getAccount(id).getAPR());
+        assertEquals(0, bank.getAccount(id).getBalance());
     }
 
     @Test
     protected void create_savings_transaction_should_process() {
-        createProcessor.handle(String.format("create savings %s %f", SAVINGS_ID, APR));
+        TransactionType transactionType = TransactionType.Create;
+        AccountType accountType = AccountType.Savings;
+        String id = "87438742";
+        double apr = getMaxAPR();
 
-        assertEquals(AccountType.Savings, bank.getAccount(SAVINGS_ID).getAccountType());
-        assertEquals(SAVINGS_ID, bank.getAccount(SAVINGS_ID).getID());
-        assertEquals(APR, bank.getAccount(SAVINGS_ID).getAPR());
-        assertEquals(0, bank.getAccount(SAVINGS_ID).getBalance());
+        createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr));
+
+        assertEquals(accountType, bank.getAccount(id).getAccountType());
+        assertEquals(id, bank.getAccount(id).getID());
+        assertEquals(apr, bank.getAccount(id).getAPR());
+        assertEquals(0, bank.getAccount(id).getBalance());
     }
 
     @Test
     protected void create_cd_transaction_should_process() {
-        createProcessor.handle(String.format("create cd %s %f %f", CD_ID, APR, INITIAL_CD_BALANCE));
+        TransactionType transactionType = TransactionType.Create;
+        AccountType accountType = AccountType.CD;
+        String id = "87438778";
+        double apr = getMaxAPR();
+        double initialCDBalance = getMinInitialCDBalance();
 
-        assertEquals(AccountType.CD, bank.getAccount(CD_ID).getAccountType());
-        assertEquals(CD_ID, bank.getAccount(CD_ID).getID());
-        assertEquals(APR, bank.getAccount(CD_ID).getAPR());
-        assertEquals(INITIAL_CD_BALANCE, bank.getAccount(CD_ID).getBalance());
+        createProcessor.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, apr, initialCDBalance));
+
+        assertEquals(accountType, bank.getAccount(id).getAccountType());
+        assertEquals(id, bank.getAccount(id).getID());
+        assertEquals(apr, bank.getAccount(id).getAPR());
+        assertEquals(initialCDBalance, bank.getAccount(id).getBalance());
     }
 }

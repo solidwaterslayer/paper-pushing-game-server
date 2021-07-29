@@ -5,18 +5,20 @@ import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
 import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
+import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
 
 public class DepositProcessorTests {
     protected DepositProcessor depositProcessor;
     protected Bank bank;
 
-    protected final String CHECKING_ID = "00000000";
-    protected final String SAVINGS_ID = "00000001";
-    protected final double APR = 9;
+    protected final String CHECKING_ID = "87439742";
+    protected final String SAVINGS_ID = "97520943";
+    protected final double APR = getMaxAPR();
 
     @BeforeEach
     protected void setUp() {
@@ -29,32 +31,37 @@ public class DepositProcessorTests {
 
     @Test
     protected void deposit_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        double savingsDepositAmount = 2500;
-        double savingsWithdrawAmount = 1000;
-
         depositProcessor.setNext(new WithdrawProcessor(bank));
-        depositProcessor.handle(String.format("deposit %s %f", SAVINGS_ID, savingsDepositAmount));
-        assertTrue(depositProcessor.handle(String.format("withdraw %s %f", SAVINGS_ID, savingsWithdrawAmount)));
+        String id = SAVINGS_ID;
+        double depositAmount = Savings.getMaxDepositAmount();
+        double withdrawAmount = 1000;
 
-        assertEquals(savingsDepositAmount - savingsWithdrawAmount, bank.getAccount(SAVINGS_ID).getBalance());
-        assertFalse(depositProcessor.handle(String.format("transfer %s %s %f", SAVINGS_ID, CHECKING_ID, 400.0f)));
+        bank.deposit(id, depositAmount);
+
+        assertTrue(depositProcessor.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
+        assertEquals(depositAmount - withdrawAmount, bank.getAccount(id).getBalance());
+        assertFalse(depositProcessor.handle(String.format("%s %s %s %s", TransactionType.Transfer, id, CHECKING_ID, withdrawAmount)));
     }
 
     @Test
     protected void deposit_checking_transaction_should_be_process() {
-        double checkingDepositAmount = 200;
+        TransactionType transactionType = TransactionType.Deposit;
+        String id = CHECKING_ID;
+        double depositAmount = Checking.getMaxDepositAmount();
 
-        depositProcessor.handle(String.format("deposit %s %f", CHECKING_ID, checkingDepositAmount));
+        depositProcessor.handle(String.format("%s %s %s", transactionType, id, depositAmount));
 
-        assertEquals(checkingDepositAmount, bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(depositAmount, bank.getAccount(id).getBalance());
     }
 
     @Test
     protected void deposit_savings_transaction_should_be_process() {
-        double savingsDepositAmount = 300;
+        TransactionType transactionType = TransactionType.Deposit;
+        String id = SAVINGS_ID;
+        double depositAmount = Savings.getMaxDepositAmount();
 
-        depositProcessor.handle(String.format("deposit %s %f", SAVINGS_ID, savingsDepositAmount));
+        depositProcessor.handle(String.format("%s %s %s", transactionType, id, depositAmount));
 
-        assertEquals(savingsDepositAmount, bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(depositAmount, bank.getAccount(id).getBalance());
     }
 }

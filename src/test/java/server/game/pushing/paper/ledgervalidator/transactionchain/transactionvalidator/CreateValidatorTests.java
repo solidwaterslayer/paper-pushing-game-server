@@ -35,7 +35,7 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_contain_the_transaction_type_create_as_the_first_argument() {
-        TransactionType transactionType = TransactionType.Create;
+        TransactionType transactionType = createValidator.getTransactionType();
         AccountType accountType = AccountType.Checking;
         String id = "34783794";
         double apr = getMaxAPR();
@@ -48,7 +48,7 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_contain_a_account_type_as_the_second_argument() {
-        TransactionType transactionType = TransactionType.Create;
+        TransactionType transactionType = createValidator.getTransactionType();
         String id = "53795478";
         double apr = getMaxAPR();
         double initialCDBalance = getMinInitialCDBalance();
@@ -63,7 +63,7 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_contain_an_unique_8_digit_id_as_the_third_argument() {
-        TransactionType transactionType = TransactionType.Create;
+        TransactionType transactionType = createValidator.getTransactionType();
         AccountType accountType = AccountType.Savings;
         String id = "34783874";
         double apr = getMaxAPR();
@@ -87,7 +87,7 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_contain_an_apr_between_0_and_10_inclusive_as_the_fourth_argument() {
-        TransactionType transactionType = TransactionType.Create;
+        TransactionType transactionType = createValidator.getTransactionType();
         AccountType accountType = AccountType.CD;
         String id = "87349724";
         double initialCDBalance = getMinInitialCDBalance();
@@ -111,7 +111,7 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_when_account_type_is_cd_should_contain_an_initial_balance_between_1000_and_10000_inclusive_as_the_fifth_argument() {
-        TransactionType transactionType = TransactionType.Create;
+        TransactionType transactionType = createValidator.getTransactionType();
         AccountType accountType = AccountType.CD;
         String id = "87349724";
         double apr = getMaxAPR();
@@ -148,7 +148,7 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        TransactionType transactionType = TransactionType.Create;
+        TransactionType transactionType = createValidator.getTransactionType();
         String id = "14567893";
         double apr = getMaxAPR();
         double initialCDBalance = getMinInitialCDBalance();
