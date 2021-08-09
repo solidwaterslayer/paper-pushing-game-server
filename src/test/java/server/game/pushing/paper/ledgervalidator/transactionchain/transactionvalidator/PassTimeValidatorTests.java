@@ -3,6 +3,7 @@ package server.game.pushing.paper.ledgervalidator.transactionchain.transactionva
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
+import server.game.pushing.paper.ledgervalidator.bank.account.Account;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
 import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
@@ -23,13 +24,13 @@ public class PassTimeValidatorTests {
     @Test
     protected void pass_time_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         passTimeValidator.setNext(new CreateValidator(bank));
-        String savingsID = "98478932";
+        AccountType accountType = AccountType.Savings;
+        String id = "98478932";
         double apr = getMaxAPR();
+        double depositAmount = Savings.getMaxDepositAmount();
 
-        bank.createSavings(savingsID, apr);
-
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "78437942", apr, getMinInitialCDBalance())));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", TransactionType.Deposit, savingsID, Savings.getMaxDepositAmount())));
+        assertTrue(passTimeValidator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, id, apr)));
+        assertFalse(passTimeValidator.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
     }
 
     @Test

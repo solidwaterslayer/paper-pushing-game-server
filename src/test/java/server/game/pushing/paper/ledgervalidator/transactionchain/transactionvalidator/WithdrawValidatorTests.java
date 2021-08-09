@@ -42,9 +42,11 @@ public class WithdrawValidatorTests {
     @Test
     protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         withdrawValidator.setNext(new TransferValidator(bank));
+        double transferAmount = 400;
+        int months = getMonthsPerYear();
 
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID, SAVINGS_ID, 400)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s", TransactionType.PassTime, 60)));
+        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID, SAVINGS_ID, transferAmount)));
+        assertFalse(withdrawValidator.handle(String.format("%s %s", TransactionType.PassTime, months)));
     }
 
     @Test

@@ -25,12 +25,14 @@ public class CreateValidatorTests {
     protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         createValidator.setNext(new DepositValidator(bank));
         String id = "87439742";
+        double apr = getMaxAPR();
         double depositAmount = Checking.getMaxDepositAmount();
+        double withdrawAmount = Checking.getMaxWithdrawAmount();
 
-        bank.createChecking(id, getMaxAPR());
+        bank.createChecking(id, apr);
 
         assertTrue(createValidator.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
-        assertFalse(createValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, id, Checking.getMaxWithdrawAmount())));
+        assertFalse(createValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
     }
 
     @Test
@@ -153,8 +155,8 @@ public class CreateValidatorTests {
         double apr = getMaxAPR();
         double initialCDBalance = getMinInitialCDBalance();
 
-        assertTrue(createValidator.handle(String.format("%s %s %s %s", transactionType, AccountType.Checking, id, apr)));
-        assertTrue(createValidator.handle(String.format("%s %s %s %s", transactionType, AccountType.Savings, id, apr)));
-        assertTrue(createValidator.handle(String.format("%s %s %s %s %s", transactionType, AccountType.CD, id, apr, initialCDBalance)));
+        assertTrue(createValidator.handle(String.format("%s %s %s %s 0", transactionType, AccountType.Checking, id, apr)));
+        assertTrue(createValidator.handle(String.format("%s %s %s %s nuke the power fd", transactionType, AccountType.Savings, id, apr)));
+        assertTrue(createValidator.handle(String.format("%s %s %s %s %s  8 83h8h8     8 8    ", transactionType, AccountType.CD, id, apr, initialCDBalance)));
     }
 }

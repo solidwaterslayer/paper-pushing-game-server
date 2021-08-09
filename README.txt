@@ -10,9 +10,11 @@ server code:
 > https://paper-pushing-game-server.herokuapp.com/
 
 how to start client:
+> download 'nodejs'
 > https://angular.io/guide/deployment
 
 how to start server:
+> download 'java'
 > https://dashboard.heroku.com/apps/
 
 how to run mutation coverage:
