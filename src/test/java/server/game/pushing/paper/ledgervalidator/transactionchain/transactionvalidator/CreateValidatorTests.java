@@ -12,8 +12,8 @@ import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
 
 public class CreateValidatorTests {
-    protected CreateValidator createValidator;
     protected Bank bank;
+    protected CreateValidator createValidator;
 
     @BeforeEach
     protected void setUp() {
@@ -23,13 +23,13 @@ public class CreateValidatorTests {
 
     @Test
     protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        createValidator.setNext(new DepositValidator(bank));
         String id = "87439742";
         double apr = getMaxAPR();
         double depositAmount = Checking.getMaxDepositAmount();
         double withdrawAmount = Checking.getMaxWithdrawAmount();
 
         bank.createChecking(id, apr);
+        createValidator.setNext(new DepositValidator(bank));
 
         assertTrue(createValidator.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
         assertFalse(createValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));

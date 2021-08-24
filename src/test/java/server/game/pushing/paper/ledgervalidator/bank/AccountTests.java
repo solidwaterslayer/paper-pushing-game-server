@@ -296,10 +296,10 @@ public class AccountTests {
 
     @Test
     protected void withdraw_cd_should_be_possible_after_a_year_inclusive() {
-        int months = getMonthsPerYear();
+        int monthsPerYear = getMonthsPerYear();
 
-        for (int month = 0; month < months + 12; month++) {
-            assertEquals(month >= months, cd.isWithdrawAmountValid(CD.getMaxWithdrawAmount()));
+        for (int month = 0; month < monthsPerYear * 2; month++) {
+            assertEquals(month >= monthsPerYear, cd.isWithdrawAmountValid(CD.getMaxWithdrawAmount()));
 
             cd.applyAPR();
         }

@@ -17,8 +17,8 @@ import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
 import static server.game.pushing.paper.ledgervalidator.bank.BankTests.passTime;
 
 public class WithdrawValidatorTests {
-    protected WithdrawValidator withdrawValidator;
     protected Bank bank;
+    protected WithdrawValidator withdrawValidator;
 
     protected final String CHECKING_ID = "34782479";
     protected final String SAVINGS_ID = "98430842";
@@ -41,9 +41,10 @@ public class WithdrawValidatorTests {
 
     @Test
     protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        withdrawValidator.setNext(new TransferValidator(bank));
         double transferAmount = 400;
         int months = getMonthsPerYear();
+
+        withdrawValidator.setNext(new TransferValidator(bank));
 
         assertTrue(withdrawValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID, SAVINGS_ID, transferAmount)));
         assertFalse(withdrawValidator.handle(String.format("%s %s", TransactionType.PassTime, months)));
@@ -152,10 +153,10 @@ public class WithdrawValidatorTests {
 
     @Test
     protected void transaction_when_account_type_is_cd_should_be_possible_after_a_year_inclusive() {
-        int months = getMonthsPerYear();
+        int monthsPerYear = getMonthsPerYear();
 
-        for (int month = 0; month < months + 12; month++) {
-            assertEquals(month >= months, withdrawValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, CD_ID, CD.getMaxWithdrawAmount())));
+        for (int month = 0; month < monthsPerYear * 2; month++) {
+            assertEquals(month >= monthsPerYear, withdrawValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, CD_ID, CD.getMaxWithdrawAmount())));
 
             bank.passTime(1);
         }

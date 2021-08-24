@@ -12,8 +12,8 @@ import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
 
 public class CreateProcessorTests {
-    CreateProcessor createProcessor;
     protected Bank bank;
+    CreateProcessor createProcessor;
 
     @BeforeEach
     protected void setUp() {
@@ -23,13 +23,13 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        createProcessor.setNext(new DepositProcessor(bank));
         String id = "98430842";
         double apr = getMaxAPR();
         double depositAmount = Savings.getMaxDepositAmount();
         double withdrawAmount = Savings.getMaxWithdrawAmount();
 
         bank.createSavings(id, apr);
+        createProcessor.setNext(new DepositProcessor(bank));
 
         assertTrue(createProcessor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
         assertEquals(depositAmount, bank.getAccount(id).getBalance());
@@ -43,8 +43,7 @@ public class CreateProcessorTests {
         String id = "87438743";
         double apr = getMaxAPR();
 
-        createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr));
-
+        assertTrue(createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
         assertEquals(accountType, bank.getAccount(id).getAccountType());
         assertEquals(id, bank.getAccount(id).getID());
         assertEquals(apr, bank.getAccount(id).getAPR());
@@ -58,8 +57,7 @@ public class CreateProcessorTests {
         String id = "87438742";
         double apr = getMaxAPR();
 
-        createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr));
-
+        assertTrue(createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
         assertEquals(accountType, bank.getAccount(id).getAccountType());
         assertEquals(id, bank.getAccount(id).getID());
         assertEquals(apr, bank.getAccount(id).getAPR());
@@ -74,8 +72,7 @@ public class CreateProcessorTests {
         double apr = getMaxAPR();
         double initialCDBalance = getMinInitialCDBalance();
 
-        createProcessor.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, apr, initialCDBalance));
-
+        assertTrue(createProcessor.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, apr, initialCDBalance)));
         assertEquals(accountType, bank.getAccount(id).getAccountType());
         assertEquals(id, bank.getAccount(id).getID());
         assertEquals(apr, bank.getAccount(id).getAPR());

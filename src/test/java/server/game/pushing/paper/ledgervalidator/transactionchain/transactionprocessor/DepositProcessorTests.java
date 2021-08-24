@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
 
 public class DepositProcessorTests {
-    protected DepositProcessor depositProcessor;
     protected Bank bank;
+    protected DepositProcessor depositProcessor;
 
     protected final String CHECKING_ID = "87439742";
     protected final String SAVINGS_ID = "97520943";
@@ -31,12 +31,12 @@ public class DepositProcessorTests {
 
     @Test
     protected void deposit_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        depositProcessor.setNext(new WithdrawProcessor(bank));
         String id = SAVINGS_ID;
         double depositAmount = Savings.getMaxDepositAmount();
         double withdrawAmount = 1000;
 
         bank.deposit(id, depositAmount);
+        depositProcessor.setNext(new WithdrawProcessor(bank));
 
         assertTrue(depositProcessor.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
         assertEquals(depositAmount - withdrawAmount, bank.getAccount(id).getBalance());
@@ -49,8 +49,7 @@ public class DepositProcessorTests {
         String id = CHECKING_ID;
         double depositAmount = Checking.getMaxDepositAmount();
 
-        depositProcessor.handle(String.format("%s %s %s", transactionType, id, depositAmount));
-
+        assertTrue(depositProcessor.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
         assertEquals(depositAmount, bank.getAccount(id).getBalance());
     }
 
@@ -60,8 +59,7 @@ public class DepositProcessorTests {
         String id = SAVINGS_ID;
         double depositAmount = Savings.getMaxDepositAmount();
 
-        depositProcessor.handle(String.format("%s %s %s", transactionType, id, depositAmount));
-
+        assertTrue(depositProcessor.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
         assertEquals(depositAmount, bank.getAccount(id).getBalance());
     }
 }

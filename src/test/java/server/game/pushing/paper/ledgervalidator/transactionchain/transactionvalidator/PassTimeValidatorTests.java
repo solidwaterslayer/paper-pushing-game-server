@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
 
 public class PassTimeValidatorTests {
-    protected PassTimeValidator passTimeValidator;
     protected Bank bank;
+    protected PassTimeValidator passTimeValidator;
 
     @BeforeEach
     protected void setUp() {
@@ -23,11 +23,12 @@ public class PassTimeValidatorTests {
 
     @Test
     protected void pass_time_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        passTimeValidator.setNext(new CreateValidator(bank));
         AccountType accountType = AccountType.Savings;
         String id = "98478932";
         double apr = getMaxAPR();
         double depositAmount = Savings.getMaxDepositAmount();
+
+        passTimeValidator.setNext(new CreateValidator(bank));
 
         assertTrue(passTimeValidator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, id, apr)));
         assertFalse(passTimeValidator.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));

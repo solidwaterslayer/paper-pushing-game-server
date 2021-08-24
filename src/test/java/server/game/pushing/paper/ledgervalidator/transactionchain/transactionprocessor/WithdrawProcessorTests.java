@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
 
 public class WithdrawProcessorTests {
-    protected WithdrawProcessor withdrawProcessor;
     protected Bank bank;
+    protected WithdrawProcessor withdrawProcessor;
 
     protected final String CHECKING_ID = "87439752";
     protected final String SAVINGS_ID = "09329843";
@@ -42,11 +42,12 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void withdraw_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        withdrawProcessor.setNext(new TransferProcessor(bank));
         String fromID = SAVINGS_ID;
         String toID = CHECKING_ID;
         double transferAmount = 400;
         int months = getMonthsPerYear();
+
+        withdrawProcessor.setNext(new TransferProcessor(bank));
 
         assertTrue(withdrawProcessor.handle(String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount)));
         assertEquals(SAVINGS_DEPOSIT_AMOUNT - transferAmount, bank.getAccount(fromID).getBalance());
@@ -60,8 +61,7 @@ public class WithdrawProcessorTests {
         String id = CHECKING_ID;
         double withdrawAmount = Checking.getMaxWithdrawAmount();
 
-        withdrawProcessor.handle(String.format("%s %s %s", transactionType, id, withdrawAmount));
-
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
         assertTrue(withdrawAmount < CHECKING_DEPOSIT_AMOUNT);
         assertEquals(CHECKING_DEPOSIT_AMOUNT - withdrawAmount, bank.getAccount(id).getBalance());
     }
@@ -72,8 +72,7 @@ public class WithdrawProcessorTests {
         String id = SAVINGS_ID;
         double withdrawAmount = Savings.getMaxWithdrawAmount();
 
-        withdrawProcessor.handle(String.format("%s %s %s", transactionType, id, withdrawAmount));
-
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
         assertTrue(withdrawAmount < SAVINGS_DEPOSIT_AMOUNT);
         assertEquals(SAVINGS_DEPOSIT_AMOUNT - withdrawAmount, bank.getAccount(id).getBalance());
     }
@@ -82,23 +81,22 @@ public class WithdrawProcessorTests {
     protected void withdraw_transaction_when_withdraw_amount_is_equal_to_balance_should_process() {
         TransactionType transactionType = TransactionType.Withdraw;
         double minBalanceFee = bank.getMinBalanceFee();
-        int months = 12;
+        int months = getMonthsPerYear();
         double checkingWithdrawAmount = BankTests.passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months);
         double savingsWithdrawAmount = BankTests.passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months);
         double cdWithdrawAmount = BankTests.passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months);
         bank.passTime(months);
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());
-        withdrawProcessor.handle(String.format("%s %s %s", transactionType, CHECKING_ID, checkingWithdrawAmount));
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, CHECKING_ID, checkingWithdrawAmount)));
+        assertEquals(0, bank.getAccount(CHECKING_ID).getBalance());
 
         assertEquals(savingsWithdrawAmount, bank.getAccount(SAVINGS_ID).getBalance());
-        withdrawProcessor.handle(String.format("%s %s %s", transactionType, SAVINGS_ID, savingsWithdrawAmount));
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, SAVINGS_ID, savingsWithdrawAmount)));
+        assertEquals(0, bank.getAccount(SAVINGS_ID).getBalance());
 
         assertEquals(cdWithdrawAmount, bank.getAccount(CD_ID).getBalance());
-        withdrawProcessor.handle(String.format("%s %s %s", transactionType, CD_ID, cdWithdrawAmount));
-
-        assertEquals(0, bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(0, bank.getAccount(SAVINGS_ID).getBalance());
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, CD_ID, cdWithdrawAmount)));
         assertEquals(0, bank.getAccount(CD_ID).getBalance());
     }
 
@@ -115,16 +113,15 @@ public class WithdrawProcessorTests {
         bank.passTime(12);
 
         assertTrue(checkingWithdrawAmount > bank.getAccount(CHECKING_ID).getBalance());
-        withdrawProcessor.handle(String.format("%s %s %s", transactionType, CHECKING_ID, checkingWithdrawAmount));
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, CHECKING_ID, checkingWithdrawAmount)));
+        assertEquals(0, bank.getAccount(CHECKING_ID).getBalance());
 
         assertTrue(savingsWithdrawAmount > bank.getAccount(SAVINGS_ID).getBalance());
-        withdrawProcessor.handle(String.format("%s %s %s", transactionType, SAVINGS_ID, savingsWithdrawAmount));
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, SAVINGS_ID, savingsWithdrawAmount)));
+        assertEquals(0, bank.getAccount(SAVINGS_ID).getBalance());
 
         assertTrue(cdWithdrawAmount > bank.getAccount(CD_ID).getBalance());
-        withdrawProcessor.handle(String.format("%s %s %s", transactionType, CD_ID, cdWithdrawAmount));
-
-        assertEquals(0, bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(0, bank.getAccount(SAVINGS_ID).getBalance());
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, CD_ID, cdWithdrawAmount)));
         assertEquals(0, bank.getAccount(CD_ID).getBalance());
     }
 }
