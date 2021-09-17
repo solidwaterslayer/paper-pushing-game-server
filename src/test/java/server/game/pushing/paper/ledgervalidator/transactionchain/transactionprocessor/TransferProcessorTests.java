@@ -26,8 +26,8 @@ public class TransferProcessorTests {
     protected final String SAVINGS_ID_1 = "11117823";
     protected final String CD_ID = "08429834";
     protected final double APR = getMaxAPR();
-    protected final double CHECKING_DEPOSIT_AMOUNT = Checking.getMaxDepositAmount();
-    protected final double SAVINGS_DEPOSIT_AMOUNT = Savings.getMaxDepositAmount();
+    protected double CHECKING_DEPOSIT_AMOUNT;
+    protected double SAVINGS_DEPOSIT_AMOUNT;
     protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
 
     @BeforeEach
@@ -40,6 +40,8 @@ public class TransferProcessorTests {
                 new CD(CD_ID, APR, INITIAL_CD_BALANCE)
         ));
         transferProcessor = new TransferProcessor(bank);
+        CHECKING_DEPOSIT_AMOUNT = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
+        SAVINGS_DEPOSIT_AMOUNT = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
 
         bank.deposit(CHECKING_ID_0, CHECKING_DEPOSIT_AMOUNT);
         bank.deposit(CHECKING_ID_1, CHECKING_DEPOSIT_AMOUNT);
@@ -68,7 +70,7 @@ public class TransferProcessorTests {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = CHECKING_ID_0;
         String toID = CHECKING_ID_1;
-        double transferAmount = min(Checking.getMaxWithdrawAmount(), Checking.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(CHECKING_DEPOSIT_AMOUNT - transferAmount, bank.getAccount(fromID).getBalance());
@@ -80,7 +82,7 @@ public class TransferProcessorTests {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = CHECKING_ID_0;
         String toID = SAVINGS_ID_0;
-        double transferAmount = min(Checking.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(CHECKING_DEPOSIT_AMOUNT - transferAmount, bank.getAccount(fromID).getBalance());
@@ -92,7 +94,7 @@ public class TransferProcessorTests {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = SAVINGS_ID_1;
         String toID = CHECKING_ID_0;
-        double transferAmount = min(Savings.getMaxWithdrawAmount(), Checking.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(SAVINGS_DEPOSIT_AMOUNT - transferAmount, bank.getAccount(fromID).getBalance());
@@ -104,7 +106,7 @@ public class TransferProcessorTests {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = SAVINGS_ID_1;
         String toID = SAVINGS_ID_0;
-        double transferAmount = min(Savings.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(SAVINGS_DEPOSIT_AMOUNT - transferAmount, bank.getAccount(fromID).getBalance());
@@ -118,7 +120,7 @@ public class TransferProcessorTests {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = CD_ID;
         String toID = SAVINGS_ID_1;
-        double transferAmount = min(CD.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         bank.passTime(months);
 

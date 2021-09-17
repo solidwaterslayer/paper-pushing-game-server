@@ -37,16 +37,17 @@ public class PassTimeProcessorTests {
 
     @Test
     protected void pass_time_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        String id = "10000010";
+        String id0 = "10000010";
+        String id1 = SAVINGS_ID;
 
         passTimeProcessor.setNext(new CreateProcessor(bank));
 
-        assertTrue(passTimeProcessor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, id, APR, INITIAL_CD_BALANCE)));
-        assertEquals(AccountType.CD, bank.getAccount(id).getAccountType());
-        assertEquals(id, bank.getAccount(id).getID());
-        assertEquals(APR, bank.getAccount(id).getAPR());
-        assertEquals(INITIAL_CD_BALANCE, bank.getAccount(id).getBalance());
-        assertFalse(passTimeProcessor.handle(String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID, Savings.getMaxDepositAmount())));
+        assertTrue(passTimeProcessor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, id0, APR, INITIAL_CD_BALANCE)));
+        assertEquals(AccountType.CD, bank.getAccount(id0).getAccountType());
+        assertEquals(id0, bank.getAccount(id0).getID());
+        assertEquals(APR, bank.getAccount(id0).getAPR());
+        assertEquals(INITIAL_CD_BALANCE, bank.getAccount(id0).getBalance());
+        assertFalse(passTimeProcessor.handle(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
     }
 
     @Test
@@ -54,8 +55,8 @@ public class PassTimeProcessorTests {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = getMonthsPerYear();
         TransactionType transactionType = TransactionType.PassTime;
-        double checkingDepositAmount = Checking.getMaxDepositAmount();
-        double savingsDepositAmount = Savings.getMaxDepositAmount();
+        double checkingDepositAmount = bank.getAccount(CHECKING_ID).getMaxDepositAmount();
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID).getMaxDepositAmount();
 
         bank.deposit(CHECKING_ID, checkingDepositAmount);
         bank.deposit(SAVINGS_ID, savingsDepositAmount);

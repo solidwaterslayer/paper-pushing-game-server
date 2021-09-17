@@ -39,7 +39,7 @@ public class DepositValidatorTests {
     @Test
     protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         String id = CHECKING_ID;
-        double withdrawAmount = Checking.getMaxWithdrawAmount();
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
         double transferAmount = 400;
 
         depositValidator.setNext(new WithdrawValidator(bank));
@@ -52,7 +52,7 @@ public class DepositValidatorTests {
     protected void transaction_should_contain_the_transaction_type_deposit_as_the_first_argument() {
         TransactionType transactionType = TransactionType.Deposit;
         String id = SAVINGS_ID;
-        double depositAmount = Savings.getMaxDepositAmount();
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
 
         assertFalse(depositValidator.handle(String.format("%s %s %s", "", "", "")));
         assertFalse(depositValidator.handle(String.format("%s %s %s", "", id, depositAmount)));
@@ -63,22 +63,24 @@ public class DepositValidatorTests {
     @Test
     protected void transaction_should_contain_a_taken_id_as_the_second_argument() {
         TransactionType transactionType = TransactionType.Deposit;
-        double depositAmount = Checking.getMaxDepositAmount();
+        String id = SAVINGS_ID;
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
 
         assertFalse(depositValidator.handle(String.format("%s %s %s", transactionType, "", "")));
         assertFalse(depositValidator.handle(String.format("%s %s %s", transactionType, "", depositAmount)));
         assertFalse(depositValidator.handle(String.format("%s %s %s", transactionType, "87439742", depositAmount)));
-        assertTrue(depositValidator.handle(String.format("%s %s %s", transactionType, SAVINGS_ID, depositAmount)));
+        assertTrue(depositValidator.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
     }
 
     @Test
     protected void transaction_should_contain_a_deposit_amount_as_the_third_argument() {
         TransactionType transactionType = TransactionType.Deposit;
         String id = SAVINGS_ID;
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
 
         assertFalse(depositValidator.handle(String.format("%s %s %s", transactionType, id, "")));
         assertFalse(depositValidator.handle(String.format("%s %s %s", transactionType, id, "depositAmount")));
-        assertTrue(depositValidator.handle(String.format("%s %s %s", transactionType, id, Checking.getMaxDepositAmount())));
+        assertTrue(depositValidator.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
     }
 
     @Test
@@ -145,15 +147,15 @@ public class DepositValidatorTests {
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        assertTrue(depositValidator.handle(String.format("dePoSIT %s %s", CHECKING_ID, Checking.getMaxDepositAmount())));
-        assertTrue(depositValidator.handle(String.format("deposit %s %s", SAVINGS_ID, Savings.getMaxDepositAmount())));
+        assertTrue(depositValidator.handle(String.format("dePoSIT %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount())));
+        assertTrue(depositValidator.handle(String.format("deposit %s %s", SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount())));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
         TransactionType transactionType = TransactionType.Deposit;
 
-        assertTrue(depositValidator.handle(String.format("%s %s %s nuke", transactionType, CHECKING_ID, Checking.getMaxDepositAmount())));
-        assertTrue(depositValidator.handle(String.format("%s %s %s 0 0 0 0 0 0  0 0", transactionType, SAVINGS_ID, Savings.getMaxDepositAmount())));
+        assertTrue(depositValidator.handle(String.format("%s %s %s nuke", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount())));
+        assertTrue(depositValidator.handle(String.format("%s %s %s 0 0 0 0 0 0  0 0", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount())));
     }
 }

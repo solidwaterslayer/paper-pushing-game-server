@@ -23,8 +23,8 @@ public class WithdrawProcessorTests {
     protected final String SAVINGS_ID = "09329843";
     protected final String CD_ID = "43894280";
     protected final double APR = getMaxAPR();
-    protected final double CHECKING_DEPOSIT_AMOUNT = Checking.getMaxDepositAmount();
-    protected final double SAVINGS_DEPOSIT_AMOUNT = Savings.getMaxDepositAmount();
+    protected double CHECKING_DEPOSIT_AMOUNT;
+    protected double SAVINGS_DEPOSIT_AMOUNT;
     protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
 
     @BeforeEach
@@ -35,6 +35,8 @@ public class WithdrawProcessorTests {
                 new CD(CD_ID, APR, INITIAL_CD_BALANCE)
         ));
         withdrawProcessor = new WithdrawProcessor(bank);
+        CHECKING_DEPOSIT_AMOUNT = bank.getAccount(CHECKING_ID).getMaxDepositAmount();
+        SAVINGS_DEPOSIT_AMOUNT = bank.getAccount(SAVINGS_ID).getMaxDepositAmount();
 
         bank.deposit(CHECKING_ID, CHECKING_DEPOSIT_AMOUNT);
         bank.deposit(SAVINGS_ID, SAVINGS_DEPOSIT_AMOUNT);
@@ -59,7 +61,7 @@ public class WithdrawProcessorTests {
     protected void withdraw_checking_transaction_when_withdraw_amount_is_less_than_balance_should_process() {
         TransactionType transactionType = TransactionType.Withdraw;
         String id = CHECKING_ID;
-        double withdrawAmount = Checking.getMaxWithdrawAmount();
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
         assertTrue(withdrawAmount < CHECKING_DEPOSIT_AMOUNT);
@@ -70,7 +72,7 @@ public class WithdrawProcessorTests {
     protected void withdraw_savings_transaction_when_withdraw_amount_is_less_than_balance_should_process() {
         TransactionType transactionType = TransactionType.Withdraw;
         String id = SAVINGS_ID;
-        double withdrawAmount = Savings.getMaxWithdrawAmount();
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
         assertTrue(withdrawAmount < SAVINGS_DEPOSIT_AMOUNT);
@@ -103,9 +105,9 @@ public class WithdrawProcessorTests {
     @Test
     protected void withdraw_transaction_when_withdraw_amount_is_greater_than_balance_should_withdraw_amount_equal_to_balance() {
         TransactionType transactionType = TransactionType.Withdraw;
-        double checkingWithdrawAmount = Checking.getMaxWithdrawAmount();
-        double savingsWithdrawAmount = Savings.getMaxWithdrawAmount();
-        double cdWithdrawAmount = CD.getMaxWithdrawAmount();
+        double checkingWithdrawAmount = bank.getAccount(CHECKING_ID).getMaxWithdrawAmount();
+        double savingsWithdrawAmount = bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount();
+        double cdWithdrawAmount = bank.getAccount(CD_ID).getMaxWithdrawAmount();
         bank.withdraw(CHECKING_ID, checkingWithdrawAmount);
         bank.withdraw(CHECKING_ID, checkingWithdrawAmount);
         bank.withdraw(SAVINGS_ID, savingsWithdrawAmount);

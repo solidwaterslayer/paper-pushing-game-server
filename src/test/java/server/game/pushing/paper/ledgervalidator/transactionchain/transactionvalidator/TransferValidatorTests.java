@@ -43,10 +43,10 @@ public class TransferValidatorTests {
         ));
         transferValidator = new TransferValidator(bank);
 
-        bank.deposit(CHECKING_ID_0, Checking.getMaxWithdrawAmount());
-        bank.deposit(CHECKING_ID_1, Checking.getMaxDepositAmount());
-        bank.deposit(SAVINGS_ID_0, Savings.getMaxDepositAmount());
-        bank.deposit(SAVINGS_ID_1, Savings.getMaxDepositAmount());
+        bank.deposit(CHECKING_ID_0, bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount());
+        bank.deposit(CHECKING_ID_1, bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
+        bank.deposit(SAVINGS_ID_0, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
+        bank.deposit(SAVINGS_ID_1, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class TransferValidatorTests {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = CHECKING_ID_1;
         String toID = CHECKING_ID_0;
-        double transferAmount = min(Checking.getMaxWithdrawAmount(), Checking.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         assertFalse(transferValidator.handle(String.format("%s %s %s %s", "", "", "", "")));
         assertFalse(transferValidator.handle(String.format("%s %s %s %s", "", fromID, toID, transferAmount)));
@@ -80,7 +80,7 @@ public class TransferValidatorTests {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = SAVINGS_ID_1;
         String toID = SAVINGS_ID_0;
-        double transferAmount = min(Savings.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         assertFalse(transferValidator.handle(String.format("%s %s %s %s", transactionType, "", "", "")));
         assertFalse(transferValidator.handle(String.format("%s %s %s %s", transactionType, "", "", transactionType)));
@@ -99,7 +99,7 @@ public class TransferValidatorTests {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = CD_ID_0;
         String toID = SAVINGS_ID_0;
-        double transferAmount = min(CD.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         bank.passTime(getMonthsPerYear());
 
@@ -164,7 +164,7 @@ public class TransferValidatorTests {
     protected void transaction_when_account_type_is_from_savings_should_not_be_possible_twice_a_month_or_more() {
         String fromID = SAVINGS_ID_1;
         String toID = CHECKING_ID_1;
-        double transferAmount = min(Savings.getMaxWithdrawAmount(), Checking.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
         String transaction = String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount);
 
         assertTrue(transferValidator.handle(transaction));
@@ -252,7 +252,7 @@ public class TransferValidatorTests {
         int monthsPerYear = getMonthsPerYear();
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(month >= monthsPerYear, transferValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CD_ID_0, SAVINGS_ID_0, Savings.getMaxDepositAmount())));
+            assertEquals(month >= monthsPerYear, transferValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CD_ID_0, SAVINGS_ID_0, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount())));
 
             bank.passTime(1);
         }
@@ -272,7 +272,7 @@ public class TransferValidatorTests {
 
         bank.removeAccount(fromID);
         bank.createCD(fromID, cdAPR, initialCDBalance);
-        bank.deposit(toID, Savings.getMaxDepositAmount());
+        bank.deposit(toID, bank.getAccount(toID).getMaxDepositAmount());
         lowerBound.add(passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, initialCDBalance, months.get(0)));
         lowerBound.add(passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, lowerBound.get(0), months.get(1)));
 
@@ -302,7 +302,7 @@ public class TransferValidatorTests {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = CD_ID_1;
         String toID = SAVINGS_ID_1;
-        double transferAmount = min(CD.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         bank.passTime(12);
 

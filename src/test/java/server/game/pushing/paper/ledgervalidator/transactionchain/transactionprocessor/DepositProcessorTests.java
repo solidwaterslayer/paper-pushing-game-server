@@ -32,7 +32,7 @@ public class DepositProcessorTests {
     @Test
     protected void deposit_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
         String id = SAVINGS_ID;
-        double depositAmount = Savings.getMaxDepositAmount();
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
         double withdrawAmount = 1000;
 
         bank.deposit(id, depositAmount);
@@ -47,7 +47,7 @@ public class DepositProcessorTests {
     protected void deposit_checking_transaction_should_be_process() {
         TransactionType transactionType = TransactionType.Deposit;
         String id = CHECKING_ID;
-        double depositAmount = Checking.getMaxDepositAmount();
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
 
         assertTrue(depositProcessor.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
         assertEquals(depositAmount, bank.getAccount(id).getBalance());
@@ -57,7 +57,7 @@ public class DepositProcessorTests {
     protected void deposit_savings_transaction_should_be_process() {
         TransactionType transactionType = TransactionType.Deposit;
         String id = SAVINGS_ID;
-        double depositAmount = Savings.getMaxDepositAmount();
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
 
         assertTrue(depositProcessor.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
         assertEquals(depositAmount, bank.getAccount(id).getBalance());

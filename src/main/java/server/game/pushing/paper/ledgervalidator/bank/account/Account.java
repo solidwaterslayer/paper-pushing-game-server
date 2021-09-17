@@ -7,12 +7,18 @@ public abstract class Account {
     protected final String ID;
     protected final double APR;
     protected double balance;
+    protected double minDepositAmount;
+    protected double maxDepositAmount;
+    protected double minWithdrawAmount;
+    protected double maxWithdrawAmount;
 
     protected Account(AccountType accountType, String id, double apr) {
         this.accountType = accountType;
         this.ID = id;
         this.APR = apr;
         balance = 0;
+        minDepositAmount = 0;
+        minWithdrawAmount = 0;
     }
 
     protected Account(AccountType accountType, String id, double apr, double balance) {
@@ -36,6 +42,14 @@ public abstract class Account {
 
     public double getBalance() {
         return balance;
+    }
+
+    public double getMaxDepositAmount() {
+        return maxDepositAmount;
+    }
+
+    public double getMaxWithdrawAmount() {
+        return maxWithdrawAmount;
     }
 
     @Override

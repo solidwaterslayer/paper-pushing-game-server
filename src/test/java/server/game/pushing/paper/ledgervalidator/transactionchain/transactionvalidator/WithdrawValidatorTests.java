@@ -35,8 +35,8 @@ public class WithdrawValidatorTests {
         )));
         withdrawValidator = new WithdrawValidator(bank);
 
-        bank.deposit(CHECKING_ID, Checking.getMaxDepositAmount());
-        bank.deposit(SAVINGS_ID, Savings.getMaxDepositAmount());
+        bank.deposit(CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount());
+        bank.deposit(SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class WithdrawValidatorTests {
     protected void transaction_should_contain_the_transaction_type_withdraw_as_the_first_argument() {
         TransactionType transactionType = TransactionType.Withdraw;
         String id = CHECKING_ID;
-        double withdrawAmount = Checking.getMaxWithdrawAmount();
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         assertFalse(withdrawValidator.handle(String.format("%s %s %s", "", "", "")));
         assertFalse(withdrawValidator.handle(String.format("%s %s %s", "", id, withdrawAmount)));
@@ -65,19 +65,20 @@ public class WithdrawValidatorTests {
     @Test
     protected void transaction_should_contain_a_taken_id_as_the_second_argument() {
         TransactionType transactionType = TransactionType.Withdraw;
-        double withdrawAmount = Savings.getMaxWithdrawAmount();
+        String id = SAVINGS_ID;
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, "", "")));
         assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, "", withdrawAmount)));
         assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, "87439742", withdrawAmount)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, SAVINGS_ID, withdrawAmount)));
+        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
     }
 
     @Test
     protected void transaction_should_contain_a_withdraw_amount_as_the_third_argument() {
         TransactionType transactionType = TransactionType.Withdraw;
         String id = CD_ID;
-        double withdrawAmount = CD.getMaxWithdrawAmount();
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         bank.passTime(getMonthsPerYear());
 
@@ -113,7 +114,7 @@ public class WithdrawValidatorTests {
     @Test
     protected void transaction_when_account_type_is_savings_should_not_be_possible_twice_a_month_or_more() {
         String id = SAVINGS_ID;
-        double withdrawAmount = Savings.getMaxWithdrawAmount();
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
         String transaction = String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount);
 
         assertTrue(withdrawValidator.handle(transaction));
@@ -156,7 +157,7 @@ public class WithdrawValidatorTests {
         int monthsPerYear = getMonthsPerYear();
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(month >= monthsPerYear, withdrawValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, CD_ID, CD.getMaxWithdrawAmount())));
+            assertEquals(month >= monthsPerYear, withdrawValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount())));
 
             bank.passTime(1);
         }
@@ -187,9 +188,9 @@ public class WithdrawValidatorTests {
     protected void transaction_should_be_case_insensitive() {
         bank.passTime(getMonthsPerYear());
 
-        assertTrue(withdrawValidator.handle(String.format("withdraw %s %s", CHECKING_ID, Checking.getMaxWithdrawAmount())));
-        assertTrue(withdrawValidator.handle(String.format("wITHdrAw %s %s", SAVINGS_ID, Savings.getMaxWithdrawAmount())));
-        assertTrue(withdrawValidator.handle(String.format("WITHDRAW %s %s", CD_ID, CD.getMaxWithdrawAmount())));
+        assertTrue(withdrawValidator.handle(String.format("withdraw %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount())));
+        assertTrue(withdrawValidator.handle(String.format("wITHdrAw %s %s", SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount())));
+        assertTrue(withdrawValidator.handle(String.format("WITHDRAW %s %s", CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount())));
     }
 
     @Test
@@ -198,8 +199,8 @@ public class WithdrawValidatorTests {
 
         bank.passTime(getMonthsPerYear());
 
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s nuke", transactionType, CHECKING_ID, Checking.getMaxWithdrawAmount())));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s 00 00 0 0 0 00    0", transactionType, SAVINGS_ID, Savings.getMaxWithdrawAmount())));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s %s %s", transactionType, CD_ID, CD.getMaxWithdrawAmount(), "d", "e", "r")));
+        assertTrue(withdrawValidator.handle(String.format("%s %s %s nuke", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount())));
+        assertTrue(withdrawValidator.handle(String.format("%s %s %s 00 00 0 0 0 00    0", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount())));
+        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s %s %s", transactionType, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount(), "d", "e", "r")));
     }
 }

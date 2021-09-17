@@ -75,7 +75,7 @@ public class BankTests {
     @Test
     protected void deposit_checking_should_be_possible() {
         String id = CHECKING_ID_0;
-        double checkingDepositAmount = Checking.getMaxDepositAmount();
+        double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
 
         bank.deposit(id, checkingDepositAmount);
 
@@ -85,7 +85,7 @@ public class BankTests {
     @Test
     protected void deposit_savings_should_be_possible() {
         String id = SAVINGS_ID_0;
-        double savingsDepositAmount = Savings.getMaxDepositAmount();
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
 
         bank.deposit(id, savingsDepositAmount);
 
@@ -94,11 +94,11 @@ public class BankTests {
 
     @Test
     protected void withdraw_should_be_possible() {
-        double checkingDepositAmount = Checking.getMaxWithdrawAmount();
-        double savingsDepositAmount = Savings.getMaxWithdrawAmount();
+        double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount();
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount();
         double checkingWithdrawAmount = checkingDepositAmount - 100;
         double savingsWithdrawAmount = savingsDepositAmount - 50;
-        double cdWithdrawAmount = CD.getMaxWithdrawAmount();
+        double cdWithdrawAmount = bank.getAccount(CD_ID_1).getMaxWithdrawAmount();
 
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
@@ -115,8 +115,8 @@ public class BankTests {
     protected void transfer_from_checking_to_checking_should_be_possible() {
         String fromID = CHECKING_ID_0;
         String toID = CHECKING_ID_1;
-        double checkingDepositAmount = Checking.getMaxDepositAmount();
-        double transferAmount = min(Checking.getMaxWithdrawAmount(), Checking.getMaxDepositAmount());
+        double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
+        double transferAmount = min(bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount(), bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
 
         bank.deposit(fromID, checkingDepositAmount);
         bank.transfer(fromID, toID, transferAmount);
@@ -129,8 +129,8 @@ public class BankTests {
     protected void transfer_from_checking_to_savings_should_be_possible() {
         String fromID = CHECKING_ID_1;
         String toID = SAVINGS_ID_1;
-        double checkingDepositAmount = Checking.getMaxDepositAmount();
-        double transferAmount = min(Checking.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
+        double transferAmount = min(bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
 
         bank.deposit(fromID, checkingDepositAmount);
         bank.transfer(fromID, toID, transferAmount);
@@ -143,8 +143,8 @@ public class BankTests {
     protected void transfer_from_savings_to_checking_should_be_possible() {
         String fromID = SAVINGS_ID_0;
         String toID = CHECKING_ID_0;
-        double savingsDepositAmount = Savings.getMaxDepositAmount();
-        double transferAmount = min(Savings.getMaxWithdrawAmount(), Checking.getMaxDepositAmount());
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
+        double transferAmount = min(bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount(), bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
 
         bank.deposit(fromID, savingsDepositAmount);
         bank.transfer(fromID, toID, transferAmount);
@@ -157,8 +157,8 @@ public class BankTests {
     protected void transfer_from_savings_to_savings_should_be_possible() {
         String fromID = SAVINGS_ID_1;
         String toID = SAVINGS_ID_0;
-        double savingsDepositAmount = Savings.getMaxDepositAmount();
-        double transferAmount = min(Savings.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
+        double transferAmount = min(bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
 
         bank.deposit(fromID, savingsDepositAmount);
         bank.transfer(fromID, toID, transferAmount);
@@ -173,8 +173,8 @@ public class BankTests {
         int months = getMonthsPerYear();
         String fromID = CD_ID_0;
         String toID = SAVINGS_ID_0;
-        double savingsDepositAmount = Savings.getMaxDepositAmount();
-        double transferAmount = min(CD.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
+        double transferAmount = min(bank.getAccount(CD_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
         bank.deposit(toID, savingsDepositAmount);
         bank.passTime(months);
 
@@ -212,7 +212,7 @@ public class BankTests {
         String fromID = SAVINGS_ID_0;
         String toID = SAVINGS_ID_1;
         double savingsDepositAmount = 100;
-        double savingsWithdrawAmount = Savings.getMaxWithdrawAmount();
+        double savingsWithdrawAmount = bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount();
         bank.deposit(fromID, savingsDepositAmount);
 
         assertTrue(savingsWithdrawAmount > bank.getAccount(fromID).getBalance());
@@ -226,8 +226,8 @@ public class BankTests {
     protected void pass_time_should_apply_apr() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = 6;
-        double checkingDepositAmount = Checking.getMaxDepositAmount();
-        double savingsDepositAmount = Savings.getMaxDepositAmount();
+        double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
 
@@ -344,7 +344,7 @@ public class BankTests {
 
     @Test
     protected void deposit_should_contain_a_taken_id() {
-        double savingsDepositAmount = Savings.getMaxDepositAmount();
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
 
         assertFalse(bank.isDepositAmountValid("08243478", savingsDepositAmount));
         assertTrue(bank.isDepositAmountValid(SAVINGS_ID_0, savingsDepositAmount));
@@ -409,7 +409,7 @@ public class BankTests {
 
     @Test
     protected void withdraw_should_contain_a_taken_id() {
-        double checkingWithdrawAmount = Checking.getMaxWithdrawAmount();
+        double checkingWithdrawAmount = bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount();
 
         assertFalse(bank.isWithdrawAmountValid("34784792", checkingWithdrawAmount));
         assertTrue(bank.isWithdrawAmountValid(CHECKING_ID_0, checkingWithdrawAmount));
@@ -440,7 +440,7 @@ public class BankTests {
     @Test
     protected void withdraw_savings_should_not_be_possible_twice_a_month_or_more() {
         String id = SAVINGS_ID_0;
-        double savingsDepositAmount = Savings.getMaxWithdrawAmount();
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount();
         double savingsWithdrawAmount = savingsDepositAmount - 100;
         bank.deposit(id, savingsDepositAmount);
 
@@ -482,7 +482,7 @@ public class BankTests {
         int monthsPerYear = getMonthsPerYear();
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(month >= getMonthsPerYear(), bank.isWithdrawAmountValid(CD_ID_0, CD.getMaxWithdrawAmount()));
+            assertEquals(month >= getMonthsPerYear(), bank.isWithdrawAmountValid(CD_ID_0, bank.getAccount(CD_ID_1).getMaxWithdrawAmount()));
 
             bank.passTime(1);
         }
@@ -512,7 +512,7 @@ public class BankTests {
     protected void transfer_should_contain_unique_and_taken_from_id_and_to_id() {
         String fromID = CHECKING_ID_1;
         String toID = CHECKING_ID_0;
-        double transferAmount = min(Checking.getMaxWithdrawAmount(), Checking.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount(), bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
 
         assertFalse(bank.isTransferAmountValid(fromID, fromID, transferAmount));
         assertFalse(bank.isTransferAmountValid("34782794", toID, transferAmount));
@@ -572,9 +572,9 @@ public class BankTests {
     protected void transfer_from_savings_should_not_be_possible_twice_a_month_or_more() {
         String fromID = SAVINGS_ID_1;
         String toID = CHECKING_ID_1;
-        double checkingDepositAmount = Checking.getMaxDepositAmount();
-        double savingsDepositAmount = Savings.getMaxDepositAmount();
-        double transferAmount = min(Checking.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
+        double transferAmount = min(bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
         bank.deposit(fromID, savingsDepositAmount);
         bank.deposit(toID, checkingDepositAmount);
 
@@ -655,7 +655,7 @@ public class BankTests {
     @Test
     protected void transfer_from_cd_to_savings_should_be_possible_after_12_month_inclusive() {
         int monthsPerYear = getMonthsPerYear();
-        double transferAmount = min(CD.getMaxWithdrawAmount(), Savings.getMaxDepositAmount());
+        double transferAmount = min(bank.getAccount(CD_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
         bank.deposit(SAVINGS_ID_0, transferAmount);
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
@@ -678,7 +678,7 @@ public class BankTests {
 
         bank.removeAccount(fromID);
         bank.createCD(fromID, cdAPR, initialCDBalance);
-        bank.deposit(toID, Savings.getMaxDepositAmount());
+        bank.deposit(toID, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
         lowerBound.add(passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, initialCDBalance, months.get(0)));
         lowerBound.add(passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, lowerBound.get(0), months.get(1)));
 

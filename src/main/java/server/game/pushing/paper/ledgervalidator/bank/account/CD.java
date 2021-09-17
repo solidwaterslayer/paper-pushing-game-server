@@ -8,6 +8,9 @@ public class CD extends Account {
     public CD(String id, double apr, double balance) {
         super(AccountType.CD, id, apr, balance);
         months = 0;
+        // TODO: test maxDepositAmount = 0.0d
+        maxDepositAmount = 0;
+        maxWithdrawAmount = Double.POSITIVE_INFINITY;
     }
 
     @Override
@@ -21,19 +24,11 @@ public class CD extends Account {
 
     @Override
     public boolean isDepositAmountValid(double depositAmount) {
-        return 0 < depositAmount && depositAmount <= getMaxDepositAmount();
-    }
-
-    public static double getMaxDepositAmount() {
-        return 0.0d;
+        return minDepositAmount < depositAmount && depositAmount <= maxDepositAmount;
     }
 
     @Override
     public boolean isWithdrawAmountValid(double withdrawAmount) {
         return months >= getMonthsPerYear() && withdrawAmount >= this.balance;
-    }
-
-    public static double getMaxWithdrawAmount() {
-        return Double.POSITIVE_INFINITY;
     }
 }

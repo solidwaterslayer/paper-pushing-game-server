@@ -25,10 +25,10 @@ public class CreateProcessorTests {
     protected void create_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
         String id = "98430842";
         double apr = getMaxAPR();
-        double depositAmount = Savings.getMaxDepositAmount();
-        double withdrawAmount = Savings.getMaxWithdrawAmount();
-
         bank.createSavings(id, apr);
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
+
         createProcessor.setNext(new DepositProcessor(bank));
 
         assertTrue(createProcessor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));

@@ -25,14 +25,16 @@ public class PassTimeValidatorTests {
     @Test
     protected void pass_time_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         AccountType accountType = AccountType.Savings;
-        String id = "98478932";
+        String id0 = "97439742";
+        String id1 = "98478932";
         double apr = getMaxAPR();
-        double depositAmount = Savings.getMaxDepositAmount();
+        bank.createSavings(id0, apr);
+        double depositAmount = bank.getAccount(id0).getMaxDepositAmount();
 
         passTimeValidator.setNext(new CreateValidator(bank));
 
-        assertTrue(passTimeValidator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, id, apr)));
-        assertFalse(passTimeValidator.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, id1, apr)));
+        assertFalse(passTimeValidator.handle(String.format("%s %s %s", TransactionType.Deposit, id1, depositAmount)));
     }
 
     @Test
