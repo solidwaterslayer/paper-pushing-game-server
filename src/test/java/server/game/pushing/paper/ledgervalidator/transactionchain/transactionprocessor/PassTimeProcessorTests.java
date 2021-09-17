@@ -13,16 +13,18 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
 
 public class PassTimeProcessorTests {
-    protected PassTimeProcessor passTimeProcessor;
     protected Bank bank;
+    protected PassTimeProcessor passTimeProcessor;
 
-    protected final String CHECKING_ID = "00000000";
-    protected final String SAVINGS_ID = "00000001";
-    protected final String CD_ID = "00000010";
-    protected final double APR = 6;
-    protected final double INITIAL_CD_BALANCE = 6000;
+    protected final String CHECKING_ID = "98430842";
+    protected final String SAVINGS_ID = "89438042";
+    protected final String CD_ID = "98430842";
+    protected final double APR = getMaxAPR();
+    protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
 
     @BeforeEach
     void setUp() {
