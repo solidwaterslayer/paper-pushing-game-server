@@ -15,7 +15,6 @@ import java.util.List;
 
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
 import static server.game.pushing.paper.ledgervalidator.bank.BankTests.passTime;
 

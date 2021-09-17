@@ -3,13 +3,14 @@ package server.game.pushing.paper.ledgervalidator.transactionchain.transactionva
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
-import server.game.pushing.paper.ledgervalidator.bank.account.Account;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
 import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
 
 public class PassTimeValidatorTests {
     protected Bank bank;

@@ -3,7 +3,6 @@ package server.game.pushing.paper.ledgervalidator.transactionchain.transactionpr
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
-import server.game.pushing.paper.ledgervalidator.bank.BankTests;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
 import server.game.pushing.paper.ledgervalidator.bank.account.CD;
 import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
@@ -15,6 +14,7 @@ import java.util.Arrays;
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
+import static server.game.pushing.paper.ledgervalidator.bank.BankTests.passTime;
 
 public class TransferProcessorTests {
     protected Bank bank;
@@ -55,11 +55,11 @@ public class TransferProcessorTests {
         transferProcessor.setNext(new PassTimeProcessor(bank));
 
         assertTrue(transferProcessor.handle(String.format("%s %s", TransactionType.PassTime, months)));
-        assertEquals(BankTests.passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months), bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(BankTests.passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(BankTests.passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(BankTests.passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months), bank.getAccount(SAVINGS_ID_1).getBalance());
-        assertEquals(BankTests.passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(CD_ID).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months), bank.getAccount(CHECKING_ID_0).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months), bank.getAccount(SAVINGS_ID_1).getBalance());
+        assertEquals(passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months), bank.getAccount(CD_ID).getBalance());
         assertFalse(transferProcessor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", APR, INITIAL_CD_BALANCE)));
     }
 
@@ -125,8 +125,8 @@ public class TransferProcessorTests {
         assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(0, bank.getAccount(fromID).getBalance());
         assertEquals(
-                BankTests.passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months)
-                        + BankTests.passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months)
+                passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months)
+                        + passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months)
                 , bank.getAccount(toID).getBalance()
         );
     }

@@ -3,7 +3,6 @@ package server.game.pushing.paper.ledgervalidator.transactionchain.transactionpr
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
-import server.game.pushing.paper.ledgervalidator.bank.BankTests;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
 import server.game.pushing.paper.ledgervalidator.bank.account.CD;
 import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
@@ -14,6 +13,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
+import static server.game.pushing.paper.ledgervalidator.bank.BankTests.passTime;
 
 public class WithdrawProcessorTests {
     protected Bank bank;
@@ -82,9 +82,9 @@ public class WithdrawProcessorTests {
         TransactionType transactionType = TransactionType.Withdraw;
         double minBalanceFee = bank.getMinBalanceFee();
         int months = getMonthsPerYear();
-        double checkingWithdrawAmount = BankTests.passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months);
-        double savingsWithdrawAmount = BankTests.passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months);
-        double cdWithdrawAmount = BankTests.passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months);
+        double checkingWithdrawAmount = passTime(APR, minBalanceFee, AccountType.Checking, CHECKING_DEPOSIT_AMOUNT, months);
+        double savingsWithdrawAmount = passTime(APR, minBalanceFee, AccountType.Savings, SAVINGS_DEPOSIT_AMOUNT, months);
+        double cdWithdrawAmount = passTime(APR, minBalanceFee, AccountType.CD, INITIAL_CD_BALANCE, months);
         bank.passTime(months);
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());
