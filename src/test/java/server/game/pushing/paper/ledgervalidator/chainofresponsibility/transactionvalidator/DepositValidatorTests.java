@@ -3,6 +3,7 @@ package server.game.pushing.paper.ledgervalidator.chainofresponsibility.transact
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
 
 import java.util.Arrays;
@@ -36,11 +37,11 @@ public class DepositValidatorTests {
 
     @Test
     protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+        depositValidator = (DepositValidator) ChainOfResponsibility.getInstance(Arrays.asList(depositValidator, new WithdrawValidator(bank), null));
+
         String id = CHECKING_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
         double transferAmount = 400;
-
-        depositValidator.setNext(new WithdrawValidator(bank));
 
         assertTrue(depositValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
         assertFalse(depositValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, id, SAVINGS_ID, transferAmount)));

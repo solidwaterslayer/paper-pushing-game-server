@@ -3,7 +3,10 @@ package server.game.pushing.paper.ledgervalidator.chainofresponsibility.transact
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,12 +31,13 @@ public class DepositProcessorTests {
 
     @Test
     protected void deposit_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
+        depositProcessor = (DepositProcessor) ChainOfResponsibility.getInstance(Arrays.asList(depositProcessor, new WithdrawProcessor(bank), null));
+
         String id = SAVINGS_ID;
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
         double withdrawAmount = 1000;
 
         bank.deposit(id, depositAmount);
-        depositProcessor.setNext(new WithdrawProcessor(bank));
 
         assertTrue(depositProcessor.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
         assertEquals(depositAmount - withdrawAmount, bank.getAccount(id).getBalance());

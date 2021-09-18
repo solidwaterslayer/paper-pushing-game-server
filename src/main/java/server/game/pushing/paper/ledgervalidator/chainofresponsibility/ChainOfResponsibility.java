@@ -22,10 +22,6 @@ public abstract class ChainOfResponsibility {
         return chainOfResponsibilities.get(0);
     }
 
-    public void setNext(ChainOfResponsibility next) {
-        this.next = next;
-    }
-
     public TransactionType getTransactionType() {
         return transactionType;
     }

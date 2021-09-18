@@ -1,18 +1,15 @@
 package server.game.pushing.paper.ledgervalidator.chainofresponsibility.transactionprocessor;
 
-import net.bytebuddy.asm.MemberSubstitution;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
 import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
-import server.game.pushing.paper.ledgervalidator.chainofresponsibility.transactionvalidator.*;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
 
 public class CreateProcessorTests {
     protected Bank bank;
@@ -26,13 +23,13 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
+        createProcessor = (CreateProcessor) ChainOfResponsibility.getInstance(Arrays.asList(createProcessor, new DepositProcessor(bank), null));
+
         String id = "98430842";
         double apr = bank.getMaxAPR();
         bank.createSavings(id, apr);
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
-
-        createProcessor.setNext(new DepositProcessor(bank));
 
         assertTrue(createProcessor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
         assertEquals(depositAmount, bank.getAccount(id).getBalance());

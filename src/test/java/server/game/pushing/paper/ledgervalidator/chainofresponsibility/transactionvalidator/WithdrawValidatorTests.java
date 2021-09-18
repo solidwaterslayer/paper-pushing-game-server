@@ -4,7 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
@@ -37,10 +40,10 @@ public class WithdrawValidatorTests {
 
     @Test
     protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        double transferAmount = 400;
-        int months = getMonthsPerYear();
+        withdrawValidator = (WithdrawValidator) ChainOfResponsibility.getInstance(Arrays.asList(withdrawValidator, new TransferValidator(bank), null));
 
-        withdrawValidator.setNext(new TransferValidator(bank));
+        int months = getMonthsPerYear();
+        double transferAmount = 400;
 
         assertTrue(withdrawValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID, SAVINGS_ID, transferAmount)));
         assertFalse(withdrawValidator.handle(String.format("%s %s", TransactionType.PassTime, months)));

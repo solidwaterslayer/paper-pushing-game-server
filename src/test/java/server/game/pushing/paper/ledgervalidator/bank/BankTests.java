@@ -288,11 +288,13 @@ public class BankTests {
             if (finalBalance <= 100) {
                 finalBalance -= minBalanceFee;
             }
+
             if (accountType == AccountType.CD) {
                 for (int j = 0; j < 3; j++) {
                     finalBalance += applyAPR(apr, finalBalance);
                 }
             }
+
             finalBalance += applyAPR(apr, finalBalance);
         }
 

@@ -4,7 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,13 +24,13 @@ public class CreateValidatorTests {
 
     @Test
     protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+        createValidator = (CreateValidator) ChainOfResponsibility.getInstance(Arrays.asList(createValidator, new DepositValidator(bank), null));
+
         String id = "87439742";
         double apr = bank.getMaxAPR();
         bank.createChecking(id, apr);
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
-
-        createValidator.setNext(new DepositValidator(bank));
 
         assertTrue(createValidator.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
         assertFalse(createValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));

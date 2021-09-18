@@ -17,8 +17,8 @@ public class PassTimeProcessor extends ChainOfResponsibility {
         if ((transactionArguments[0] + transactionArguments[1]).equalsIgnoreCase(transactionType.name())) {
             bank.passTime(parseInt(transactionArguments[2]));
             return true;
-        } else {
-            return next != null && next.handle(transactionArguments);
         }
+
+        return next != null && next.handle(transactionArguments);
     }
 }

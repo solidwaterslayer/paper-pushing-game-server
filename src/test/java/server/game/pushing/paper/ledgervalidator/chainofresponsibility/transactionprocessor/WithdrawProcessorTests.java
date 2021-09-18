@@ -4,7 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
@@ -41,12 +44,12 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void withdraw_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
+        withdrawProcessor = (WithdrawProcessor) ChainOfResponsibility.getInstance(Arrays.asList(withdrawProcessor, new TransferProcessor(bank), null));
+
         int months = getMonthsPerYear();
         String fromID = SAVINGS_ID;
         String toID = CHECKING_ID;
         double transferAmount = 400;
-
-        withdrawProcessor.setNext(new TransferProcessor(bank));
 
         assertTrue(withdrawProcessor.handle(String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount)));
         assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());

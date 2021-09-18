@@ -17,8 +17,8 @@ public class TransferProcessor extends ChainOfResponsibility {
         if (transactionArguments[0].equalsIgnoreCase(transactionType.name())) {
             bank.transfer(transactionArguments[1], transactionArguments[2], parseDouble(transactionArguments[3]));
             return true;
-        } else {
-            return next != null && next.handle(transactionArguments);
         }
+
+        return next != null && next.handle(transactionArguments);
     }
 }

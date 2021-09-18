@@ -15,7 +15,6 @@ public class CreateValidator extends ChainOfResponsibility {
     @Override
     public boolean handle(String[] transactionArguments) {
         try {
-            // TODO: fix mee
             if (transactionArguments[0].equalsIgnoreCase(transactionType.name())
                     && (handleCreateCheckingTransaction(transactionArguments)
                     || handleCreateSavingsTransaction(transactionArguments)
@@ -30,7 +29,6 @@ public class CreateValidator extends ChainOfResponsibility {
     }
 
     private boolean handleCreateCheckingTransaction(String[] transactionArguments) {
-        // TODO: fix mee
         return transactionArguments[1].equalsIgnoreCase("checking")
                 && bank.isIDValid(transactionArguments[2])
                 && bank.isAPRValid(parseDouble(transactionArguments[3]));

@@ -39,32 +39,53 @@ public class AccountTests {
 
     @Test
     protected void initialize_checking_should_have_0_balance() {
-        assertEquals(AccountType.Checking, checking.getAccountType());
-        assertEquals(CHECKING_ID, checking.getID());
-        assertEquals(CHECKING_APR, checking.getAPR());
-        assertEquals(0, checking.getBalance());
+        AccountType accountType = AccountType.Checking;
+        String id = CHECKING_ID;
+        double apr = CHECKING_APR;
+        double balance = 0;
+
+        assertEquals(accountType, checking.getAccountType());
+        assertEquals(id, checking.getID());
+        assertEquals(apr, checking.getAPR());
+        assertEquals(balance, checking.getBalance());
         assertEquals(1000, checking.getMaxDepositAmount());
         assertEquals(400, checking.getMaxWithdrawAmount());
+
+        assertEquals(String.format("%s %s %.2f %.2f", accountType, id, apr, balance).toLowerCase(), String.format("%s", checking));
     }
 
     @Test
     protected void initialize_savings_should_have_0_balance() {
-        assertEquals(AccountType.Savings, savings.getAccountType());
-        assertEquals(SAVINGS_ID, savings.getID());
-        assertEquals(SAVINGS_APR, savings.getAPR());
-        assertEquals(0, savings.getBalance());
+        AccountType accountType = AccountType.Savings;
+        String id = SAVINGS_ID;
+        double apr = SAVINGS_APR;
+        double balance = 0;
+
+        assertEquals(accountType, savings.getAccountType());
+        assertEquals(id, savings.getID());
+        assertEquals(apr, savings.getAPR());
+        assertEquals(balance, savings.getBalance());
         assertEquals(2500, savings.getMaxDepositAmount());
         assertEquals(1000, savings.getMaxWithdrawAmount());
+
+        assertEquals(String.format("%s %s %.2f %.2f", accountType, id, apr, balance).toLowerCase(), String.format("%s", savings));
     }
 
     @Test
     protected void initialize_cd_should_be_possible() {
-        assertEquals(AccountType.CD, cd.getAccountType());
-        assertEquals(CD_ID, cd.getID());
-        assertEquals(CD_APR, cd.getAPR());
-        assertEquals(INITIAL_CD_BALANCE, cd.getBalance());
+        AccountType accountType = AccountType.CD;
+        String id = CD_ID;
+        double apr = CD_APR;
+        double balance = INITIAL_CD_BALANCE;
+
+        assertEquals(accountType, cd.getAccountType());
+        assertEquals(id, cd.getID());
+        assertEquals(apr, cd.getAPR());
+        assertEquals(balance, cd.getBalance());
         assertEquals(0, cd.getMaxDepositAmount());
         assertEquals(Double.POSITIVE_INFINITY, cd.getMaxWithdrawAmount());
+
+        assertEquals(String.format("%s %s %.2f %.2f", accountType, id, apr, balance).toLowerCase(), String.format("%s", cd));
     }
 
     @Test

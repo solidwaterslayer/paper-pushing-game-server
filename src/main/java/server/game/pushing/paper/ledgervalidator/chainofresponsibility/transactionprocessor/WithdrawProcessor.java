@@ -17,8 +17,8 @@ public class WithdrawProcessor extends ChainOfResponsibility {
         if (transactionArguments[0].equalsIgnoreCase(transactionType.name())) {
             bank.withdraw(transactionArguments[1], parseDouble(transactionArguments[2]));
             return true;
-        } else {
-            return next != null && next.handle(transactionArguments);
         }
+
+        return next != null && next.handle(transactionArguments);
     }
 }

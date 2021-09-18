@@ -15,8 +15,8 @@ public class DepositProcessor extends ChainOfResponsibility {
         if (transactionArguments[0].equalsIgnoreCase(transactionType.name())) {
             bank.deposit(transactionArguments[1], Double.parseDouble(transactionArguments[2]));
             return true;
-        } else {
-            return next != null && next.handle(transactionArguments);
         }
+
+        return next != null && next.handle(transactionArguments);
     }
 }

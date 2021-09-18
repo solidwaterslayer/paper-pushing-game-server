@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
 
 import java.util.ArrayList;
@@ -50,11 +51,11 @@ public class TransferValidatorTests {
 
     @Test
     protected void transfer_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+        transferValidator = (TransferValidator) ChainOfResponsibility.getInstance(Arrays.asList(transferValidator, new PassTimeValidator(bank), null));
+
         int months = getMonthsPerYear();
         AccountType accountType = AccountType.Savings;
         String id = "97420734";
-
-        transferValidator.setNext(new PassTimeValidator(bank));
 
         assertTrue(transferValidator.handle(String.format("%s %s", TransactionType.PassTime, months)));
         assertFalse(transferValidator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, id, apr)));

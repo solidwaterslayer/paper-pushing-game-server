@@ -4,7 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
+
+import java.util.Arrays;
 
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,10 +51,10 @@ public class TransferProcessorTests {
 
     @Test
     protected void transfer_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
+        transferProcessor = (TransferProcessor) ChainOfResponsibility.getInstance(Arrays.asList(transferProcessor, new PassTimeProcessor(bank), null));
+
         double minBalanceFee = bank.getMinBalanceFee();
         int months = getMonthsPerYear();
-
-        transferProcessor.setNext(new PassTimeProcessor(bank));
 
         assertTrue(transferProcessor.handle(String.format("%s %s", TransactionType.PassTime, months)));
         assertEquals(passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
