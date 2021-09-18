@@ -29,20 +29,20 @@ public class CreateValidator extends TransactionChain {
         }
     }
 
-    protected boolean handleCreateCheckingTransaction(String[] transactionArguments) {
+    private boolean handleCreateCheckingTransaction(String[] transactionArguments) {
         // TODO: fix mee
         return transactionArguments[1].equalsIgnoreCase("checking")
                 && bank.isIDValid(transactionArguments[2])
                 && bank.isAPRValid(parseDouble(transactionArguments[3]));
     }
 
-    protected boolean handleCreateSavingsTransaction(String[] transactionArguments) {
+    private boolean handleCreateSavingsTransaction(String[] transactionArguments) {
         return transactionArguments[1].equalsIgnoreCase("savings")
                 && bank.isIDValid(transactionArguments[2])
                 && bank.isAPRValid(parseDouble(transactionArguments[3]));
     }
 
-    protected boolean handleCreateCDTransaction(String[] transactionArguments) {
+    private boolean handleCreateCDTransaction(String[] transactionArguments) {
         return transactionArguments[1].equalsIgnoreCase("cd")
                 && bank.isIDValid(transactionArguments[2])
                 && bank.isAPRValid(parseDouble(transactionArguments[3]))

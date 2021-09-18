@@ -167,4 +167,26 @@ public class TransferProcessorTests {
         assertEquals(0, bank.getAccount(fromID).getBalance());
         assertEquals(3000, bank.getAccount(toID).getBalance());
     }
+
+    @Test
+    protected void transaction_should_be_case_insensitive() {
+        String fromID = CHECKING_ID_1;
+        String toID = CHECKING_ID_0;
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+
+        assertTrue(transferProcessor.handle(String.format("traNSFer %s %s %s", fromID, toID, transferAmount)));
+    }
+
+    @Test
+    protected void transaction_should_be_possible_with_useless_additional_arguments() {
+        TransactionType transactionType = TransactionType.Transfer;
+        String fromID = CD_ID;
+        String toID = SAVINGS_ID_1;
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+
+        bank.passTime(12);
+
+        assertTrue(transferProcessor.handle(String.format("%s %s %s %s %s", transactionType, fromID, toID, transferAmount, "nuke")));
+        assertTrue(transferProcessor.handle(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, fromID, toID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
+    }
 }

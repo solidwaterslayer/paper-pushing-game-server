@@ -10,56 +10,56 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Bank {
-    protected Map<String, Account> accounts;
-    protected double minBalanceFee;
+    private final Map<String, Account> ACCOUNTS;
+    private final double MIN_BALANCE_FEE;
 
-    protected String validID;
-    protected double minAPR;
-    protected double maxAPR;
-    protected double minInitialCDBalance;
-    protected double maxInitialCDBalance;
+    private final String VALID_ID;
+    private final double MIN_APR;
+    private final double MAX_APR;
+    private final double MIN_INITIAL_CD_BALANCE;
+    private final double MAX_INITIAL_CD_BALANCE;
 
     public Bank() {
-        this.accounts = new LinkedHashMap<>();
-        minBalanceFee = 25;
+        this.ACCOUNTS = new LinkedHashMap<>();
+        MIN_BALANCE_FEE = 25;
 
-        validID = "[0-9]{8}";
-        minAPR = 0;
-        maxAPR = 10;
-        minInitialCDBalance = 1000;
-        maxInitialCDBalance = 10000;
+        VALID_ID = "[0-9]{8}";
+        MIN_APR = 0;
+        MAX_APR = 10;
+        MIN_INITIAL_CD_BALANCE = 1000;
+        MAX_INITIAL_CD_BALANCE = 10000;
     }
 
     public void createChecking(String id, double apr) {
-        accounts.put(id, new Checking(id, apr));
+        ACCOUNTS.put(id, new Checking(id, apr));
     }
 
     public void createSavings(String id, double apr) {
-        accounts.put(id, new Savings(id, apr));
+        ACCOUNTS.put(id, new Savings(id, apr));
     }
 
     public void createCD(String id, double apr, double balance) {
-        accounts.put(id, new CD(id, apr, balance));
+        ACCOUNTS.put(id, new CD(id, apr, balance));
     }
 
     public Map<String, Account> getAccounts() {
-        return accounts;
+        return ACCOUNTS;
     }
 
     public Account getAccount(String id) {
-        return accounts.get(id);
+        return ACCOUNTS.get(id);
     }
 
     public void removeAccount(String id) {
-        accounts.remove(id);
+        ACCOUNTS.remove(id);
     }
 
     public boolean containsAccount(String id) {
-        return accounts.containsKey(id);
+        return ACCOUNTS.containsKey(id);
     }
 
     public double getMinBalanceFee() {
-        return minBalanceFee;
+        return MIN_BALANCE_FEE;
     }
 
     public void deposit(String id, double depositAmount) {
@@ -89,11 +89,11 @@ public class Bank {
 
     public void passTime(int months) {
         for (int i = 0; i < months; i++) {
-            for (Account account : new ArrayList<>(accounts.values())) {
+            for (Account account : new ArrayList<>(ACCOUNTS.values())) {
                 if (account.getBalance() == 0) {
-                    accounts.remove(account.getID());
+                    ACCOUNTS.remove(account.getID());
                 } else if (account.getBalance() <= 100) {
-                    account.withdraw(minBalanceFee);
+                    account.withdraw(MIN_BALANCE_FEE);
                 }
 
                 account.applyAPR();
@@ -102,23 +102,23 @@ public class Bank {
     }
 
     public boolean isIDValid(String id) {
-        return !containsAccount(id) && id.matches(validID);
+        return !containsAccount(id) && id.matches(VALID_ID);
     }
 
     public boolean isAPRValid(double apr) {
-        return minAPR <= apr && apr <= maxAPR;
+        return MIN_APR <= apr && apr <= MAX_APR;
     }
 
     public double getMaxAPR() {
-        return maxAPR;
+        return MAX_APR;
     }
 
     public boolean isInitialCDBalanceValid(double balance) {
-        return minInitialCDBalance <= balance && balance <= maxInitialCDBalance;
+        return MIN_INITIAL_CD_BALANCE <= balance && balance <= MAX_INITIAL_CD_BALANCE;
     }
 
     public double getMinInitialCDBalance() {
-        return minInitialCDBalance;
+        return MIN_INITIAL_CD_BALANCE;
     }
 
     public boolean isDepositAmountValid(String id, double depositAmount) {

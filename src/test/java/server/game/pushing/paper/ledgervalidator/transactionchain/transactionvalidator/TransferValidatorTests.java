@@ -292,7 +292,11 @@ public class TransferValidatorTests {
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        assertTrue(transferValidator.handle(String.format("traNSFer %s %s %s", CHECKING_ID_1, CHECKING_ID_0, 400)));
+        String fromID = CHECKING_ID_1;
+        String toID = CHECKING_ID_0;
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+
+        assertTrue(transferValidator.handle(String.format("traNSFer %s %s %s", fromID, toID, transferAmount)));
     }
 
     @Test
@@ -304,7 +308,7 @@ public class TransferValidatorTests {
 
         bank.passTime(12);
 
-        assertTrue(transferValidator.handle(String.format("%s %s %s %s nuke", transactionType, fromID, toID, transferAmount)));
-        assertTrue(transferValidator.handle(String.format("%s %s %s %s  DsDifJ paSJiOf ps3f&jf sp@&HR*&HDSoa psd)(Jo", transactionType, fromID, toID, transferAmount)));
+        assertTrue(transferValidator.handle(String.format("%s %s %s %s %s", transactionType, fromID, toID, transferAmount, "nuke")));
+        assertTrue(transferValidator.handle(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, fromID, toID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
     }
 }

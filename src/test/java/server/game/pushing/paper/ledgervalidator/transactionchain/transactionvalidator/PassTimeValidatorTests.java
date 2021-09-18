@@ -81,10 +81,10 @@ public class PassTimeValidatorTests {
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        TransactionType transactionType = TransactionType.PassTime;
         int months = getMonthsPerYear();
+        TransactionType transactionType = TransactionType.PassTime;
 
-        assertTrue(passTimeValidator.handle(String.format("%s %s 0", transactionType, months)));
-        assertTrue(passTimeValidator.handle(String.format("%s %s 89 23892398 92839233 23", transactionType, months)));
+        assertTrue(passTimeValidator.handle(String.format("%s %s %s", transactionType, months, "0")));
+        assertTrue(passTimeValidator.handle(String.format("%s %s %s %s %s %s", transactionType, months, 89, 23892398, 92839233, 23)));
     }
 }

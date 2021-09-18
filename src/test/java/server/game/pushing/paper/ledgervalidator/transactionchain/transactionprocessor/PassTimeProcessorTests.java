@@ -97,4 +97,20 @@ public class PassTimeProcessorTests {
         assertTrue(bank.containsAccount(CD_ID));
         assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
     }
+
+    @Test
+    protected void transaction_should_be_case_insensitive() {
+        int months = getMonthsPerYear();
+
+        assertTrue(passTimeProcessor.handle(String.format("%s %s", "PaSs tIme", months)));
+    }
+
+    @Test
+    protected void transaction_should_be_possible_with_useless_additional_arguments() {
+        int months = getMonthsPerYear();
+        TransactionType transactionType = TransactionType.PassTime;
+
+        assertTrue(passTimeProcessor.handle(String.format("%s %s %s", transactionType, months, "0")));
+        assertTrue(passTimeProcessor.handle(String.format("%s %s %s %s %s %s", transactionType, months, 89, 23892398, 92839233, 23)));
+    }
 }

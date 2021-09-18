@@ -195,8 +195,8 @@ public class WithdrawValidatorTests {
 
         bank.passTime(getMonthsPerYear());
 
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s nuke", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount())));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s 00 00 0 0 0 00    0", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount())));
+        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount(), "nuke")));
+        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s %s  %s    %s         %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount(), "00", "000", "00000", "000", 0)));
         assertTrue(withdrawValidator.handle(String.format("%s %s %s %s %s %s", transactionType, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount(), "d", "e", "r")));
     }
 }

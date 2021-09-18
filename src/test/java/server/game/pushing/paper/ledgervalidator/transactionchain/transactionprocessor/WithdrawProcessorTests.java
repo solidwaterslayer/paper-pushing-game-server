@@ -123,4 +123,24 @@ public class WithdrawProcessorTests {
         assertTrue(withdrawProcessor.handle(String.format("%s %s %s", transactionType, CD_ID, cdWithdrawAmount)));
         assertEquals(0, bank.getAccount(CD_ID).getBalance());
     }
+
+    @Test
+    protected void transaction_should_be_case_insensitive() {
+        bank.passTime(getMonthsPerYear());
+
+        assertTrue(withdrawProcessor.handle(String.format("withdraw %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount())));
+        assertTrue(withdrawProcessor.handle(String.format("wITHdrAw %s %s", SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount())));
+        assertTrue(withdrawProcessor.handle(String.format("WITHDRAW %s %s", CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount())));
+    }
+
+    @Test
+    protected void transaction_should_be_possible_with_useless_additional_arguments() {
+        TransactionType transactionType = TransactionType.Withdraw;
+
+        bank.passTime(getMonthsPerYear());
+
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount(), "nuke")));
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s %s %s  %s    %s         %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount(), "00", "000", "00000", "000", 0)));
+        assertTrue(withdrawProcessor.handle(String.format("%s %s %s %s %s %s", transactionType, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount(), "d", "e", "r")));
+    }
 }
