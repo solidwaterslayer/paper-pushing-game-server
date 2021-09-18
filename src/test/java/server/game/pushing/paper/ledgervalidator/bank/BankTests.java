@@ -11,7 +11,6 @@ import java.util.List;
 
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
-import static server.game.pushing.paper.ledgervalidator.bank.AccountTests.applyAPR;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
 
 public class BankTests {
@@ -185,8 +184,8 @@ public class BankTests {
 
         assertEquals(0, bank.getAccount(fromID).getBalance());
         assertEquals(
-                passTime(apr, minBalanceFee, AccountType.Savings, savingsDepositAmount, months)
-                        + passTime(apr, minBalanceFee, AccountType.CD, initialCDBalance, months),
+                passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount)
+                        + passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance),
                 bank.getAccount(toID).getBalance()
         );
     }
@@ -236,9 +235,9 @@ public class BankTests {
 
         bank.passTime(months);
 
-        assertEquals(passTime(apr, minBalanceFee, AccountType.Checking, checkingDepositAmount, months), bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(passTime(apr, minBalanceFee, AccountType.Savings, savingsDepositAmount, months), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(passTime(apr, minBalanceFee, AccountType.CD, initialCDBalance, months), bank.getAccount(CD_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID_0).getBalance());
     }
 
     @Test
@@ -252,9 +251,9 @@ public class BankTests {
 
         bank.passTime(months);
 
-        assertEquals(passTime(apr, minBalanceFee, AccountType.Checking, checkingDepositAmount, months), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(passTime(apr, minBalanceFee, AccountType.Savings, savingsDepositAmount, months), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(passTime(apr, minBalanceFee, AccountType.CD, initialCDBalance, months), bank.getAccount(CD_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID_0).getBalance());
     }
 
     @Test
@@ -272,27 +271,31 @@ public class BankTests {
         assertFalse(bank.containsAccount(CHECKING_ID_1));
         assertFalse(bank.containsAccount(SAVINGS_ID_0));
         assertTrue(bank.containsAccount(SAVINGS_ID_1));
-        assertEquals(passTime(apr, minBalanceFee, AccountType.Savings, savingsDepositAmount, months), bank.getAccount(SAVINGS_ID_1).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
         assertTrue(bank.containsAccount(CD_ID_0));
-        assertEquals(passTime(apr, minBalanceFee, AccountType.CD, initialCDBalance, months), bank.getAccount(CD_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID_0).getBalance());
     }
 
-    public static double passTime(double apr, double minBalanceFee, AccountType accountType, double initialBalance, int months) {
-        double balance = initialBalance;
+    public static double passTime(double minBalanceFee, int months, AccountType accountType, double apr, double initialBalance) {
+        double finalBalance = initialBalance;
 
         for (int i = 0; i < months; i++) {
-            if (balance <= 100) {
-                balance -= minBalanceFee;
+            if (finalBalance <= 100) {
+                finalBalance -= minBalanceFee;
             }
-
             if (accountType == AccountType.CD) {
-                balance = applyAPR(apr, balance, 4);
-            } else {
-                balance = applyAPR(apr, balance, 1);
+                for (int j = 0; j < 3; j++) {
+                    finalBalance += applyAPR(apr, finalBalance);
+                }
             }
+            finalBalance += applyAPR(apr, finalBalance);
         }
 
-        return balance;
+        return finalBalance;
+    }
+
+    public static double applyAPR(double apr, double finalBalance) {
+        return apr * finalBalance / getMonthsPerYear() / 100;
     }
 
     @Test
@@ -495,7 +498,7 @@ public class BankTests {
     protected void withdraw_cd_should_be_greater_than_or_equal_to_balance() {
         int months = getMonthsPerYear();
         String id = CD_ID_0;
-        double cdWithdrawAmount = passTime(apr, bank.getMinBalanceFee(), AccountType.CD, initialCDBalance, months);
+        double cdWithdrawAmount = passTime(bank.getMinBalanceFee(), months, AccountType.CD, apr, initialCDBalance);
 
         bank.passTime(months);
 
@@ -682,8 +685,8 @@ public class BankTests {
         bank.removeAccount(fromID);
         bank.createCD(fromID, cdAPR, initialCDBalance);
         bank.deposit(toID, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
-        lowerBound.add(passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, initialCDBalance, months.get(0)));
-        lowerBound.add(passTime(cdAPR, bank.getMinBalanceFee(), AccountType.CD, lowerBound.get(0), months.get(1)));
+        lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(0), AccountType.CD, cdAPR, initialCDBalance));
+        lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(1), AccountType.CD, cdAPR, lowerBound.get(0)));
 
         for (int i = 0; i < 2; i++) {
             bank.passTime(months.get(i));

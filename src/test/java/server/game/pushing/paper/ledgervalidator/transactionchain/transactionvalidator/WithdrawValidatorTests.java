@@ -164,7 +164,7 @@ public class WithdrawValidatorTests {
         int months = getMonthsPerYear();
         TransactionType transactionType = TransactionType.Withdraw;
         String id = CD_ID;
-        double withdrawAmount = passTime(apr, bank.getMinBalanceFee(), AccountType.CD, initialCDBalance, months);
+        double withdrawAmount = passTime(bank.getMinBalanceFee(), months, AccountType.CD, apr, initialCDBalance);
 
         bank.passTime(months);
 

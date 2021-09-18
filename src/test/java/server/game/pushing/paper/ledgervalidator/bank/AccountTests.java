@@ -9,6 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
+import static server.game.pushing.paper.ledgervalidator.bank.BankTests.passTime;
 
 public class AccountTests {
     protected Account checking;
@@ -107,7 +108,7 @@ public class AccountTests {
         savingsDepositAmount = 400;
         checkingWithdrawAmount = checkingDepositAmount;
         savingsWithdrawAmount = savingsDepositAmount;
-        cdWithdrawAmount = applyAPR(CD_APR, INITIAL_CD_BALANCE, 4 * months);
+        cdWithdrawAmount = passTime(0, months, AccountType.CD, CD_APR, INITIAL_CD_BALANCE);
 
         for (int i = 0; i < months; i++) {
             cd.applyAPR();
@@ -152,7 +153,7 @@ public class AccountTests {
         checking.deposit(checkingDepositAmount);
         checking.applyAPR();
 
-        assertEquals(applyAPR(CHECKING_APR, checkingDepositAmount, 1), checking.getBalance());
+        assertEquals(passTime(0, 1, AccountType.Checking, CHECKING_APR, checkingDepositAmount), checking.getBalance());
     }
 
     @Test
@@ -162,24 +163,14 @@ public class AccountTests {
         savings.deposit(savingsDepositAmount);
         savings.applyAPR();
 
-        assertEquals(applyAPR(SAVINGS_APR, savingsDepositAmount, 1), savings.getBalance());
+        assertEquals(passTime(0, 1, AccountType.Savings, SAVINGS_APR, savingsDepositAmount), savings.getBalance());
     }
 
     @Test
     protected void apply_apr_cd_should_apply_apr_4_times() {
         cd.applyAPR();
 
-        assertEquals(applyAPR(CD_APR, INITIAL_CD_BALANCE, 4), cd.getBalance());
-    }
-
-    public static double applyAPR(double apr, double initialBalance, int months) {
-        double finalBalance = initialBalance;
-
-        for (int i = 0; i < months; i++) {
-            finalBalance += finalBalance * apr / getMonthsPerYear() / 100;
-        }
-
-        return finalBalance;
+        assertEquals(passTime(0, 1, AccountType.CD, CD_APR, INITIAL_CD_BALANCE), cd.getBalance());
     }
 
     @Test
@@ -308,7 +299,7 @@ public class AccountTests {
     @Test
     protected void withdraw_cd_should_be_greater_than_or_equal_to_balance() {
         int months = getMonthsPerYear();
-        cdWithdrawAmount = applyAPR(CD_APR, INITIAL_CD_BALANCE, 4 * months);
+        cdWithdrawAmount = passTime(0, months, AccountType.CD, CD_APR, INITIAL_CD_BALANCE);
 
         for (int i = 0; i < months; i++) {
             cd.applyAPR();

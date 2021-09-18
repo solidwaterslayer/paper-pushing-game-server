@@ -81,9 +81,9 @@ public class WithdrawProcessorTests {
         TransactionType transactionType = TransactionType.Withdraw;
         double minBalanceFee = bank.getMinBalanceFee();
         int months = getMonthsPerYear();
-        double checkingWithdrawAmount = passTime(apr, minBalanceFee, AccountType.Checking, checkingDepositAmount, months);
-        double savingsWithdrawAmount = passTime(apr, minBalanceFee, AccountType.Savings, savingsDepositAmount, months);
-        double cdWithdrawAmount = passTime(apr, minBalanceFee, AccountType.CD, initialCDBalance, months);
+        double checkingWithdrawAmount = passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount);
+        double savingsWithdrawAmount = passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount);
+        double cdWithdrawAmount = passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance);
         bank.passTime(months);
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());

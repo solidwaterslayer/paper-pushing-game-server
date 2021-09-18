@@ -71,7 +71,7 @@ public abstract class Account {
     }
 
     public void applyAPR() {
-        deposit(balance * APR / getMonthsPerYear() / 100);
+        deposit(APR * balance / getMonthsPerYear() / 100);
     }
 
     public abstract boolean isDepositAmountValid(double depositAmount);
