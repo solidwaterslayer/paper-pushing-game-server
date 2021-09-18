@@ -1,7 +1,7 @@
 package server.game.pushing.paper.ledgervalidator.bank.account;
 
 public class Savings extends Account {
-    protected boolean isWithdrawValid;
+    private boolean isWithdrawValid;
 
     public Savings(String id, double apr) {
         super(AccountType.Savings, id, apr);

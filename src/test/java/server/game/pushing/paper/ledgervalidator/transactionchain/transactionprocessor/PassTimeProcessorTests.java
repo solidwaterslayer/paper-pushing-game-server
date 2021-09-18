@@ -49,7 +49,7 @@ public class PassTimeProcessorTests {
     }
 
     @Test
-    protected void pass_time_transaction_should_apply_apr() {
+    protected void transaction_should_apply_apr() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = getMonthsPerYear();
         TransactionType transactionType = TransactionType.PassTime;
@@ -66,7 +66,7 @@ public class PassTimeProcessorTests {
     }
 
     @Test
-    protected void pass_time_transaction_when_balance_is_less_than_or_equal_to_100_should_apply_min_balance_fee_then_apr() {
+    protected void transaction_when_balance_is_less_than_or_equal_to_100_should_apply_min_balance_fee_then_apr() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = 2;
         TransactionType transactionType = TransactionType.PassTime;
@@ -83,7 +83,7 @@ public class PassTimeProcessorTests {
     }
 
     @Test
-    protected void pass_time_transaction_when_balance_is_0_should_remove_account() {
+    protected void transaction_when_balance_is_0_should_remove_account() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = 2;
         TransactionType transactionType = TransactionType.PassTime;

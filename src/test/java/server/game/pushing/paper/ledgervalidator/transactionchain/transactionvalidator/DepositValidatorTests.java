@@ -153,7 +153,7 @@ public class DepositValidatorTests {
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
         TransactionType transactionType = TransactionType.Deposit;
 
-        assertTrue(depositValidator.handle(String.format("%s %s %s nuke", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount())));
-        assertTrue(depositValidator.handle(String.format("%s %s %s 0 0 0 0 0 0  0 0", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount())));
+        assertTrue(depositValidator.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount(), "nuke")));
+        assertTrue(depositValidator.handle(String.format("%s %s %s %s %s %s  %s %s  %s %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount(), "0", "0", "0", "0", "0", "0", "0")));
     }
 }

@@ -21,13 +21,6 @@ public abstract class Account {
         minWithdrawAmount = 0;
     }
 
-    protected Account(AccountType accountType, String id, double apr, double balance) {
-        this.accountType = accountType;
-        this.ID = id;
-        this.APR = apr;
-        this.balance = balance;
-    }
-
     public AccountType getAccountType() {
         return accountType;
     }

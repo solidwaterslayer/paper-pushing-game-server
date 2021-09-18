@@ -77,7 +77,7 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    protected void withdraw_transaction_when_withdraw_amount_is_equal_to_balance_should_process() {
+    protected void transaction_when_withdraw_amount_is_equal_to_balance_should_process() {
         TransactionType transactionType = TransactionType.Withdraw;
         double minBalanceFee = bank.getMinBalanceFee();
         int months = getMonthsPerYear();
@@ -100,7 +100,7 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    protected void withdraw_transaction_when_withdraw_amount_is_greater_than_balance_should_withdraw_amount_equal_to_balance() {
+    protected void transaction_when_withdraw_amount_is_greater_than_balance_should_withdraw_amount_equal_to_balance() {
         TransactionType transactionType = TransactionType.Withdraw;
         double checkingWithdrawAmount = bank.getAccount(CHECKING_ID).getMaxWithdrawAmount();
         double savingsWithdrawAmount = bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount();

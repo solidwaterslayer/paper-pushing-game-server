@@ -43,6 +43,8 @@ public class AccountTests {
         assertEquals(CHECKING_ID, checking.getID());
         assertEquals(CHECKING_APR, checking.getAPR());
         assertEquals(0, checking.getBalance());
+        assertEquals(1000, checking.getMaxDepositAmount());
+        assertEquals(400, checking.getMaxWithdrawAmount());
     }
 
     @Test
@@ -51,6 +53,8 @@ public class AccountTests {
         assertEquals(SAVINGS_ID, savings.getID());
         assertEquals(SAVINGS_APR, savings.getAPR());
         assertEquals(0, savings.getBalance());
+        assertEquals(2500, savings.getMaxDepositAmount());
+        assertEquals(1000, savings.getMaxWithdrawAmount());
     }
 
     @Test
@@ -59,6 +63,8 @@ public class AccountTests {
         assertEquals(CD_ID, cd.getID());
         assertEquals(CD_APR, cd.getAPR());
         assertEquals(INITIAL_CD_BALANCE, cd.getBalance());
+        assertEquals(0, cd.getMaxDepositAmount());
+        assertEquals(Double.POSITIVE_INFINITY, cd.getMaxWithdrawAmount());
     }
 
     @Test
@@ -113,7 +119,7 @@ public class AccountTests {
         for (int i = 0; i < months; i++) {
             cd.applyAPR();
         }
-        depositAndWithdraw();
+        transfer();
 
         assertEquals(0, checking.getBalance());
         assertEquals(0, savings.getBalance());
@@ -131,14 +137,14 @@ public class AccountTests {
         for (int i = 0; i < getMonthsPerYear(); i++) {
             cd.applyAPR();
         }
-        depositAndWithdraw();
+        transfer();
 
         assertEquals(0, checking.getBalance());
         assertEquals(0, savings.getBalance());
         assertEquals(0, cd.getBalance());
     }
 
-    protected void depositAndWithdraw() {
+    protected void transfer() {
         checking.deposit(checkingDepositAmount);
         savings.deposit(savingsDepositAmount);
         checking.withdraw(checkingWithdrawAmount);

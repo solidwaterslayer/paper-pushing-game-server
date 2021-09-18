@@ -41,7 +41,12 @@ public class BankTests {
 
     @Test
     protected void initialize_bank_should_have_0_accounts() {
-        assertEquals(0, (new Bank()).getAccounts().size());
+        bank = new Bank();
+
+        assertTrue(bank.getAccounts().isEmpty());
+        assertEquals(25, bank.getMinBalanceFee());
+        assertEquals(10, bank.getMaxAPR());
+        assertEquals(1000, bank.getMinInitialCDBalance());
     }
 
     @Test

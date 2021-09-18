@@ -153,8 +153,8 @@ public class CreateValidatorTests {
         double apr = bank.getMaxAPR();
         double initialCDBalance = bank.getMinInitialCDBalance();
 
-        assertTrue(createValidator.handle(String.format("%s %s %s %s 0", transactionType, AccountType.Checking, id, apr)));
-        assertTrue(createValidator.handle(String.format("%s %s %s %s nuke the power fd", transactionType, AccountType.Savings, id, apr)));
-        assertTrue(createValidator.handle(String.format("%s %s %s %s %s  8 83h8h8     8 8    ", transactionType, AccountType.CD, id, apr, initialCDBalance)));
+        assertTrue(createValidator.handle(String.format("%s %s %s %s %s", transactionType, AccountType.Checking, id, apr, "the")));
+        assertTrue(createValidator.handle(String.format("%s %s %s %s %s %s %s  %s", transactionType, AccountType.Savings, id, apr, "power", "of", "friendship", id)));
+        assertTrue(createValidator.handle(String.format("%s %s %s %s %s  $s    $s     %s %s    ", transactionType, AccountType.CD, id, apr, initialCDBalance, AccountType.CD, id)));
     }
 }

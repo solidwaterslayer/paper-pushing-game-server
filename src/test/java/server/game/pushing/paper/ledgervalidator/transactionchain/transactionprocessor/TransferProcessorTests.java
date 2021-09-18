@@ -131,7 +131,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transfer_transaction_when_transaction_amount_is_less_than_or_equal_to_balance_should_process() {
+    protected void transaction_when_transaction_amount_is_less_than_or_equal_to_balance_should_process() {
         TransactionType transactionType = TransactionType.Transfer;
         String id0 = SAVINGS_ID_0;
         String id1 = CHECKING_ID_1;
@@ -152,7 +152,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transfer_transaction_when_transfer_amount_is_greater_than_balance_should_transfer_amount_equal_to_balance() {
+    protected void transaction_when_transfer_amount_is_greater_than_balance_should_transfer_amount_equal_to_balance() {
         TransactionType transactionType = TransactionType.Transfer;
         String fromID = SAVINGS_ID_0;
         String toID = SAVINGS_ID_1;
