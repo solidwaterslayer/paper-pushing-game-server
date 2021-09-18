@@ -1,12 +1,12 @@
-package server.game.pushing.paper.ledgervalidator.transactionchain.transactionvalidator;
+package server.game.pushing.paper.ledgervalidator.chainofresponsibility.transactionvalidator;
 
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
-import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionChain;
-import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
 
 import static java.lang.Integer.parseInt;
 
-public class PassTimeValidator extends TransactionChain {
+public class PassTimeValidator extends ChainOfResponsibility {
     public PassTimeValidator(Bank bank) {
         super(bank);
         transactionType = TransactionType.PassTime;

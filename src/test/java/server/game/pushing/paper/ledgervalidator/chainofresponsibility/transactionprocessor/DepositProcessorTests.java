@@ -1,9 +1,9 @@
-package server.game.pushing.paper.ledgervalidator.transactionchain.transactionprocessor;
+package server.game.pushing.paper.ledgervalidator.chainofresponsibility.transactionprocessor;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
-import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
 
 import static org.junit.jupiter.api.Assertions.*;
 

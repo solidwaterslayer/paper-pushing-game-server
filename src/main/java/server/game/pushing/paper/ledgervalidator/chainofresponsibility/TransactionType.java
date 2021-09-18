@@ -1,4 +1,4 @@
-package server.game.pushing.paper.ledgervalidator.transactionchain;
+package server.game.pushing.paper.ledgervalidator.chainofresponsibility;
 
 public enum TransactionType {
     Create, Deposit, Withdraw, Transfer, PassTime;

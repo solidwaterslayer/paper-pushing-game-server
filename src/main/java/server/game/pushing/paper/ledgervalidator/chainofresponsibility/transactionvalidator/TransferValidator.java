@@ -1,12 +1,12 @@
-package server.game.pushing.paper.ledgervalidator.transactionchain.transactionvalidator;
+package server.game.pushing.paper.ledgervalidator.chainofresponsibility.transactionvalidator;
 
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
-import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionChain;
-import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
 
 import static java.lang.Double.parseDouble;
 
-public class TransferValidator extends TransactionChain {
+public class TransferValidator extends ChainOfResponsibility {
     public TransferValidator(Bank bank) {
         super(bank);
         transactionType = TransactionType.Transfer;

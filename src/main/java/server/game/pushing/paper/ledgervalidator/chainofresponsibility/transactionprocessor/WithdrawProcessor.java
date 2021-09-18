@@ -1,12 +1,12 @@
-package server.game.pushing.paper.ledgervalidator.transactionchain.transactionprocessor;
+package server.game.pushing.paper.ledgervalidator.chainofresponsibility.transactionprocessor;
 
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
-import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionChain;
-import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.ChainOfResponsibility;
+import server.game.pushing.paper.ledgervalidator.chainofresponsibility.TransactionType;
 
 import static java.lang.Double.parseDouble;
 
-public class WithdrawProcessor extends TransactionChain {
+public class WithdrawProcessor extends ChainOfResponsibility {
     public WithdrawProcessor(Bank bank) {
         super(bank);
         transactionType = TransactionType.Withdraw;
