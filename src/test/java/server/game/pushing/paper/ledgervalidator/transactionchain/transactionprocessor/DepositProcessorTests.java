@@ -3,14 +3,9 @@ package server.game.pushing.paper.ledgervalidator.transactionchain.transactionpr
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
-import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
-import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
 
 public class DepositProcessorTests {
     protected Bank bank;
@@ -18,15 +13,17 @@ public class DepositProcessorTests {
 
     protected final String CHECKING_ID = "87439742";
     protected final String SAVINGS_ID = "97520943";
-    protected final double APR = getMaxAPR();
+    protected double apr;
 
     @BeforeEach
     protected void setUp() {
-        bank = new Bank(Arrays.asList(
-                new Checking(CHECKING_ID, APR),
-                new Savings(SAVINGS_ID, APR)
-        ));
+        bank = new Bank();
         depositProcessor = new DepositProcessor(bank);
+
+        apr = bank.getMaxAPR();
+
+        bank.createChecking(CHECKING_ID, apr);
+        bank.createSavings(SAVINGS_ID, apr);
     }
 
     @Test

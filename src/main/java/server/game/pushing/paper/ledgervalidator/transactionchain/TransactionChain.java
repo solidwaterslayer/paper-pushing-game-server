@@ -7,7 +7,7 @@ import java.util.List;
 public abstract class TransactionChain {
     protected TransactionChain next;
     protected TransactionType transactionType;
-    protected final Bank bank;
+    protected Bank bank;
 
     public TransactionChain(Bank bank) {
         this.bank = bank;

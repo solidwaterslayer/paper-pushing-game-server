@@ -4,13 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
-import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
 
 public class CreateValidatorTests {
     protected Bank bank;
@@ -25,7 +22,7 @@ public class CreateValidatorTests {
     @Test
     protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         String id = "87439742";
-        double apr = getMaxAPR();
+        double apr = bank.getMaxAPR();
         bank.createChecking(id, apr);
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
@@ -41,7 +38,7 @@ public class CreateValidatorTests {
         TransactionType transactionType = createValidator.getTransactionType();
         AccountType accountType = AccountType.Checking;
         String id = "34783794";
-        double apr = getMaxAPR();
+        double apr = bank.getMaxAPR();
 
         assertFalse(createValidator.handle(String.format("%s %s %s %s", "", "", "", "")));
         assertFalse(createValidator.handle(String.format("%s %s %s %s", "", accountType, id, apr)));
@@ -53,8 +50,8 @@ public class CreateValidatorTests {
     protected void transaction_should_contain_a_account_type_as_the_second_argument() {
         TransactionType transactionType = createValidator.getTransactionType();
         String id = "53795478";
-        double apr = getMaxAPR();
-        double initialCDBalance = getMinInitialCDBalance();
+        double apr = bank.getMaxAPR();
+        double initialCDBalance = bank.getMinInitialCDBalance();
 
         assertFalse(createValidator.handle(String.format("%s %s %s %s", transactionType, "", "", "")));
         assertFalse(createValidator.handle(String.format("%s %s %s %s", transactionType, "", id, apr)));
@@ -69,7 +66,7 @@ public class CreateValidatorTests {
         TransactionType transactionType = createValidator.getTransactionType();
         AccountType accountType = AccountType.Savings;
         String id = "34783874";
-        double apr = getMaxAPR();
+        double apr = bank.getMaxAPR();
         bank.createSavings(id, apr);
 
         assertFalse(createValidator.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
@@ -93,7 +90,7 @@ public class CreateValidatorTests {
         TransactionType transactionType = createValidator.getTransactionType();
         AccountType accountType = AccountType.CD;
         String id = "87349724";
-        double initialCDBalance = getMinInitialCDBalance();
+        double initialCDBalance = bank.getMinInitialCDBalance();
 
         assertFalse(createValidator.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, "", "")));
         assertFalse(createValidator.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, "", initialCDBalance)));
@@ -117,7 +114,7 @@ public class CreateValidatorTests {
         TransactionType transactionType = createValidator.getTransactionType();
         AccountType accountType = AccountType.CD;
         String id = "87349724";
-        double apr = getMaxAPR();
+        double apr = bank.getMaxAPR();
 
         assertFalse(createValidator.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, apr, "")));
         assertFalse(createValidator.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, apr, "3fg78G&*")));
@@ -141,8 +138,8 @@ public class CreateValidatorTests {
     @Test
     protected void transaction_should_be_case_insensitive() {
         String id = "87349724";
-        double apr = getMaxAPR();
-        double initialCDBalance = getMinInitialCDBalance();
+        double apr = bank.getMaxAPR();
+        double initialCDBalance = bank.getMinInitialCDBalance();
 
         assertTrue(createValidator.handle(String.format("%s %s %s %s", "crEaTe", "checking", id, apr)));
         assertTrue(createValidator.handle(String.format("%s %s %s %s", "create", "saVINgs", id, apr)));
@@ -153,8 +150,8 @@ public class CreateValidatorTests {
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
         TransactionType transactionType = createValidator.getTransactionType();
         String id = "14567893";
-        double apr = getMaxAPR();
-        double initialCDBalance = getMinInitialCDBalance();
+        double apr = bank.getMaxAPR();
+        double initialCDBalance = bank.getMinInitialCDBalance();
 
         assertTrue(createValidator.handle(String.format("%s %s %s %s 0", transactionType, AccountType.Checking, id, apr)));
         assertTrue(createValidator.handle(String.format("%s %s %s %s nuke the power fd", transactionType, AccountType.Savings, id, apr)));

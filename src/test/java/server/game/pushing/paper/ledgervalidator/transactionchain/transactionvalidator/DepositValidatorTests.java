@@ -3,9 +3,6 @@ package server.game.pushing.paper.ledgervalidator.transactionchain.transactionva
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
-import server.game.pushing.paper.ledgervalidator.bank.account.CD;
-import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
-import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
 import java.util.Arrays;
@@ -13,8 +10,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMinInitialCDBalance;
 
 public class DepositValidatorTests {
     protected Bank bank;
@@ -23,17 +18,20 @@ public class DepositValidatorTests {
     protected final String CHECKING_ID = "09096564";
     protected final String SAVINGS_ID = "90438954";
     protected final String CD_ID = "98430842";
-    protected final double APR = getMaxAPR();
-    protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
+    protected double apr;
+    protected double initialCDBalance;
 
     @BeforeEach
     protected void setUp() {
-        bank = new Bank(Arrays.asList(
-                new Checking(CHECKING_ID, APR),
-                new Savings(SAVINGS_ID, APR),
-                new CD(CD_ID, APR, INITIAL_CD_BALANCE)
-        ));
+        bank = new Bank();
         depositValidator = new DepositValidator(bank);
+
+        apr = bank.getMaxAPR();
+        initialCDBalance = bank.getMinInitialCDBalance();
+
+        bank.createChecking(CHECKING_ID, apr);
+        bank.createSavings(SAVINGS_ID, apr);
+        bank.createCD(CD_ID, apr, initialCDBalance);
     }
 
     @Test

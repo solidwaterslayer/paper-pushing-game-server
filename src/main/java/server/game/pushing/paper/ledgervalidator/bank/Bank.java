@@ -7,28 +7,27 @@ import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Bank {
     protected Map<String, Account> accounts;
     protected double minBalanceFee;
 
-    public Bank(List<Account> accounts) {
-        initializeBank();
-
-        for (Account account : accounts) {
-            this.accounts.put(account.getID(), account);
-        }
-    }
+    protected String validID;
+    protected double minAPR;
+    protected double maxAPR;
+    protected double minInitialCDBalance;
+    protected double maxInitialCDBalance;
 
     public Bank() {
-        initializeBank();
-    }
-
-    protected void initializeBank() {
         this.accounts = new LinkedHashMap<>();
         minBalanceFee = 25;
+
+        validID = "[0-9]{8}";
+        minAPR = 0;
+        maxAPR = 10;
+        minInitialCDBalance = 1000;
+        maxInitialCDBalance = 10000;
     }
 
     public void createChecking(String id, double apr) {
@@ -103,23 +102,23 @@ public class Bank {
     }
 
     public boolean isIDValid(String id) {
-        return !containsAccount(id) && id.matches("[0-9]{8}");
+        return !containsAccount(id) && id.matches(validID);
     }
 
     public boolean isAPRValid(double apr) {
-        return 0 <= apr && apr <= getMaxAPR();
+        return minAPR <= apr && apr <= maxAPR;
     }
 
-    public static double getMaxAPR() {
-        return 10;
+    public double getMaxAPR() {
+        return maxAPR;
     }
 
     public boolean isInitialCDBalanceValid(double balance) {
-        return getMinInitialCDBalance() <= balance && balance <= 10000;
+        return minInitialCDBalance <= balance && balance <= maxInitialCDBalance;
     }
 
-    public static double getMinInitialCDBalance() {
-        return 1000;
+    public double getMinInitialCDBalance() {
+        return minInitialCDBalance;
     }
 
     public boolean isDepositAmountValid(String id, double depositAmount) {

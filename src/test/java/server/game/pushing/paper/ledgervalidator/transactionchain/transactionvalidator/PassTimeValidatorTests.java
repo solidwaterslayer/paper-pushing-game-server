@@ -4,12 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
-import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMaxAPR;
 import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
 
 public class PassTimeValidatorTests {
@@ -27,7 +25,7 @@ public class PassTimeValidatorTests {
         AccountType accountType = AccountType.Savings;
         String id0 = "97439742";
         String id1 = "98478932";
-        double apr = getMaxAPR();
+        double apr = bank.getMaxAPR();
         bank.createSavings(id0, apr);
         double depositAmount = bank.getAccount(id0).getMaxDepositAmount();
 

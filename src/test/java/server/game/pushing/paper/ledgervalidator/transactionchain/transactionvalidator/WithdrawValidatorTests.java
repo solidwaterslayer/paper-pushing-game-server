@@ -4,16 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
-import server.game.pushing.paper.ledgervalidator.bank.account.CD;
-import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
-import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.ledgervalidator.bank.BankTests.passTime;
 
 public class WithdrawValidatorTests {
@@ -23,18 +17,20 @@ public class WithdrawValidatorTests {
     protected final String CHECKING_ID = "34782479";
     protected final String SAVINGS_ID = "98430842";
     protected final String CD_ID = "43784268";
-    protected final double APR = getMaxAPR();
-    protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
+    protected double apr;
+    protected double initialCDBalance;
 
     @BeforeEach
     protected void setUp() {
-        bank = new Bank(new ArrayList<>(Arrays.asList(
-                new Checking(CHECKING_ID, APR),
-                new Savings(SAVINGS_ID, APR),
-                new CD(CD_ID, APR, INITIAL_CD_BALANCE)
-        )));
+        bank = new Bank();
         withdrawValidator = new WithdrawValidator(bank);
 
+        apr = bank.getMaxAPR();
+        initialCDBalance = bank.getMinInitialCDBalance();
+
+        bank.createChecking(CHECKING_ID, apr);
+        bank.createSavings(SAVINGS_ID, apr);
+        bank.createCD(CD_ID, apr, initialCDBalance);
         bank.deposit(CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount());
         bank.deposit(SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount());
     }
@@ -168,7 +164,7 @@ public class WithdrawValidatorTests {
         int months = getMonthsPerYear();
         TransactionType transactionType = TransactionType.Withdraw;
         String id = CD_ID;
-        double withdrawAmount = passTime(APR, bank.getMinBalanceFee(), AccountType.CD, INITIAL_CD_BALANCE, months);
+        double withdrawAmount = passTime(apr, bank.getMinBalanceFee(), AccountType.CD, initialCDBalance, months);
 
         bank.passTime(months);
 

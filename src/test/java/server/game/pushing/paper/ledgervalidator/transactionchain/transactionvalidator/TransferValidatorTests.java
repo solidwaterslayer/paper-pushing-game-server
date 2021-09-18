@@ -4,9 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.ledgervalidator.bank.Bank;
 import server.game.pushing.paper.ledgervalidator.bank.account.AccountType;
-import server.game.pushing.paper.ledgervalidator.bank.account.CD;
-import server.game.pushing.paper.ledgervalidator.bank.account.Checking;
-import server.game.pushing.paper.ledgervalidator.bank.account.Savings;
 import server.game.pushing.paper.ledgervalidator.transactionchain.TransactionType;
 
 import java.util.ArrayList;
@@ -15,7 +12,7 @@ import java.util.List;
 
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
-import static server.game.pushing.paper.ledgervalidator.bank.Bank.*;
+import static server.game.pushing.paper.ledgervalidator.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.ledgervalidator.bank.BankTests.passTime;
 
 public class TransferValidatorTests {
@@ -28,21 +25,23 @@ public class TransferValidatorTests {
     protected final String SAVINGS_ID_1 = "98430854";
     protected final String CD_ID_0 = "24799348";
     protected final String CD_ID_1 = "14799348";
-    protected final double APR = getMaxAPR();
-    protected final double INITIAL_CD_BALANCE = getMinInitialCDBalance();
+    protected double apr;
+    protected double initialCDBalance;
 
     @BeforeEach
     protected void setUp() {
-        bank = new Bank(Arrays.asList(
-                new Checking(CHECKING_ID_0, APR),
-                new Checking(CHECKING_ID_1, APR),
-                new Savings(SAVINGS_ID_0, APR),
-                new Savings(SAVINGS_ID_1, APR),
-                new CD(CD_ID_0, APR, INITIAL_CD_BALANCE),
-                new CD(CD_ID_1, APR, INITIAL_CD_BALANCE)
-        ));
+        bank = new Bank();
         transferValidator = new TransferValidator(bank);
 
+        apr = bank.getMaxAPR();
+        initialCDBalance = bank.getMinInitialCDBalance();
+
+        bank.createChecking(CHECKING_ID_0, apr);
+        bank.createChecking(CHECKING_ID_1, apr);
+        bank.createSavings(SAVINGS_ID_0, apr);
+        bank.createSavings(SAVINGS_ID_1, apr);
+        bank.createCD(CD_ID_0, apr, initialCDBalance);
+        bank.createCD(CD_ID_1, apr, initialCDBalance);
         bank.deposit(CHECKING_ID_0, bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount());
         bank.deposit(CHECKING_ID_1, bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
         bank.deposit(SAVINGS_ID_0, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
@@ -54,7 +53,6 @@ public class TransferValidatorTests {
         int months = getMonthsPerYear();
         AccountType accountType = AccountType.Savings;
         String id = "97420734";
-        double apr = getMaxAPR();
 
         transferValidator.setNext(new PassTimeValidator(bank));
 
@@ -261,7 +259,7 @@ public class TransferValidatorTests {
     @Test
     protected void transfer_from_cd_to_savings_should_be_between_balance_and_2500_inclusive() {
         double cdAPR = 0.6;
-        double initialCDBalance = 2200;
+        initialCDBalance = 2200;
 
         List<Integer> months = Arrays.asList(getMonthsPerYear(), 60);
         TransactionType transactionType = TransactionType.Transfer;
