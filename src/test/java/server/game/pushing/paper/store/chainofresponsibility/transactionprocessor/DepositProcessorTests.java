@@ -11,19 +11,18 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DepositProcessorTests {
-    protected Bank bank;
-    protected DepositProcessor depositProcessor;
+    private Bank bank;
+    private DepositProcessor depositProcessor;
 
-    protected final String CHECKING_ID = "87439742";
-    protected final String SAVINGS_ID = "97520943";
-    protected double apr;
+    private final String CHECKING_ID = "87439742";
+    private final String SAVINGS_ID = "97520943";
 
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
         depositProcessor = new DepositProcessor(bank);
 
-        apr = bank.getMaxAPR();
+        double apr = bank.getMaxAPR();
 
         bank.createChecking(CHECKING_ID, apr);
         bank.createSavings(SAVINGS_ID, apr);

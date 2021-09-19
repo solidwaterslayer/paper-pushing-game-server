@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateValidatorTests {
-    protected Bank bank;
-    protected CreateValidator createValidator;
+    private Bank bank;
+    private CreateValidator createValidator;
 
     @BeforeEach
     protected void setUp() {

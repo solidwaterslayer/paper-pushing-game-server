@@ -14,16 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class BankTests {
-    protected Bank bank;
+    private Bank bank;
 
-    protected final String CHECKING_ID_0 = "34792497";
-    protected final String CHECKING_ID_1 = "42793478";
-    protected final String SAVINGS_ID_0 = "00000000";
-    protected final String SAVINGS_ID_1 = "98340842";
-    protected final String CD_ID_0 = "54873935";
-    protected final String CD_ID_1 = "37599823";
-    protected double apr;
-    protected double initialCDBalance;
+    private final String CHECKING_ID_0 = "34792497";
+    private final String CHECKING_ID_1 = "42793478";
+    private final String SAVINGS_ID_0 = "00000000";
+    private final String SAVINGS_ID_1 = "98340842";
+    private final String CD_ID_0 = "54873935";
+    private final String CD_ID_1 = "37599823";
+    private double apr;
+    private double initialCDBalance;
 
     @BeforeEach
     protected void setUp() {
@@ -52,7 +52,6 @@ public class BankTests {
     @Test
     protected void create_checking_should_be_possible() {
         Account account = bank.getAccount(CHECKING_ID_0);
-
         assertEquals(AccountType.Checking, account.getAccountType());
         assertEquals(CHECKING_ID_0, account.getID());
         assertEquals(apr, account.getAPR());
@@ -62,7 +61,6 @@ public class BankTests {
     @Test
     protected void create_savings_should_be_possible() {
         Account account = bank.getAccount(SAVINGS_ID_0);
-
         assertEquals(AccountType.Savings, account.getAccountType());
         assertEquals(SAVINGS_ID_0, account.getID());
         assertEquals(apr, account.getAPR());
@@ -72,7 +70,6 @@ public class BankTests {
     @Test
     protected void create_cd_should_be_possible() {
         Account account = bank.getAccount(CD_ID_0);
-
         assertEquals(AccountType.CD, account.getAccountType());
         assertEquals(CD_ID_0, account.getID());
         assertEquals(apr, account.getAPR());
@@ -101,10 +98,10 @@ public class BankTests {
 
     @Test
     protected void withdraw_should_be_possible() {
-        double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount();
-        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount();
-        double checkingWithdrawAmount = checkingDepositAmount - 100;
-        double savingsWithdrawAmount = savingsDepositAmount - 50;
+        double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
+        double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
+        double checkingWithdrawAmount = bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount();
+        double savingsWithdrawAmount = bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount();
         double cdWithdrawAmount = bank.getAccount(CD_ID_1).getMaxWithdrawAmount();
 
         bank.deposit(CHECKING_ID_0, checkingDepositAmount);

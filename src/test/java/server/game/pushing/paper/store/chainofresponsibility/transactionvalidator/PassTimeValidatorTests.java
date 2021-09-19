@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class PassTimeValidatorTests {
-    protected Bank bank;
-    protected PassTimeValidator passTimeValidator;
+    private Bank bank;
+    private PassTimeValidator passTimeValidator;
 
     @BeforeEach
     protected void setUp() {
@@ -40,8 +40,8 @@ public class PassTimeValidatorTests {
 
     @Test
     protected void transaction_should_contain_the_transaction_type_pass_time_as_the_first_and_second_argument() {
-        TransactionType transactionType = TransactionType.PassTime;
         int months = getMonthsPerYear();
+        TransactionType transactionType = TransactionType.PassTime;
 
         assertFalse(passTimeValidator.handle(String.format("%s %s", "", "")));
         assertFalse(passTimeValidator.handle(String.format("%s %s", "", months)));

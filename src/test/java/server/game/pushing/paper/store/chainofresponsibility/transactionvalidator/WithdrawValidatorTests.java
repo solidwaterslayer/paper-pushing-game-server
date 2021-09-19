@@ -14,14 +14,14 @@ import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.bank.BankTests.passTime;
 
 public class WithdrawValidatorTests {
-    protected Bank bank;
-    protected WithdrawValidator withdrawValidator;
+    private Bank bank;
+    private WithdrawValidator withdrawValidator;
 
-    protected final String CHECKING_ID = "34782479";
-    protected final String SAVINGS_ID = "98430842";
-    protected final String CD_ID = "43784268";
-    protected double apr;
-    protected double initialCDBalance;
+    private final String CHECKING_ID = "34782479";
+    private final String SAVINGS_ID = "98430842";
+    private final String CD_ID = "43784268";
+    private double apr;
+    private double initialCDBalance;
 
     @BeforeEach
     protected void setUp() {

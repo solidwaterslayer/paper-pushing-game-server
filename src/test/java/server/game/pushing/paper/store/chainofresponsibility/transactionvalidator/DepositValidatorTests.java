@@ -13,22 +13,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DepositValidatorTests {
-    protected Bank bank;
-    protected DepositValidator depositValidator;
+    private Bank bank;
+    private DepositValidator depositValidator;
 
-    protected final String CHECKING_ID = "09096564";
-    protected final String SAVINGS_ID = "90438954";
-    protected final String CD_ID = "98430842";
-    protected double apr;
-    protected double initialCDBalance;
+    private final String CHECKING_ID = "09096564";
+    private final String SAVINGS_ID = "90438954";
+    private final String CD_ID = "98430842";
 
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
         depositValidator = new DepositValidator(bank);
 
-        apr = bank.getMaxAPR();
-        initialCDBalance = bank.getMinInitialCDBalance();
+        double apr = bank.getMaxAPR();
+        double initialCDBalance = bank.getMinInitialCDBalance();
 
         bank.createChecking(CHECKING_ID, apr);
         bank.createSavings(SAVINGS_ID, apr);

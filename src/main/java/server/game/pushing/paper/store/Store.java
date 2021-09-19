@@ -2,43 +2,52 @@ package server.game.pushing.paper.store;
 
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.chainofresponsibility.ChainOfResponsibility;
+import server.game.pushing.paper.store.chainofresponsibility.transactionprocessor.*;
 import server.game.pushing.paper.store.chainofresponsibility.transactionvalidator.*;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Store {
-    protected ChainOfResponsibility validator;
-    protected ChainOfResponsibility processor;
-    protected Bank bank;
+    private Bank bank;
+    private ChainOfResponsibility validator;
+    private ChainOfResponsibility processor;
 
-    public Store(Bank bank) {
+    public Store() {
+        initialize();
+    }
+
+    private void initialize() {
+        bank = new Bank();
         validator = ChainOfResponsibility.getInstance(Arrays.asList(
                 new CreateValidator(bank),
                 new DepositValidator(bank),
                 new WithdrawValidator(bank),
                 new TransferValidator(bank),
-                new PassTimeValidator(bank),
-                null
-        ));
+                new PassTimeValidator(bank), null)
+        );
         processor = ChainOfResponsibility.getInstance(Arrays.asList(
-                new CreateValidator(bank),
-                new DepositValidator(bank),
-                new WithdrawValidator(bank),
-                new TransferValidator(bank),
-                new PassTimeValidator(bank),
+                new CreateProcessor(bank),
+                new DepositProcessor(bank),
+                new WithdrawProcessor(bank),
+                new TransferProcessor(bank),
+                new PassTimeProcessor(bank),
                 null
         ));
-        this.bank = bank;
     }
 
-    public List<String> validate(List<String> invalidLedger) {
-        Order order = new Order(bank);
+    public Bank getBank() {
+        return bank;
+    }
 
-        for (String transaction : invalidLedger) {
-            order.addTransaction(transaction, validator.handle(transaction) && processor.handle(transaction));
+    public List<String> order(List<String> order) {
+        initialize();
+        Receipt receipt = new Receipt(bank);
+
+        for (String transaction : order) {
+            receipt.addTransaction(transaction, validator.handle(transaction) && processor.handle(transaction));
         }
 
-        return order.getTransactions();
+        return receipt.output();
     }
 }

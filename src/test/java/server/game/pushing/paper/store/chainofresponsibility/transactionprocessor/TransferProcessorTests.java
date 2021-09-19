@@ -15,18 +15,18 @@ import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.bank.BankTests.passTime;
 
 public class TransferProcessorTests {
-    protected Bank bank;
-    protected TransferProcessor transferProcessor;
+    private Bank bank;
+    private TransferProcessor transferProcessor;
 
-    protected final String CHECKING_ID_0 = "98830842";
-    protected final String CHECKING_ID_1 = "09309843";
-    protected final String SAVINGS_ID_0 = "90328934";
-    protected final String SAVINGS_ID_1 = "11117823";
-    protected final String CD_ID = "08429834";
-    protected double apr;
-    protected double initialCDBalance;
-    protected double checkingDepositAmount;
-    protected double savingsDepositAmount;
+    private final String CHECKING_ID_0 = "98830842";
+    private final String CHECKING_ID_1 = "09309843";
+    private final String SAVINGS_ID_0 = "90328934";
+    private final String SAVINGS_ID_1 = "11117823";
+    private final String CD_ID = "08429834";
+    private double apr;
+    private double initialCDBalance;
+    private double checkingDepositAmount;
+    private double savingsDepositAmount;
 
     @BeforeEach
     protected void setUp() {

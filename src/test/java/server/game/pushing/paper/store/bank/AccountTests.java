@@ -12,23 +12,23 @@ import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.bank.BankTests.passTime;
 
 public class AccountTests {
-    protected Account checking;
-    protected Account savings;
-    protected Account cd;
+    private Account checking;
+    private Account savings;
+    private Account cd;
 
-    protected final String CHECKING_ID = "34785729";
-    protected final String SAVINGS_ID = "47012479";
-    protected final String CD_ID = "34782479";
-    protected final double CHECKING_APR = 0.2;
-    protected final double SAVINGS_APR = 1;
-    protected final double CD_APR = 10;
-    protected final double INITIAL_CD_BALANCE = 5835;
+    private final String CHECKING_ID = "34785729";
+    private final String SAVINGS_ID = "47012479";
+    private final String CD_ID = "34782479";
+    private final double CHECKING_APR = 0.2;
+    private final double SAVINGS_APR = 1;
+    private final double CD_APR = 10;
+    private final double INITIAL_CD_BALANCE = 5835;
 
-    protected double checkingDepositAmount;
-    protected double checkingWithdrawAmount;
-    protected double savingsDepositAmount;
-    protected double savingsWithdrawAmount;
-    protected double cdWithdrawAmount;
+    private double checkingDepositAmount;
+    private double checkingWithdrawAmount;
+    private double savingsDepositAmount;
+    private double savingsWithdrawAmount;
+    private double cdWithdrawAmount;
 
     @BeforeEach
     protected void setUp() {

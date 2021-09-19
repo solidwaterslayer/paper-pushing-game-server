@@ -3,6 +3,7 @@ package server.game.pushing.paper.store.chainofresponsibility.transactionprocess
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.bank.account.Account;
 import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chainofresponsibility.TransactionType;
@@ -14,14 +15,14 @@ import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.bank.BankTests.passTime;
 
 public class PassTimeProcessorTests {
-    protected Bank bank;
-    protected PassTimeProcessor passTimeProcessor;
+    private Bank bank;
+    private PassTimeProcessor passTimeProcessor;
 
-    protected final String CHECKING_ID = "98408842";
-    protected final String SAVINGS_ID = "89438042";
-    protected final String CD_ID = "98430842";
-    protected double apr;
-    protected double initialCDBalance;
+    private final String CHECKING_ID = "98408842";
+    private final String SAVINGS_ID = "89438042";
+    private final String CD_ID = "98430842";
+    private double apr;
+    private double initialCDBalance;
 
     @BeforeEach
     protected void setUp() {
@@ -44,10 +45,11 @@ public class PassTimeProcessorTests {
         String id1 = SAVINGS_ID;
 
         assertTrue(passTimeProcessor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, id0, apr, initialCDBalance)));
-        assertEquals(AccountType.CD, bank.getAccount(id0).getAccountType());
-        assertEquals(id0, bank.getAccount(id0).getID());
-        assertEquals(apr, bank.getAccount(id0).getAPR());
-        assertEquals(initialCDBalance, bank.getAccount(id0).getBalance());
+        Account account = bank.getAccount(id0);
+        assertEquals(AccountType.CD, account.getAccountType());
+        assertEquals(id0, account.getID());
+        assertEquals(apr, account.getAPR());
+        assertEquals(initialCDBalance, account.getBalance());
         assertFalse(passTimeProcessor.handle(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
     }
 

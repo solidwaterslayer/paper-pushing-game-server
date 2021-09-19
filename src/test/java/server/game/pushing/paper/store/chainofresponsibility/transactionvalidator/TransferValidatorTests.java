@@ -17,17 +17,17 @@ import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.bank.BankTests.passTime;
 
 public class TransferValidatorTests {
-    protected Bank bank;
-    protected TransferValidator transferValidator;
+    private Bank bank;
+    private TransferValidator transferValidator;
 
-    protected final String CHECKING_ID_0 = "87439753";
-    protected final String CHECKING_ID_1 = "87439742";
-    protected final String SAVINGS_ID_0 = "98430842";
-    protected final String SAVINGS_ID_1 = "98430854";
-    protected final String CD_ID_0 = "24799348";
-    protected final String CD_ID_1 = "14799348";
-    protected double apr;
-    protected double initialCDBalance;
+    private final String CHECKING_ID_0 = "87439753";
+    private final String CHECKING_ID_1 = "87439742";
+    private final String SAVINGS_ID_0 = "98430842";
+    private final String SAVINGS_ID_1 = "98430854";
+    private final String CD_ID_0 = "24799348";
+    private final String CD_ID_1 = "14799348";
+    private double apr;
+    private double initialCDBalance;
 
     @BeforeEach
     protected void setUp() {

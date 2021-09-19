@@ -3,6 +3,7 @@ package server.game.pushing.paper.store.chainofresponsibility.transactionprocess
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.bank.account.Account;
 import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chainofresponsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chainofresponsibility.TransactionType;
@@ -12,8 +13,8 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateProcessorTests {
-    protected Bank bank;
-    protected CreateProcessor createProcessor;
+    private Bank bank;
+    private CreateProcessor createProcessor;
 
     @BeforeEach
     protected void setUp() {
@@ -44,10 +45,11 @@ public class CreateProcessorTests {
         double apr = bank.getMaxAPR();
 
         assertTrue(createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
-        assertEquals(accountType, bank.getAccount(id).getAccountType());
-        assertEquals(id, bank.getAccount(id).getID());
-        assertEquals(apr, bank.getAccount(id).getAPR());
-        assertEquals(0, bank.getAccount(id).getBalance());
+        Account account = bank.getAccount(id);
+        assertEquals(accountType, account.getAccountType());
+        assertEquals(id, account.getID());
+        assertEquals(apr, account.getAPR());
+        assertEquals(0, account.getBalance());
     }
 
     @Test
@@ -58,10 +60,11 @@ public class CreateProcessorTests {
         double apr = bank.getMaxAPR();
 
         assertTrue(createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
-        assertEquals(accountType, bank.getAccount(id).getAccountType());
-        assertEquals(id, bank.getAccount(id).getID());
-        assertEquals(apr, bank.getAccount(id).getAPR());
-        assertEquals(0, bank.getAccount(id).getBalance());
+        Account account = bank.getAccount(id);
+        assertEquals(accountType, account.getAccountType());
+        assertEquals(id, account.getID());
+        assertEquals(apr, account.getAPR());
+        assertEquals(0, account.getBalance());
     }
 
     @Test
@@ -73,10 +76,11 @@ public class CreateProcessorTests {
         double initialCDBalance = bank.getMinInitialCDBalance();
 
         assertTrue(createProcessor.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, apr, initialCDBalance)));
-        assertEquals(accountType, bank.getAccount(id).getAccountType());
-        assertEquals(id, bank.getAccount(id).getID());
-        assertEquals(apr, bank.getAccount(id).getAPR());
-        assertEquals(initialCDBalance, bank.getAccount(id).getBalance());
+        Account account = bank.getAccount(id);
+        assertEquals(accountType, account.getAccountType());
+        assertEquals(id, account.getID());
+        assertEquals(apr, account.getAPR());
+        assertEquals(initialCDBalance, account.getBalance());
     }
 
     @Test
