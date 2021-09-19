@@ -14,37 +14,47 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateProcessorTests {
     private Bank bank;
-    private CreateProcessor createProcessor;
+    private ChainOfResponsibility processor;
+
+    private TransactionType transactionType;
+    private final String CHECKING_ID = "17349724";
+    private final String SAVINGS_ID = "27349724";
+    private final String CD_ID = "87349724";
+    private double apr;
+    private double initialCDBalance;
 
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        createProcessor = new CreateProcessor(bank);
+        processor = new CreateProcessor(bank);
+
+        transactionType = processor.getTransactionType();
+        apr = bank.getMaxAPR();
+        initialCDBalance = bank.getMinInitialCDBalance();
     }
 
     @Test
     protected void create_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        createProcessor = (CreateProcessor) ChainOfResponsibility.getInstance(Arrays.asList(createProcessor, new DepositProcessor(bank), null));
+        processor = ChainOfResponsibility.getInstance(Arrays.asList(processor, new DepositProcessor(bank), null));
 
-        String id = "98430842";
-        double apr = bank.getMaxAPR();
-        bank.createSavings(id, apr);
+        AccountType accountType = AccountType.Savings;
+        String id = SAVINGS_ID;
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
-        assertTrue(createProcessor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
         assertEquals(depositAmount, bank.getAccount(id).getBalance());
-        assertFalse(createProcessor.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
+        assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
     }
 
     @Test
     protected void create_checking_transaction_should_process() {
-        TransactionType transactionType = TransactionType.Create;
         AccountType accountType = AccountType.Checking;
-        String id = "87438743";
-        double apr = bank.getMaxAPR();
+        String id = CHECKING_ID;
 
-        assertTrue(createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
+
         Account account = bank.getAccount(id);
         assertEquals(accountType, account.getAccountType());
         assertEquals(id, account.getID());
@@ -54,12 +64,11 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_savings_transaction_should_process() {
-        TransactionType transactionType = TransactionType.Create;
         AccountType accountType = AccountType.Savings;
-        String id = "87438742";
-        double apr = bank.getMaxAPR();
+        String id = SAVINGS_ID;
 
-        assertTrue(createProcessor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
+
         Account account = bank.getAccount(id);
         assertEquals(accountType, account.getAccountType());
         assertEquals(id, account.getID());
@@ -69,13 +78,11 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_cd_transaction_should_process() {
-        TransactionType transactionType = TransactionType.Create;
         AccountType accountType = AccountType.CD;
-        String id = "87438778";
-        double apr = bank.getMaxAPR();
-        double initialCDBalance = bank.getMinInitialCDBalance();
+        String id = CD_ID;
 
-        assertTrue(createProcessor.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, apr, initialCDBalance)));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s", transactionType, accountType, id, apr, initialCDBalance)));
+
         Account account = bank.getAccount(id);
         assertEquals(accountType, account.getAccountType());
         assertEquals(id, account.getID());
@@ -85,29 +92,15 @@ public class CreateProcessorTests {
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        assertEquals(AccountType.Checking, AccountType.valueOf("Checking"));
-        String checkingID = "17349724";
-        String savingsID = "27349724";
-        String cdID = "87349724";
-        double apr = bank.getMaxAPR();
-        double initialCDBalance = bank.getMinInitialCDBalance();
-
-        assertTrue(createProcessor.handle(String.format("%s %s %s %s", "crEaTe", "checking", checkingID, apr)));
-        assertTrue(createProcessor.handle(String.format("%s %s %s %s", "create", "saVINgs", savingsID, apr)));
-        assertTrue(createProcessor.handle(String.format("%s %s %s %s %s", "creATe", "Cd", cdID, apr, initialCDBalance)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", "crEaTe", "checking", CHECKING_ID, apr)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", "create", "saVINgs", SAVINGS_ID, apr)));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s", "creATe", "Cd", CD_ID, apr, initialCDBalance)));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        TransactionType transactionType = createProcessor.getTransactionType();
-        String checkingID = "17349724";
-        String savingsID = "27349724";
-        String cdID = "87349724";
-        double apr = bank.getMaxAPR();
-        double initialCDBalance = bank.getMinInitialCDBalance();
-
-        assertTrue(createProcessor.handle(String.format("%s %s %s %s %s", transactionType, AccountType.Checking, checkingID, apr, "0")));
-        assertTrue(createProcessor.handle(String.format("%s %s %s %s %s %s %s %s", transactionType, AccountType.Savings, savingsID, apr, "nuke", AccountType.CD, "38ur", 34)));
-        assertTrue(createProcessor.handle(String.format("%s %s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, cdID, apr, initialCDBalance, "8", 8, "eight", 4 + 4)));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s", transactionType, AccountType.Checking, CHECKING_ID, apr, "0")));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s %s %s %s", transactionType, AccountType.Savings, SAVINGS_ID, apr, "nuke", AccountType.CD, "38ur", 34)));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance, "8", 8, "eight", 4 + 4)));
     }
 }

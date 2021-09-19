@@ -16,8 +16,11 @@ import static server.game.pushing.paper.store.bank.BankTests.passTime;
 
 public class TransferProcessorTests {
     private Bank bank;
-    private TransferProcessor transferProcessor;
+    private ChainOfResponsibility processor;
 
+    private final int MONTHS = getMonthsPerYear();
+    private double minBalanceFee;
+    private TransactionType transactionType;
     private final String CHECKING_ID_0 = "98830842";
     private final String CHECKING_ID_1 = "09309843";
     private final String SAVINGS_ID_0 = "90328934";
@@ -31,8 +34,10 @@ public class TransferProcessorTests {
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        transferProcessor = new TransferProcessor(bank);
+        processor = new TransferProcessor(bank);
 
+        minBalanceFee = bank.getMinBalanceFee();
+        transactionType = processor.getTransactionType();
         apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
         bank.createChecking(CHECKING_ID_0, apr);
@@ -51,91 +56,80 @@ public class TransferProcessorTests {
 
     @Test
     protected void transfer_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        transferProcessor = (TransferProcessor) ChainOfResponsibility.getInstance(Arrays.asList(transferProcessor, new PassTimeProcessor(bank), null));
+        processor = ChainOfResponsibility.getInstance(Arrays.asList(processor, new PassTimeProcessor(bank), null));
 
-        double minBalanceFee = bank.getMinBalanceFee();
-        int months = getMonthsPerYear();
-
-        assertTrue(transferProcessor.handle(String.format("%s %s", TransactionType.PassTime, months)));
-        assertEquals(passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
-        assertFalse(transferProcessor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", apr, initialCDBalance)));
+        assertTrue(processor.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));
+        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
+        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertFalse(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", apr, initialCDBalance)));
     }
 
     @Test
     protected void transfer_from_checking_to_checking_transaction_should_process() {
-        TransactionType transactionType = TransactionType.Transfer;
         String fromID = CHECKING_ID_0;
         String toID = CHECKING_ID_1;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(checkingDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());
         assertEquals(checkingDepositAmount + transferAmount, bank.getAccount(toID).getBalance());
     }
 
     @Test
     protected void transfer_from_checking_to_savings_transaction_should_process() {
-        TransactionType transactionType = TransactionType.Transfer;
         String fromID = CHECKING_ID_0;
         String toID = SAVINGS_ID_0;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(checkingDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());
         assertEquals(savingsDepositAmount + transferAmount, bank.getAccount(toID).getBalance());
     }
 
     @Test
     protected void transfer_from_savings_to_checking_transaction_should_process() {
-        TransactionType transactionType = TransactionType.Transfer;
         String fromID = SAVINGS_ID_1;
         String toID = CHECKING_ID_0;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());
         assertEquals(checkingDepositAmount + transferAmount, bank.getAccount(toID).getBalance());
     }
 
     @Test
     protected void transfer_from_savings_to_savings_transaction_should_process() {
-        TransactionType transactionType = TransactionType.Transfer;
         String fromID = SAVINGS_ID_1;
         String toID = SAVINGS_ID_0;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());
         assertEquals(savingsDepositAmount + transferAmount, bank.getAccount(toID).getBalance());
     }
 
     @Test
     protected void transfer_from_cd_to_savings_transaction_should_process() {
-        int months = getMonthsPerYear();
-        double minBalanceFee = bank.getMinBalanceFee();
-        TransactionType transactionType = TransactionType.Transfer;
         String fromID = CD_ID;
         String toID = SAVINGS_ID_1;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
-        bank.passTime(months);
+        bank.passTime(MONTHS);
 
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(0, bank.getAccount(fromID).getBalance());
         assertEquals(
-                passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount)
-                        + passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance)
+                passTime(minBalanceFee, MONTHS, AccountType.Savings, apr, savingsDepositAmount)
+                        + passTime(minBalanceFee, MONTHS, AccountType.CD, apr, initialCDBalance)
                 , bank.getAccount(toID).getBalance()
         );
     }
 
     @Test
     protected void transaction_when_transaction_amount_is_less_than_or_equal_to_balance_should_process() {
-        TransactionType transactionType = TransactionType.Transfer;
         String id0 = SAVINGS_ID_0;
         String id1 = CHECKING_ID_1;
         double transferAmount = 400;
@@ -145,10 +139,10 @@ public class TransferProcessorTests {
         }
 
         assertEquals(transferAmount, bank.getAccount(id0).getBalance());
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, id0, id1, transferAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, id0, id1, transferAmount)));
 
         assertTrue(transferAmount < bank.getAccount(id1).getBalance());
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, id1, id0, transferAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, id1, id0, transferAmount)));
 
         assertEquals(400, bank.getAccount(id0).getBalance());
         assertEquals(1000, bank.getAccount(id1).getBalance());
@@ -156,7 +150,6 @@ public class TransferProcessorTests {
 
     @Test
     protected void transaction_when_transfer_amount_is_greater_than_balance_should_transfer_amount_equal_to_balance() {
-        TransactionType transactionType = TransactionType.Transfer;
         String fromID = SAVINGS_ID_0;
         String toID = SAVINGS_ID_1;
         double transferAmount = 1000;
@@ -165,7 +158,7 @@ public class TransferProcessorTests {
         bank.withdraw(SAVINGS_ID_0, transferAmount);
 
         assertTrue(transferAmount > bank.getAccount(fromID).getBalance());
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
 
         assertEquals(0, bank.getAccount(fromID).getBalance());
         assertEquals(3000, bank.getAccount(toID).getBalance());
@@ -177,19 +170,18 @@ public class TransferProcessorTests {
         String toID = CHECKING_ID_0;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
-        assertTrue(transferProcessor.handle(String.format("traNSFer %s %s %s", fromID, toID, transferAmount)));
+        assertTrue(processor.handle(String.format("traNSFer %s %s %s", fromID, toID, transferAmount)));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        TransactionType transactionType = TransactionType.Transfer;
         String fromID = CD_ID;
         String toID = SAVINGS_ID_1;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
         bank.passTime(12);
 
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s %s", transactionType, fromID, toID, transferAmount, "nuke")));
-        assertTrue(transferProcessor.handle(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, fromID, toID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s", transactionType, fromID, toID, transferAmount, "nuke")));
+        assertTrue(processor.handle(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, fromID, toID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
     }
 }

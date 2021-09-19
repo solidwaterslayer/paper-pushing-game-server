@@ -9,14 +9,17 @@ import server.game.pushing.paper.store.chainofresponsibility.TransactionType;
 
 import java.util.Arrays;
 
+import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.bank.BankTests.passTime;
 
 public class WithdrawValidatorTests {
     private Bank bank;
-    private WithdrawValidator withdrawValidator;
+    private ChainOfResponsibility validator;
 
+    private final int MONTHS = getMonthsPerYear();
+    private TransactionType transactionType;
     private final String CHECKING_ID = "34782479";
     private final String SAVINGS_ID = "98430842";
     private final String CD_ID = "43784268";
@@ -26,8 +29,9 @@ public class WithdrawValidatorTests {
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        withdrawValidator = new WithdrawValidator(bank);
+        validator = new WithdrawValidator(bank);
 
+        transactionType = validator.getTransactionType();
         apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
 
@@ -40,115 +44,110 @@ public class WithdrawValidatorTests {
 
     @Test
     protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        withdrawValidator = (WithdrawValidator) ChainOfResponsibility.getInstance(Arrays.asList(withdrawValidator, new TransferValidator(bank), null));
+        validator = ChainOfResponsibility.getInstance(Arrays.asList(validator, new TransferValidator(bank), null));
 
-        int months = getMonthsPerYear();
-        double transferAmount = 400;
+        String fromID = CHECKING_ID;
+        String toID = SAVINGS_ID;
+        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID, SAVINGS_ID, transferAmount)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s", TransactionType.PassTime, months)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));
     }
 
     @Test
     protected void transaction_should_contain_the_transaction_type_withdraw_as_the_first_argument() {
-        TransactionType transactionType = TransactionType.Withdraw;
         String id = CHECKING_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", "", "", "")));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", "", id, withdrawAmount)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", "nuke", id, withdrawAmount)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s", "", "", "")));
+        assertFalse(validator.handle(String.format("%s %s %s", "", id, withdrawAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s", "nuke", id, withdrawAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
     }
 
     @Test
     protected void transaction_should_contain_a_taken_id_as_the_second_argument() {
-        TransactionType transactionType = TransactionType.Withdraw;
         String id = SAVINGS_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, "", "")));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, "", withdrawAmount)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, "87439742", withdrawAmount)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, "", "")));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, "", withdrawAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, "87439742", withdrawAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
     }
 
     @Test
     protected void transaction_should_contain_a_withdraw_amount_as_the_third_argument() {
-        TransactionType transactionType = TransactionType.Withdraw;
         String id = CD_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         bank.passTime(getMonthsPerYear());
 
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, "")));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, "68&(")));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, "")));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, "68&(")));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
     }
 
     @Test
     protected void transaction_when_account_type_is_checking_should_contain_a_withdraw_amount_greater_than_0() {
-        TransactionType transactionType = TransactionType.Withdraw;
         String id = CHECKING_ID;
         double withdrawAmount = 0;
 
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 200)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 200)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
     }
 
     @Test
     protected void transaction_when_account_type_is_checking_should_contain_a_withdraw_amount_less_than_or_equal_to_400() {
-        TransactionType transactionType = TransactionType.Withdraw;
         String id = CHECKING_ID;
         double withdrawAmount = 400;
 
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 200)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 200)));
     }
 
     @Test
     protected void transaction_when_account_type_is_savings_should_not_be_possible_twice_a_month_or_more() {
         String id = SAVINGS_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
+
         String transaction = String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount);
 
-        assertTrue(withdrawValidator.handle(transaction));
+        assertTrue(validator.handle(transaction));
         bank.withdraw(id, withdrawAmount);
 
-        assertFalse(withdrawValidator.handle(transaction));
+        assertFalse(validator.handle(transaction));
 
         bank.passTime(1);
-        assertTrue(withdrawValidator.handle(transaction));
+        assertTrue(validator.handle(transaction));
     }
 
     @Test
     protected void transaction_when_account_type_is_savings_should_contain_a_withdraw_amount_greater_than_0() {
-        TransactionType transactionType = TransactionType.Withdraw;
         String id = SAVINGS_ID;
         double withdrawAmount = 0;
 
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 200)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, 500)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 200)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, 500)));
     }
 
     @Test
     protected void transaction_when_account_type_is_savings_should_contain_a_withdraw_amount_less_than_or_equal_to_1000() {
-        TransactionType transactionType = TransactionType.Withdraw;
         String id = SAVINGS_ID;
         double withdrawAmount = 1000;
 
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, 600)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 200)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, 600)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 200)));
     }
 
     @Test
@@ -156,7 +155,7 @@ public class WithdrawValidatorTests {
         int monthsPerYear = getMonthsPerYear();
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(month >= monthsPerYear, withdrawValidator.handle(String.format("%s %s %s", TransactionType.Withdraw, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount())));
+            assertEquals(month >= monthsPerYear, validator.handle(String.format("%s %s %s", TransactionType.Withdraw, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount())));
 
             bank.passTime(1);
         }
@@ -164,42 +163,38 @@ public class WithdrawValidatorTests {
 
     @Test
     protected void withdraw_cd_should_be_greater_than_or_equal_to_balance() {
-        int months = getMonthsPerYear();
-        TransactionType transactionType = TransactionType.Withdraw;
         String id = CD_ID;
-        double withdrawAmount = passTime(bank.getMinBalanceFee(), months, AccountType.CD, apr, initialCDBalance);
+        double withdrawAmount = passTime(bank.getMinBalanceFee(), MONTHS, AccountType.CD, apr, initialCDBalance);
 
-        bank.passTime(months);
+        bank.passTime(MONTHS);
 
-        assertEquals(withdrawAmount, bank.getAccount(CD_ID).getBalance());
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 200)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 200)));
+        assertEquals(withdrawAmount, bank.getAccount(id).getBalance());
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 200)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount - 2)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 2)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount + 200)));
 
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, -1000)));
-        assertFalse(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, 0)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s", transactionType, id, Double.POSITIVE_INFINITY)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, -1000)));
+        assertFalse(validator.handle(String.format("%s %s %s", transactionType, id, 0)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, id, Double.POSITIVE_INFINITY)));
     }
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        bank.passTime(getMonthsPerYear());
+        bank.passTime(MONTHS);
 
-        assertTrue(withdrawValidator.handle(String.format("withdraw %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount())));
-        assertTrue(withdrawValidator.handle(String.format("wITHdrAw %s %s", SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount())));
-        assertTrue(withdrawValidator.handle(String.format("WITHDRAW %s %s", CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount())));
+        assertTrue(validator.handle(String.format("withdraw %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount())));
+        assertTrue(validator.handle(String.format("wITHdrAw %s %s", SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount())));
+        assertTrue(validator.handle(String.format("WITHDRAW %s %s", CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount())));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        TransactionType transactionType = TransactionType.Withdraw;
+        bank.passTime(MONTHS);
 
-        bank.passTime(getMonthsPerYear());
-
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount(), "nuke")));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s %s  %s    %s         %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount(), "00", "000", "00000", "000", 0)));
-        assertTrue(withdrawValidator.handle(String.format("%s %s %s %s %s %s", transactionType, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount(), "d", "e", "r")));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount(), "nuke")));
+        assertTrue(validator.handle(String.format("%s %s %s %s %s  %s    %s         %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount(), "00", "000", "00000", "000", 0)));
+        assertTrue(validator.handle(String.format("%s %s %s %s %s %s", transactionType, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount(), "d", "e", "r")));
     }
 }

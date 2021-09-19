@@ -16,7 +16,11 @@ import static server.game.pushing.paper.store.bank.BankTests.passTime;
 
 public class PassTimeProcessorTests {
     private Bank bank;
-    private PassTimeProcessor passTimeProcessor;
+    private ChainOfResponsibility processor;
+
+    private double minBalanceFee;
+    private int months;
+    private TransactionType transactionType;
 
     private final String CHECKING_ID = "98408842";
     private final String SAVINGS_ID = "89438042";
@@ -27,8 +31,11 @@ public class PassTimeProcessorTests {
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        passTimeProcessor = new PassTimeProcessor(bank);
+        processor = new PassTimeProcessor(bank);
 
+        minBalanceFee = bank.getMinBalanceFee();
+        months = getMonthsPerYear();
+        transactionType = processor.getTransactionType();
         apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
 
@@ -39,32 +46,29 @@ public class PassTimeProcessorTests {
 
     @Test
     protected void pass_time_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        passTimeProcessor = (PassTimeProcessor) ChainOfResponsibility.getInstance(Arrays.asList(passTimeProcessor, new CreateProcessor(bank), null));
+        processor = ChainOfResponsibility.getInstance(Arrays.asList(processor, new CreateProcessor(bank), null));
 
         String id0 = "10000010";
         String id1 = SAVINGS_ID;
 
-        assertTrue(passTimeProcessor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, id0, apr, initialCDBalance)));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, id0, apr, initialCDBalance)));
         Account account = bank.getAccount(id0);
         assertEquals(AccountType.CD, account.getAccountType());
         assertEquals(id0, account.getID());
         assertEquals(apr, account.getAPR());
         assertEquals(initialCDBalance, account.getBalance());
-        assertFalse(passTimeProcessor.handle(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
+        assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
     }
 
     @Test
     protected void transaction_should_apply_apr() {
-        double minBalanceFee = bank.getMinBalanceFee();
-        int months = getMonthsPerYear();
-        TransactionType transactionType = TransactionType.PassTime;
         double checkingDepositAmount = bank.getAccount(CHECKING_ID).getMaxDepositAmount();
         double savingsDepositAmount = bank.getAccount(SAVINGS_ID).getMaxDepositAmount();
 
         bank.deposit(CHECKING_ID, checkingDepositAmount);
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
-        assertTrue(passTimeProcessor.handle(String.format("%s %s", transactionType, months)));
+        assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
         assertEquals(passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
         assertEquals(passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
         assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
@@ -72,16 +76,14 @@ public class PassTimeProcessorTests {
 
     @Test
     protected void transaction_when_balance_is_less_than_or_equal_to_100_should_apply_min_balance_fee_then_apr() {
-        double minBalanceFee = bank.getMinBalanceFee();
-        int months = 2;
-        TransactionType transactionType = TransactionType.PassTime;
+        months = 2;
         double checkingDepositAmount = 75;
         double savingsDepositAmount = 100;
 
         bank.deposit(CHECKING_ID, checkingDepositAmount);
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
-        assertTrue(passTimeProcessor.handle(String.format("%s %s", transactionType, months)));
+        assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
         assertEquals(passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
         assertEquals(passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
         assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
@@ -89,14 +91,12 @@ public class PassTimeProcessorTests {
 
     @Test
     protected void transaction_when_balance_is_0_should_remove_account() {
-        double minBalanceFee = bank.getMinBalanceFee();
-        int months = 2;
-        TransactionType transactionType = TransactionType.PassTime;
+        months = 2;
         double depositAmount = 25;
 
         bank.deposit(SAVINGS_ID, depositAmount);
 
-        assertTrue(passTimeProcessor.handle(String.format("%s %s", transactionType, months)));
+        assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
         assertFalse(bank.containsAccount(CHECKING_ID));
         assertFalse(bank.containsAccount(SAVINGS_ID));
         assertTrue(bank.containsAccount(CD_ID));
@@ -105,17 +105,12 @@ public class PassTimeProcessorTests {
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        int months = getMonthsPerYear();
-
-        assertTrue(passTimeProcessor.handle(String.format("%s %s", "PaSs tIme", months)));
+        assertTrue(processor.handle(String.format("%s %s", "PaSs tIme", months)));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        int months = getMonthsPerYear();
-        TransactionType transactionType = TransactionType.PassTime;
-
-        assertTrue(passTimeProcessor.handle(String.format("%s %s %s", transactionType, months, "0")));
-        assertTrue(passTimeProcessor.handle(String.format("%s %s %s %s %s %s", transactionType, months, 89, 23892398, 92839233, 23)));
+        assertTrue(processor.handle(String.format("%s %s %s", transactionType, months, "0")));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s %s", transactionType, months, 89, 23892398, 92839233, 23)));
     }
 }
