@@ -3,10 +3,7 @@ package server.game.pushing.paper.store;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.chainofresponsibility.TransactionType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Receipt {
     private final Bank BANK;
@@ -41,7 +38,10 @@ public class Receipt {
     public List<String> output() {
         List<String> transactions = new ArrayList<>();
 
-        for (String id : BANK.getAccounts().keySet()) {
+        Iterator<String> iterator = BANK.getAccountIterator();
+        while (iterator.hasNext()) {
+            String id = iterator.next();
+
             transactions.add(BANK.getAccount(id).toString());
             transactions.addAll(this.TRANSACTIONS.get(id));
             transactions.add("");

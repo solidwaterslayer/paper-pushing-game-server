@@ -6,6 +6,7 @@ import server.game.pushing.paper.store.bank.account.Checking;
 import server.game.pushing.paper.store.bank.account.Savings;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -42,10 +43,6 @@ public class Bank {
         ACCOUNTS.put(id, new CD(id, apr, balance));
     }
 
-    public Map<String, Account> getAccounts() {
-        return ACCOUNTS;
-    }
-
     public Account getAccount(String id) {
         return ACCOUNTS.get(id);
     }
@@ -54,8 +51,20 @@ public class Bank {
         ACCOUNTS.remove(id);
     }
 
+    public boolean isEmpty() {
+        return ACCOUNTS.isEmpty();
+    }
+
+    public int size() {
+        return ACCOUNTS.size();
+    }
+
     public boolean containsAccount(String id) {
         return ACCOUNTS.containsKey(id);
+    }
+
+    public Iterator<String> getAccountIterator() {
+        return ACCOUNTS.keySet().iterator();
     }
 
     public double getMinBalanceFee() {
@@ -113,12 +122,16 @@ public class Bank {
         return MAX_APR;
     }
 
-    public boolean isInitialCDBalanceValid(double balance) {
-        return MIN_INITIAL_CD_BALANCE <= balance && balance <= MAX_INITIAL_CD_BALANCE;
+    public boolean isInitialCDBalanceValid(double initialCDBalance) {
+        return MIN_INITIAL_CD_BALANCE <= initialCDBalance && initialCDBalance <= MAX_INITIAL_CD_BALANCE;
     }
 
     public double getMinInitialCDBalance() {
         return MIN_INITIAL_CD_BALANCE;
+    }
+
+    public double getMaxInitialCDBalance() {
+        return MAX_INITIAL_CD_BALANCE;
     }
 
     public boolean isDepositAmountValid(String id, double depositAmount) {
