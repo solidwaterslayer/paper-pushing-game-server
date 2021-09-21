@@ -7,8 +7,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,11 +32,11 @@ public class CreateValidatorTests {
 
     @Test
     protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        validator = ChainOfResponsibility.getInstance(Arrays.asList(validator, new DepositValidator(bank), null));
-
         bank.createChecking(id1, apr);
         double depositAmount = bank.getAccount(id1).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id1).getMaxWithdrawAmount();
+
+        validator.setNext(new DepositValidator(bank));
 
         assertTrue(validator.handle(String.format("%s %s %s", TransactionType.Deposit, id1, depositAmount)));
         assertFalse(validator.handle(String.format("%s %s %s", TransactionType.Withdraw, id1, withdrawAmount)));

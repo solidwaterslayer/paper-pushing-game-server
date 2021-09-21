@@ -6,8 +6,6 @@ import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.Arrays;
-
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,14 +31,14 @@ public class DepositProcessorTests {
 
     @Test
     protected void deposit_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        processor = ChainOfResponsibility.getInstance(Arrays.asList(processor, new WithdrawProcessor(bank), null));
-
         String fromID = SAVINGS_ID;
         String toID = CHECKING_ID;
         double depositAmount = bank.getAccount(fromID).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(fromID).getMaxWithdrawAmount();
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
         assertTrue(processor.handle(String.format("%s %s %s", transactionType, fromID, depositAmount)));
+
+        processor.setNext(new WithdrawProcessor(bank));
 
         assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Withdraw, fromID, withdrawAmount)));
         assertEquals(depositAmount - withdrawAmount, bank.getAccount(fromID).getBalance());

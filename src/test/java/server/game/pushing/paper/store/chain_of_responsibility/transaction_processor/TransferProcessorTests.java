@@ -7,8 +7,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.Arrays;
-
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
@@ -56,7 +54,7 @@ public class TransferProcessorTests {
 
     @Test
     protected void transfer_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        processor = ChainOfResponsibility.getInstance(Arrays.asList(processor, new PassTimeProcessor(bank), null));
+        processor.setNext(new PassTimeProcessor(bank));
 
         assertTrue(processor.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));
         assertEquals(passTime(minBalanceFee, MONTHS, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());

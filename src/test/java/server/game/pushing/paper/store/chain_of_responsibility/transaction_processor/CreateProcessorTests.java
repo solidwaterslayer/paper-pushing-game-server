@@ -8,8 +8,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateProcessorTests {
@@ -35,13 +33,13 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        processor = ChainOfResponsibility.getInstance(Arrays.asList(processor, new DepositProcessor(bank), null));
-
         AccountType accountType = AccountType.Savings;
         String id = SAVINGS_ID;
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
+
+        processor.setNext(new DepositProcessor(bank));
 
         assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
         assertEquals(depositAmount, bank.getAccount(id).getBalance());

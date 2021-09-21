@@ -7,6 +7,7 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Math.min;
@@ -37,16 +38,24 @@ public class BankTests {
         bank.createSavings(SAVINGS_ID_0, apr);
         bank.createCD(CD_ID_1, apr, initialCDBalance);
         bank.createCD(CD_ID_0, apr, initialCDBalance);
+
+        assertFalse(bank.isEmpty());
+        assertEquals(6, bank.size());
+        for (Iterator<String> accountIterator = bank.getAccountIterator(); accountIterator.hasNext();) {
+            assertTrue(bank.containsAccount(accountIterator.next()));
+        }
     }
 
     @Test
     protected void initialize_bank_should_have_0_accounts() {
         bank = new Bank();
 
-        assertTrue(bank.isEmpty());
         assertEquals(25, bank.getMinBalanceFee());
         assertEquals(10, bank.getMaxAPR());
         assertEquals(1000, bank.getMinInitialCDBalance());
+        assertEquals(10000, bank.getMaxInitialCDBalance());
+
+        assertTrue(bank.isEmpty());
     }
 
     @Test

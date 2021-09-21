@@ -7,8 +7,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.Arrays;
-
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
@@ -50,11 +48,11 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void withdraw_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        processor = ChainOfResponsibility.getInstance(Arrays.asList(processor, new TransferProcessor(bank), null));
-
         String fromID = SAVINGS_ID;
         String toID = CHECKING_ID;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+
+        processor.setNext(new TransferProcessor(bank));
 
         assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount)));
         assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());

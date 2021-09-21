@@ -2,8 +2,6 @@ package server.game.pushing.paper.store.chain_of_responsibility;
 
 import server.game.pushing.paper.store.bank.Bank;
 
-import java.util.List;
-
 public abstract class ChainOfResponsibility {
     protected ChainOfResponsibility next;
 
@@ -14,12 +12,8 @@ public abstract class ChainOfResponsibility {
         this.bank = bank;
     }
 
-    public static ChainOfResponsibility getInstance(List<ChainOfResponsibility> chainOfResponsibilities) {
-        for (int i = 0; i < chainOfResponsibilities.size() - 1; i++) {
-            chainOfResponsibilities.get(i).next = chainOfResponsibilities.get(i + 1);
-        }
-
-        return chainOfResponsibilities.get(0);
+    public void setNext(ChainOfResponsibility next) {
+        this.next = next;
     }
 
     public TransactionType getTransactionType() {

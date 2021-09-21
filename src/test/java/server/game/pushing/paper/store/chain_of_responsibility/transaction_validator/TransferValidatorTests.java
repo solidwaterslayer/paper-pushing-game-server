@@ -55,9 +55,11 @@ public class TransferValidatorTests {
     @Test
     protected void transfer_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
         bank = new Bank();
-        validator = ChainOfResponsibility.getInstance(Arrays.asList(new TransferValidator(bank), new PassTimeValidator(bank), null));
+        validator = new TransferValidator(bank);
 
         AccountType accountType = AccountType.Savings;
+
+        validator.setNext(new PassTimeValidator(bank));
 
         assertTrue(validator.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));
         assertFalse(validator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, SAVINGS_ID_1, apr)));

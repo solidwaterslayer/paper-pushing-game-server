@@ -7,8 +7,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
@@ -30,11 +28,10 @@ public class PassTimeValidatorTests {
 
     @Test
     protected void pass_time_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        validator = ChainOfResponsibility.getInstance(Arrays.asList(validator, new CreateValidator(bank), null));
-
         AccountType accountType = AccountType.Savings;
         String id = "97439742";
         double apr = bank.getMaxAPR();
+        validator.setNext(new CreateValidator(bank));
         assertTrue(validator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, id, apr)));
         bank.createSavings(id, apr);
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();

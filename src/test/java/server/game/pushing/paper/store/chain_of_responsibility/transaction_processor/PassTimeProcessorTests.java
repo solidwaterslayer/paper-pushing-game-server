@@ -8,8 +8,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.bank.BankTests.passTime;
@@ -46,10 +44,10 @@ public class PassTimeProcessorTests {
 
     @Test
     protected void pass_time_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
-        processor = ChainOfResponsibility.getInstance(Arrays.asList(processor, new CreateProcessor(bank), null));
-
         String id0 = "10000010";
         String id1 = SAVINGS_ID;
+
+        processor.setNext(new CreateProcessor(bank));
 
         assertTrue(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, id0, apr, initialCDBalance)));
         Account account = bank.getAccount(id0);

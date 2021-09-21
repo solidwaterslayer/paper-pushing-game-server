@@ -7,8 +7,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.Arrays;
-
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
@@ -44,11 +42,11 @@ public class WithdrawValidatorTests {
 
     @Test
     protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
-        validator = ChainOfResponsibility.getInstance(Arrays.asList(validator, new TransferValidator(bank), null));
-
         String fromID = CHECKING_ID;
         String toID = SAVINGS_ID;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+
+        validator.setNext(new TransferValidator(bank));
 
         assertTrue(validator.handle(String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount)));
         assertFalse(validator.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));

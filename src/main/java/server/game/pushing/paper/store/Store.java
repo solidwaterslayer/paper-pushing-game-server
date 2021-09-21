@@ -2,58 +2,45 @@ package server.game.pushing.paper.store;
 
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.transaction_processor.*;
-import server.game.pushing.paper.store.chain_of_responsibility.transaction_validator.*;
+import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Store {
-    private Bank bank;
-    private List<String> order;
-    private Receipt receipt;
-    private ChainOfResponsibility validator;
-    private ChainOfResponsibility processor;
+    private final List<String> ORDER;
+    private final Bank BANK;
+    private final Receipt RECEIPT;
+    private final ChainOfResponsibility VALIDATOR;
+    private final ChainOfResponsibility PROCESSOR;
 
     public Store() {
-        bank = new Bank();
-        order = new ArrayList<>();
-        receipt = new Receipt(bank);
-        validator = ChainOfResponsibility.getInstance(Arrays.asList(
-                new CreateValidator(bank),
-                new DepositValidator(bank),
-                new WithdrawValidator(bank),
-                new TransferValidator(bank),
-                new PassTimeValidator(bank), null)
-        );
-        processor = ChainOfResponsibility.getInstance(Arrays.asList(
-                new CreateProcessor(bank),
-                new DepositProcessor(bank),
-                new WithdrawProcessor(bank),
-                new TransferProcessor(bank),
-                new PassTimeProcessor(bank),
-                null
-        ));
+        ORDER = new ArrayList<>();
+        BANK = new Bank();
+        RECEIPT = new Receipt(BANK);
+        ChainOfResponsibilityFactory chainOfResponsibilityFactory = new ChainOfResponsibilityFactory(BANK);
+        VALIDATOR = chainOfResponsibilityFactory.getChainOfResponsibility(true);
+        PROCESSOR = chainOfResponsibilityFactory.getChainOfResponsibility(false);
     }
 
     public Bank getBank() {
-        return bank;
+        return BANK;
     }
 
     public List<String> getOrder() {
-        return order;
+        return ORDER;
     }
 
     public void setOrder(List<String> order) {
-        this.order = order;
+        this.ORDER.addAll(order);
     }
 
     public List<String> getReceipt() {
-        for (String transaction : order) {
-            receipt.addTransaction(transaction, validator.handle(transaction) && processor.handle(transaction));
+        for (int i = RECEIPT.size(); i < ORDER.size(); i++) {
+            String transaction = ORDER.get(i);
+            RECEIPT.addTransaction(transaction, VALIDATOR.handle(transaction) && PROCESSOR.handle(transaction));
         }
 
-        return this.receipt.output();
+        return this.RECEIPT.output();
     }
 }
