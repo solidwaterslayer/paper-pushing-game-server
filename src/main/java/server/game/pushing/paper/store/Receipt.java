@@ -1,7 +1,7 @@
 package server.game.pushing.paper.store;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.chainofresponsibility.TransactionType;
+import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.*;
 

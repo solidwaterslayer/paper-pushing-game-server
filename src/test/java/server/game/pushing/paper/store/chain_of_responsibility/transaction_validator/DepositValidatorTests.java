@@ -1,10 +1,10 @@
-package server.game.pushing.paper.store.chainofresponsibility.transactionvalidator;
+package server.game.pushing.paper.store.chain_of_responsibility.transaction_validator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.chainofresponsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chainofresponsibility.TransactionType;
+import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
+import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.Arrays;
 import java.util.List;

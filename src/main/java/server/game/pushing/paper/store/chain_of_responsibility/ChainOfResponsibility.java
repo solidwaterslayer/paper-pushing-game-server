@@ -1,4 +1,4 @@
-package server.game.pushing.paper.store.chainofresponsibility;
+package server.game.pushing.paper.store.chain_of_responsibility;
 
 import server.game.pushing.paper.store.bank.Bank;
 

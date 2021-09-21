@@ -5,9 +5,8 @@ import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.Account;
 import server.game.pushing.paper.store.bank.account.AccountType;
-import server.game.pushing.paper.store.chainofresponsibility.TransactionType;
+import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.min;

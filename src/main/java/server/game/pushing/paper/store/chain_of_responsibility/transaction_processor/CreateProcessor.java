@@ -1,9 +1,9 @@
-package server.game.pushing.paper.store.chainofresponsibility.transactionprocessor;
+package server.game.pushing.paper.store.chain_of_responsibility.transaction_processor;
 
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.AccountType;
-import server.game.pushing.paper.store.chainofresponsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chainofresponsibility.TransactionType;
+import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
+import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import static java.lang.Double.parseDouble;
 

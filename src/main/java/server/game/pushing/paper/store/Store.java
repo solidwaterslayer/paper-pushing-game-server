@@ -1,9 +1,9 @@
 package server.game.pushing.paper.store;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.chainofresponsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chainofresponsibility.transactionprocessor.*;
-import server.game.pushing.paper.store.chainofresponsibility.transactionvalidator.*;
+import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
+import server.game.pushing.paper.store.chain_of_responsibility.transaction_processor.*;
+import server.game.pushing.paper.store.chain_of_responsibility.transaction_validator.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +43,10 @@ public class Store {
 
     public List<String> getOrder() {
         return order;
+    }
+
+    public void setOrder(List<String> order) {
+        this.order = order;
     }
 
     public List<String> getReceipt() {

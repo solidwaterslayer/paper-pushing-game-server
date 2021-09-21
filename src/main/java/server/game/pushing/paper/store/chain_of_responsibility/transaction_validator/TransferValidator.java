@@ -1,22 +1,22 @@
-package server.game.pushing.paper.store.chainofresponsibility.transactionvalidator;
+package server.game.pushing.paper.store.chain_of_responsibility.transaction_validator;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.chainofresponsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chainofresponsibility.TransactionType;
+import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
+import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import static java.lang.Double.parseDouble;
 
-public class WithdrawValidator extends ChainOfResponsibility {
-    public WithdrawValidator(Bank bank) {
+public class TransferValidator extends ChainOfResponsibility {
+    public TransferValidator(Bank bank) {
         super(bank);
-        transactionType = TransactionType.Withdraw;
+        transactionType = TransactionType.Transfer;
     }
 
     @Override
     public boolean handle(String[] transactionArguments) {
         try {
             if (transactionArguments[0].equalsIgnoreCase(transactionType.name())
-                    && bank.isWithdrawAmountValid(transactionArguments[1], parseDouble(transactionArguments[2]))) {
+                    && bank.isTransferAmountValid(transactionArguments[1], transactionArguments[2], parseDouble(transactionArguments[3]))) {
                 return true;
             } else {
                 return next != null && next.handle(transactionArguments);
