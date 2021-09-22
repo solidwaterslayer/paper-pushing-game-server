@@ -3,9 +3,9 @@ package server.game.pushing.paper.store.chain_of_responsibility;
 import server.game.pushing.paper.store.bank.Bank;
 
 public abstract class ChainOfResponsibility {
+    protected Bank bank;
     protected ChainOfResponsibility next;
 
-    protected Bank bank;
     protected TransactionType transactionType;
 
     public ChainOfResponsibility(Bank bank) {
