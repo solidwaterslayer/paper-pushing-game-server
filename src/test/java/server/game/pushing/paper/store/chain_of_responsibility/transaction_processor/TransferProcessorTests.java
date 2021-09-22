@@ -53,7 +53,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transfer_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
+    protected void transfer_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
         processor.setNext(new PassTimeProcessor(bank));
 
         assertTrue(processor.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));

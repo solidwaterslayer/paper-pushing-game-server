@@ -37,7 +37,7 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+    protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_down_the_chain_of_responsibility() {
         String fromID = CHECKING_ID;
         String toID = SAVINGS_ID;
         double withdrawAmount = bank.getAccount(fromID).getMaxWithdrawAmount();

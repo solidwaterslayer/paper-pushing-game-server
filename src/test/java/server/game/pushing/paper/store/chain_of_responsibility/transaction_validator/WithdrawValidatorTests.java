@@ -41,7 +41,7 @@ public class WithdrawValidatorTests {
     }
 
     @Test
-    protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+    protected void withdraw_validator_when_transaction_is_not_valid_should_pass_transaction_down_the_chain_of_responsibility() {
         String fromID = CHECKING_ID;
         String toID = SAVINGS_ID;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
@@ -112,7 +112,6 @@ public class WithdrawValidatorTests {
     protected void transaction_when_account_type_is_savings_should_not_be_possible_twice_a_month_or_more() {
         String id = SAVINGS_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
-
         String transaction = String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount);
 
         assertTrue(validator.handle(transaction));

@@ -56,6 +56,7 @@ public class BankTests {
         assertEquals(10000, bank.getMaxInitialCDBalance());
 
         assertTrue(bank.isEmpty());
+        assertEquals(0, bank.size());
     }
 
     @Test

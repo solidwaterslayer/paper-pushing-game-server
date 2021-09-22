@@ -1,8 +1,6 @@
 package server.game.pushing.paper.store;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +9,13 @@ public class Store {
     private final List<String> ORDER;
     private final Bank BANK;
     private final Receipt RECEIPT;
-    private final ChainOfResponsibility VALIDATOR;
-    private final ChainOfResponsibility PROCESSOR;
+    private int receiptInputSize;
 
     public Store() {
         ORDER = new ArrayList<>();
         BANK = new Bank();
         RECEIPT = new Receipt(BANK);
-        ChainOfResponsibilityFactory chainOfResponsibilityFactory = new ChainOfResponsibilityFactory(BANK);
-        VALIDATOR = chainOfResponsibilityFactory.getChainOfResponsibility(true);
-        PROCESSOR = chainOfResponsibilityFactory.getChainOfResponsibility(false);
+        receiptInputSize = 0;
     }
 
     public Bank getBank() {
@@ -36,9 +31,10 @@ public class Store {
     }
 
     public List<String> getReceipt() {
-        for (int i = RECEIPT.size(); i < ORDER.size(); i++) {
-            String transaction = ORDER.get(i);
-            RECEIPT.addTransaction(transaction, VALIDATOR.handle(transaction) && PROCESSOR.handle(transaction));
+        for (int i = receiptInputSize; i < ORDER.size(); i++) {
+            RECEIPT.addTransaction(ORDER.get(i));
+
+            receiptInputSize++;
         }
 
         return this.RECEIPT.output();

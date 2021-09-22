@@ -53,7 +53,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transfer_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+    protected void transfer_validator_when_transaction_is_not_valid_should_pass_transaction_down_the_chain_of_responsibility() {
         bank = new Bank();
         validator = new TransferValidator(bank);
 
@@ -161,7 +161,6 @@ public class TransferValidatorTests {
         String fromID = SAVINGS_ID_1;
         String toID = CHECKING_ID_1;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
-
         String transaction = String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount);
 
         assertTrue(validator.handle(transaction));

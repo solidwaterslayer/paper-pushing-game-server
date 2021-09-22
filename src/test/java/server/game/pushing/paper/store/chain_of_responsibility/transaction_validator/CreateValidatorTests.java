@@ -31,7 +31,7 @@ public class CreateValidatorTests {
     }
 
     @Test
-    protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+    protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_down_the_chain_of_responsibility() {
         bank.createChecking(id1, apr);
         double depositAmount = bank.getAccount(id1).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id1).getMaxWithdrawAmount();

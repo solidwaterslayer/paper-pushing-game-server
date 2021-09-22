@@ -1,22 +1,27 @@
 package server.game.pushing.paper.store;
 
 import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
+import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.*;
 
 public class Receipt {
     private final Bank BANK;
-    private final Map<String, List<String>> TRANSACTIONS;
+    private final ChainOfResponsibility VALIDATOR;
+    private final ChainOfResponsibility PROCESSOR;
 
-    private int size;
+    private final Map<String, List<String>> TRANSACTIONS;
 
     public Receipt(Bank bank) {
         this.BANK = bank;
+        ChainOfResponsibilityFactory chainOfResponsibilityFactory = new ChainOfResponsibilityFactory(BANK);
+        VALIDATOR = chainOfResponsibilityFactory.getChainOfResponsibility(true);
+        PROCESSOR = chainOfResponsibilityFactory.getChainOfResponsibility(false);
+
         TRANSACTIONS = new HashMap<>();
         TRANSACTIONS.put(null, new ArrayList<>());
-
-        size = 0;
     }
 
     public List<String> output() {
@@ -27,22 +32,20 @@ public class Receipt {
             String id = iterator.next();
 
             transactions.add(BANK.getAccount(id).toString());
-            transactions.addAll(this.TRANSACTIONS.get(id));
+            transactions.addAll(TRANSACTIONS.get(id));
             transactions.add("");
         }
-        transactions.addAll(this.TRANSACTIONS.get(null));
+        transactions.addAll(TRANSACTIONS.get(null));
 
         return transactions;
     }
 
-    public void addTransaction(String transaction, boolean isTransactionValid) {
-        if (isTransactionValid) {
+    public void addTransaction(String transaction) {
+        if (VALIDATOR.handle(transaction) && PROCESSOR.handle(transaction)) {
             addValidTransaction(transaction.toLowerCase().split(" "));
         } else {
             TRANSACTIONS.get(null).add("[invalid] " + transaction);
         }
-
-        size++;
     }
 
     private void addValidTransaction(String[] transactionArguments) {
@@ -55,9 +58,5 @@ public class Receipt {
                 TRANSACTIONS.get(transactionArguments[i]).add(transactionArguments[0] + " " + transactionArguments[1] + " " + transactionArguments[2] + " " + transactionArguments[3]);
             }
         }
-    }
-
-    public int size() {
-        return size;
     }
 }

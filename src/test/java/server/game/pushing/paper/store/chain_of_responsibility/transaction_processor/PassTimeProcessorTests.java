@@ -43,7 +43,7 @@ public class PassTimeProcessorTests {
     }
 
     @Test
-    protected void pass_time_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
+    protected void pass_time_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
         String id0 = "10000010";
         String id1 = SAVINGS_ID;
 

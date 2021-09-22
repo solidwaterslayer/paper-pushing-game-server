@@ -6,7 +6,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Math.min;
@@ -15,7 +14,7 @@ import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class ChainOfResponsibilityFactoryTests {
     @Test
-    protected void temp() {
+    protected void get_chain_of_responsiblity_should_return_each_validator_or_each_processor() {
         Bank bank = new Bank();
         ChainOfResponsibilityFactory chainOfResponsibilityFactory = new ChainOfResponsibilityFactory(bank);
         ChainOfResponsibility validator = chainOfResponsibilityFactory.getChainOfResponsibility(true);

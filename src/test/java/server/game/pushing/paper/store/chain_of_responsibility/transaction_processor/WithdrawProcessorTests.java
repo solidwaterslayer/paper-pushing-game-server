@@ -47,7 +47,7 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    protected void withdraw_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
+    protected void withdraw_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
         String fromID = SAVINGS_ID;
         String toID = CHECKING_ID;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());

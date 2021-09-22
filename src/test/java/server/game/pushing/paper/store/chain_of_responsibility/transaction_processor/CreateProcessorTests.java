@@ -32,7 +32,7 @@ public class CreateProcessorTests {
     }
 
     @Test
-    protected void create_processor_when_transaction_can_not_process_should_pass_transaction_up_the_chain_of_responsibility() {
+    protected void create_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
         AccountType accountType = AccountType.Savings;
         String id = SAVINGS_ID;
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));

@@ -27,7 +27,7 @@ public class PassTimeValidatorTests {
     }
 
     @Test
-    protected void pass_time_validator_when_transaction_is_not_valid_should_pass_transaction_up_the_chain_of_responsibility() {
+    protected void pass_time_validator_when_transaction_is_not_valid_should_pass_transaction_down_the_chain_of_responsibility() {
         AccountType accountType = AccountType.Savings;
         String id = "97439742";
         double apr = bank.getMaxAPR();
