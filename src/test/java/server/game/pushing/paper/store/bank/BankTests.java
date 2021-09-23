@@ -7,7 +7,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Math.min;
@@ -41,8 +40,8 @@ public class BankTests {
 
         assertFalse(bank.isEmpty());
         assertEquals(6, bank.size());
-        for (Iterator<String> accountIterator = bank.getAccountIterator(); accountIterator.hasNext();) {
-            assertTrue(bank.containsAccount(accountIterator.next()));
+        for (String id : bank.getIDs()) {
+            assertTrue(bank.containsAccount(id));
         }
     }
 

@@ -1,13 +1,10 @@
 package server.game.pushing.paper.store.bank;
 
-import server.game.pushing.paper.store.bank.account.Account;
-import server.game.pushing.paper.store.bank.account.CD;
-import server.game.pushing.paper.store.bank.account.Checking;
-import server.game.pushing.paper.store.bank.account.Savings;
+import server.game.pushing.paper.store.bank.account.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Bank {
@@ -63,8 +60,12 @@ public class Bank {
         return ACCOUNTS.containsKey(id);
     }
 
-    public Iterator<String> getAccountIterator() {
-        return ACCOUNTS.keySet().iterator();
+    public boolean containsOnlyCD() {
+        return getIDs().stream().noneMatch(id -> getAccount(id).getAccountType() != AccountType.CD);
+    }
+
+    public List<String> getIDs() {
+        return new ArrayList<>(ACCOUNTS.keySet());
     }
 
     public double getMinBalanceFee() {

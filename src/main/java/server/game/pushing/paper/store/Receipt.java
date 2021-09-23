@@ -5,7 +5,10 @@ import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibi
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility.parseDouble;
 
@@ -29,10 +32,7 @@ public class Receipt {
     public List<String> output() {
         List<String> transactions = new ArrayList<>();
 
-        Iterator<String> iterator = BANK.getAccountIterator();
-        while (iterator.hasNext()) {
-            String id = iterator.next();
-
+        for (String id : BANK.getIDs()) {
             transactions.add(BANK.getAccount(id).toString());
             transactions.addAll(TRANSACTIONS.get(id));
             transactions.add("");

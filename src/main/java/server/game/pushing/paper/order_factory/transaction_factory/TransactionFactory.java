@@ -16,5 +16,5 @@ public abstract class TransactionFactory {
         this.random = random;
     }
 
-    public abstract String getTransaction();
+    public abstract String getTransaction() throws Exception;
 }

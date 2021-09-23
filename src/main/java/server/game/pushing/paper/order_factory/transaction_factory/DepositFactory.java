@@ -1,6 +1,7 @@
 package server.game.pushing.paper.order_factory.transaction_factory;
 
 import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.Random;
@@ -12,14 +13,25 @@ public class DepositFactory extends TransactionFactory {
         transactionType = TransactionType.Deposit;
     }
 
-    public String getTransaction() {
-        String id = random.ints(48, 58).limit(8).collect(
-                StringBuilder :: new,
-                StringBuilder :: appendCodePoint,
-                StringBuilder :: append
-        ).toString();
-        double depositAmount = (bank.getMaxInitialCDBalance() - bank.getMinInitialCDBalance()) * random.nextDouble() + bank.getMinInitialCDBalance();
+    public String getTransaction() throws Exception {
+        checkException();
 
-        return String.format("%s %s %.2f", transactionType, id, depositAmount);
+        String id = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount() * random.nextDouble();
+        while (bank.getAccount(id).getAccountType() == AccountType.CD && depositAmount == 0) {
+            id = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
+            depositAmount = bank.getAccount(id).getMaxDepositAmount() * random.nextDouble();
+        }
+
+        return String.format("%s %s %.2f", transactionType, id, depositAmount).toLowerCase();
+    }
+
+    private void checkException() throws Exception {
+        if (bank.isEmpty()) {
+            throw new Exception("[error] bank is empty");
+        }
+        if (bank.containsOnlyCD()) {
+            throw new Exception("[error] bank contains only cd");
+        }
     }
 }
