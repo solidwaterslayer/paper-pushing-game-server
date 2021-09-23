@@ -13,6 +13,7 @@ import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
+import static server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility.parseDouble;
 
 public class ReceiptTests {
     private Bank bank;
@@ -173,22 +174,15 @@ public class ReceiptTests {
             Account account = bank.getAccount(string);
             return String.format("%s %s %.2f %.2f", account.getAccountType(), account.getID(), account.getAPR(), account.getBalance()).toLowerCase();
         }
-
-        return string.toLowerCase();
-    }
-
-    public static String outputValid(Bank bank, String transaction, int trim) {
-        return outputValid(bank, transaction.split(" "), trim);
-    }
-
-    public static String outputValid(Bank bank, String[] transactionArguments, int trim) {
-        StringBuilder beautifiedTransaction = new StringBuilder();
-
-        for(int i = 0; i < trim; i++){
-            beautifiedTransaction.append(transactionArguments[i]).append(" ");
+        String[] transactionArguments = string.toLowerCase().split(" ");
+        if (transactionArguments[0].equalsIgnoreCase(TransactionType.Deposit.name()) || transactionArguments[0].equalsIgnoreCase(TransactionType.Withdraw.name())) {
+            return String.format("%s %s %.2f", transactionArguments[0], transactionArguments[1], parseDouble(transactionArguments[2]));
+        }
+        if (transactionArguments[0].equalsIgnoreCase(TransactionType.Transfer.name())) {
+            return String.format("%s %s %s %.2f", transactionArguments[0], transactionArguments[1], transactionArguments[2], parseDouble(transactionArguments[3]));
         }
 
-        return outputValid(bank, beautifiedTransaction.substring(0, beautifiedTransaction.length() - 1));
+        return string;
     }
 
     @Test

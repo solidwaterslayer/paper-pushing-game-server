@@ -54,6 +54,7 @@ public class DepositValidatorTests {
         String id = SAVINGS_ID;
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
 
+        assertFalse(validator.handle(""));
         assertFalse(validator.handle(String.format("%s %s %s", "", "", "")));
         assertFalse(validator.handle(String.format("%s %s %s", "", id, depositAmount)));
         assertFalse(validator.handle(String.format("%s %s %s", "nuke", id, depositAmount)));

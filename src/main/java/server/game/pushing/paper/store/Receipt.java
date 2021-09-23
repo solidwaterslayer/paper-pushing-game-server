@@ -7,6 +7,8 @@ import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.*;
 
+import static server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility.parseDouble;
+
 public class Receipt {
     private final Bank BANK;
     private final ChainOfResponsibility VALIDATOR;
@@ -52,10 +54,10 @@ public class Receipt {
         if (transactionArguments[0].equalsIgnoreCase(TransactionType.Create.name())) {
             TRANSACTIONS.put(transactionArguments[2], new ArrayList<>());
         } else if (transactionArguments[0].equalsIgnoreCase(TransactionType.Deposit.name()) || transactionArguments[0].equalsIgnoreCase(TransactionType.Withdraw.name())) {
-            TRANSACTIONS.get(transactionArguments[1]).add(transactionArguments[0] + " " + transactionArguments[1] + " " + transactionArguments[2]);
+            TRANSACTIONS.get(transactionArguments[1]).add(String.format("%s %s %.2f", transactionArguments[0], transactionArguments[1], parseDouble(transactionArguments[2])));
         } else if (transactionArguments[0].equalsIgnoreCase(TransactionType.Transfer.name())) {
             for (int i = 1; i < 3; i++) {
-                TRANSACTIONS.get(transactionArguments[i]).add(transactionArguments[0] + " " + transactionArguments[1] + " " + transactionArguments[2] + " " + transactionArguments[3]);
+                TRANSACTIONS.get(transactionArguments[i]).add(String.format("%s %s %s %.2f", transactionArguments[0], transactionArguments[1], transactionArguments[2], parseDouble(transactionArguments[3])));
             }
         }
     }

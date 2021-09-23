@@ -41,6 +41,7 @@ public class PassTimeValidatorTests {
 
     @Test
     protected void transaction_should_contain_the_transaction_type_pass_time_as_the_first_and_second_argument() {
+        assertFalse(validator.handle(""));
         assertFalse(validator.handle(String.format("%s %s", "", "")));
         assertFalse(validator.handle(String.format("%s %s", "", MONTHS)));
         assertFalse(validator.handle(String.format("%s %s", "yes no", MONTHS)));

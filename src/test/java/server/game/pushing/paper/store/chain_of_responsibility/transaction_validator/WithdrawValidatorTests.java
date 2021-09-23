@@ -57,6 +57,7 @@ public class WithdrawValidatorTests {
         String id = CHECKING_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
+        assertFalse(validator.handle(""));
         assertFalse(validator.handle(String.format("%s %s %s", "", "", "")));
         assertFalse(validator.handle(String.format("%s %s %s", "", id, withdrawAmount)));
         assertFalse(validator.handle(String.format("%s %s %s", "nuke", id, withdrawAmount)));

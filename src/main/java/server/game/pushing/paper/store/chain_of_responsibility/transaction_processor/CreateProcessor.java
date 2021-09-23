@@ -5,8 +5,6 @@ import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import static java.lang.Double.parseDouble;
-
 public class CreateProcessor extends ChainOfResponsibility {
     public CreateProcessor(Bank bank) {
         super(bank);

@@ -4,8 +4,6 @@ import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import static java.lang.Double.parseDouble;
-
 public class DepositValidator extends ChainOfResponsibility {
     public DepositValidator(Bank bank) {
         super(bank);

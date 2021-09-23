@@ -46,6 +46,7 @@ public class CreateValidatorTests {
     protected void transaction_should_contain_the_transaction_type_create_as_the_first_argument() {
         AccountType accountType = AccountType.Checking;
 
+        assertFalse(validator.handle(""));
         assertFalse(validator.handle(String.format("%s %s %s %s", "", "", "", "")));
         assertFalse(validator.handle(String.format("%s %s %s %s", "", accountType, id1, apr)));
         assertFalse(validator.handle(String.format("%s %s %s %s", "nuke", accountType, id1, apr)));

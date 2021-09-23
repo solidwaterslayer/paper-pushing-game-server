@@ -71,6 +71,7 @@ public class TransferValidatorTests {
         String toID = CHECKING_ID_0;
         double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
 
+        assertFalse(validator.handle(""));
         assertFalse(validator.handle(String.format("%s %s %s %s", "", "", "", "")));
         assertFalse(validator.handle(String.format("%s %s %s %s", "", fromID, toID, transferAmount)));
         assertFalse(validator.handle(String.format("%s %s %s %s", "nuke", fromID, toID, transferAmount)));

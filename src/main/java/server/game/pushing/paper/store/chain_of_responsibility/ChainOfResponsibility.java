@@ -25,4 +25,12 @@ public abstract class ChainOfResponsibility {
     }
 
     public abstract boolean handle(String[] transactionArguments);
+
+    public static double parseDouble(String string) {
+        if (string.equalsIgnoreCase("infinity")) {
+            return Double.POSITIVE_INFINITY;
+        }
+
+        return Double.parseDouble(string);
+    }
 }

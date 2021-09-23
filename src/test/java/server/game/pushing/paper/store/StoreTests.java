@@ -233,13 +233,13 @@ public class StoreTests {
         List<String> receipt = store.getReceipt();
         int i = 0;
         assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6), 4), receipt.get(i)); i++;
+        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
         assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
 
         assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5), 3), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6), 4), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(8), 3), receipt.get(i)); i++;
+        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
+        assertEquals(outputValid(bank, store.getOrder().get(8)), receipt.get(i)); i++;
         assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
 
         assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
