@@ -31,13 +31,18 @@ public class BankTests {
         apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
 
+        assertFalse(bank.containsChecking());
         bank.createChecking(CHECKING_ID_0, apr);
         bank.createChecking(CHECKING_ID_1, apr);
+
+        assertTrue(bank.containsChecking());
+        assertFalse(bank.containsSavings());
         bank.createSavings(SAVINGS_ID_1, apr);
         bank.createSavings(SAVINGS_ID_0, apr);
         bank.createCD(CD_ID_1, apr, initialCDBalance);
         bank.createCD(CD_ID_0, apr, initialCDBalance);
 
+        assertTrue(bank.containsSavings());
         assertFalse(bank.isEmpty());
         assertEquals(6, bank.size());
         for (String id : bank.getIDs()) {
