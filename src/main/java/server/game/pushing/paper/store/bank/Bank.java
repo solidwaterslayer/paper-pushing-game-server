@@ -60,8 +60,12 @@ public class Bank {
         return ACCOUNTS.containsKey(id);
     }
 
-    public boolean containsOnlyCD() {
-        return getIDs().stream().noneMatch(id -> getAccount(id).getAccountType() != AccountType.CD);
+    public boolean containsChecking() {
+        return getIDs().stream().anyMatch(id -> getAccount(id).getAccountType() == AccountType.Checking);
+    }
+
+    public boolean containsSavings() {
+        return getIDs().stream().anyMatch(id -> getAccount(id).getAccountType() == AccountType.Savings);
     }
 
     public List<String> getIDs() {

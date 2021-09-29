@@ -6,23 +6,23 @@ import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.Random;
 
-public class DepositFactory extends TransactionFactory {
-    public DepositFactory(Bank bank, Random random) {
+public class WithdrawFactory extends TransactionFactory {
+    public WithdrawFactory(Bank bank, Random random) {
         super(bank, random);
 
-        transactionType = TransactionType.Deposit;
+        transactionType = TransactionType.Withdraw;
     }
 
     public String getTransaction() {
         checkException();
 
         String id = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
-        double depositAmount = bank.getAccount(id).getMaxDepositAmount() * random.nextDouble();
-        String transaction = String.format("%s %s %.2f", transactionType, id, depositAmount).toLowerCase();
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount() * random.nextDouble();
+        String transaction = String.format("%s %s %.2f", transactionType, id, withdrawAmount).toLowerCase();
         while (!validator.handle(transaction)) {
             id = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
-            depositAmount = bank.getAccount(id).getMaxDepositAmount() * random.nextDouble();
-            transaction = String.format("%s %s %.2f", transactionType, id, depositAmount).toLowerCase();
+            withdrawAmount = bank.getAccount(id).getMaxDepositAmount() * random.nextDouble();
+            transaction = String.format("%s %s %.2f", transactionType, id, withdrawAmount).toLowerCase();
         }
 
         return transaction;
@@ -32,8 +32,8 @@ public class DepositFactory extends TransactionFactory {
         if (bank.isEmpty()) {
             throw new IllegalArgumentException("[error] bank is empty");
         }
-        if (!bank.containsChecking() || !bank.containsSavings()) {
-            throw new IllegalArgumentException("[error] bank contains 0 checking or savings");
+        if (!bank.containsChecking()) {
+            throw new IllegalArgumentException("[error] bank contains 0 checking");
         }
     }
 }
