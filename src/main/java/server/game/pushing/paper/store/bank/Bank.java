@@ -1,6 +1,9 @@
 package server.game.pushing.paper.store.bank;
 
-import server.game.pushing.paper.store.bank.account.*;
+import server.game.pushing.paper.store.bank.account.Account;
+import server.game.pushing.paper.store.bank.account.CD;
+import server.game.pushing.paper.store.bank.account.Checking;
+import server.game.pushing.paper.store.bank.account.Savings;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,6 +19,7 @@ public class Bank {
     private final double MAX_APR;
     private final double MIN_INITIAL_CD_BALANCE;
     private final double MAX_INITIAL_CD_BALANCE;
+    private final int MAX_MONTHS;
 
     public Bank() {
         this.ACCOUNTS = new LinkedHashMap<>();
@@ -26,6 +30,7 @@ public class Bank {
         MAX_APR = 10;
         MIN_INITIAL_CD_BALANCE = 1000;
         MAX_INITIAL_CD_BALANCE = 10000;
+        MAX_MONTHS = 60;
     }
 
     public void createChecking(String id, double apr) {
@@ -144,6 +149,10 @@ public class Bank {
     }
 
     public boolean isPassTimeValid(int months) {
-        return 1 <= months && months <= 60;
+        return 1 <= months && months <= MAX_MONTHS;
+    }
+
+    public int getMaxMonths() {
+        return MAX_MONTHS;
     }
 }

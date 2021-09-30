@@ -40,6 +40,7 @@ public class TransactionFactoryTests {
         transactionFactories.add(new DepositFactory(bank, random));
         transactionFactories.add(new WithdrawFactory(bank, random));
         transactionFactories.add(new TransferFactory(bank, random));
+        transactionFactories.add(new PassTimeFactory(bank, random));
     }
 
     @Test
@@ -92,5 +93,9 @@ public class TransactionFactoryTests {
             processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, "0000000" + i, bank.getMaxAPR()));
             processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "0000000" + i, bank.getMaxAPR(), bank.getMinInitialCDBalance()));
         }
+
+        processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, "11111110", bank.getMaxAPR()));
+        String transaction = transactionFactory.getTransaction();
+        assertTrue(validator.handle(transaction) && processor.handle(transaction));
     }
 }
