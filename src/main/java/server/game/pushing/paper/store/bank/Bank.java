@@ -60,14 +60,6 @@ public class Bank {
         return ACCOUNTS.containsKey(id);
     }
 
-    public boolean containsChecking() {
-        return getIDs().stream().anyMatch(id -> getAccount(id).getAccountType() == AccountType.CHECKING);
-    }
-
-    public boolean containsSavings() {
-        return getIDs().stream().anyMatch(id -> getAccount(id).getAccountType() == AccountType.SAVINGS);
-    }
-
     public List<String> getIDs() {
         return new ArrayList<>(ACCOUNTS.keySet());
     }

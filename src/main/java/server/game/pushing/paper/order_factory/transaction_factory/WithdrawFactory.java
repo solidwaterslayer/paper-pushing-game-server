@@ -27,11 +27,8 @@ public class WithdrawFactory extends TransactionFactory {
     }
 
     private void checkException() {
-        if (bank.isEmpty()) {
-            throw new IllegalArgumentException("[error] bank is empty");
-        }
-        if (!bank.containsChecking()) {
-            throw new IllegalArgumentException("[error] bank contains 0 checking");
+        if (bank.getIDs().stream().noneMatch(id -> bank.getAccount(id).getAccountType() == AccountType.CHECKING)) {
+            throw new IllegalArgumentException("[error] bank contains 0 checking accounts");
         }
     }
 }

@@ -4,10 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import server.game.pushing.paper.order_factory.transaction_factory.CreateFactory;
-import server.game.pushing.paper.order_factory.transaction_factory.DepositFactory;
-import server.game.pushing.paper.order_factory.transaction_factory.TransactionFactory;
-import server.game.pushing.paper.order_factory.transaction_factory.WithdrawFactory;
+import server.game.pushing.paper.order_factory.transaction_factory.*;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
@@ -42,6 +39,7 @@ public class TransactionFactoryTests {
         transactionFactories.add(new CreateFactory(bank, random));
         transactionFactories.add(new DepositFactory(bank, random));
         transactionFactories.add(new WithdrawFactory(bank, random));
+        transactionFactories.add(new TransferFactory(bank, random));
     }
 
     @Test
@@ -61,27 +59,38 @@ public class TransactionFactoryTests {
     }
 
     @Test
-    protected void deposit_factory_when_bank_contains_0_checking_or_savings_should_throw_illegal_argument_exception() {
+    protected void deposit_factory_when_bank_contains_0_checking_and_savings_accounts_should_throw_an_illegal_argument_exception() {
         TransactionFactory transactionFactory = transactionFactories.get(1);
 
-        assertEquals("[error] bank is empty", assertThrows(IllegalArgumentException.class, transactionFactory::getTransaction).getMessage());
-
         for (int i = 0; i < 9; i++) {
+            assertEquals("[error] bank contains 0 checking and savings accounts", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
+
             processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "0000000" + i, bank.getMaxAPR(), bank.getMinInitialCDBalance()));
-            assertEquals("[error] bank contains 0 checking or savings", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
         }
     }
 
     @Test
-    protected void withdraw_factory_when_bank_contains_0_checking_should_throw_argument_exception() {
+    protected void withdraw_factory_when_bank_contains_0_checking_accounts_should_throw_an_illegal_argument_exception() {
         TransactionFactory transactionFactory = transactionFactories.get(2);
 
-        assertEquals("[error] bank is empty", assertThrows(IllegalArgumentException.class, transactionFactory::getTransaction).getMessage());
-
         for (int i = 0; i < 9; i++) {
+            assertEquals("[error] bank contains 0 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
+
             processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, "0000000" + i, bank.getMaxAPR()));
             processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "0000000" + i, bank.getMaxAPR(), bank.getMinInitialCDBalance()));
-            assertEquals("[error] bank contains 0 checking", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
+        }
+    }
+
+    @Test
+    protected void transfer_factory_when_bank_contains_less_than_2_checking_accounts_should_throw_an_illegal_argument_exception() {
+        TransactionFactory transactionFactory = transactionFactories.get(3);
+
+        processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, "11111111", bank.getMaxAPR()));
+        for (int i = 0; i < 9; i++) {
+            assertEquals("[error] bank contains less than 2 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
+
+            processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, "0000000" + i, bank.getMaxAPR()));
+            processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "0000000" + i, bank.getMaxAPR(), bank.getMinInitialCDBalance()));
         }
     }
 }

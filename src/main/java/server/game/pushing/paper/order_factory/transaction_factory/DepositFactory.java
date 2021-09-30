@@ -27,11 +27,8 @@ public class DepositFactory extends TransactionFactory {
     }
 
     private void checkException() {
-        if (bank.isEmpty()) {
-            throw new IllegalArgumentException("[error] bank is empty");
-        }
-        if (!bank.containsChecking() || !bank.containsSavings()) {
-            throw new IllegalArgumentException("[error] bank contains 0 checking or savings");
+        if (bank.getIDs().stream().allMatch(id -> bank.getAccount(id).getAccountType() == AccountType.CD)) {
+            throw new IllegalArgumentException("[error] bank contains 0 checking and savings accounts");
         }
     }
 }
