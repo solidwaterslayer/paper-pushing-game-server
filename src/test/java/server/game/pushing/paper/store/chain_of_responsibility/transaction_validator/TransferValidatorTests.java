@@ -57,7 +57,7 @@ public class TransferValidatorTests {
         bank = new Bank();
         validator = new TransferValidator(bank);
 
-        AccountType accountType = AccountType.Savings;
+        AccountType accountType = AccountType.SAVINGS;
 
         validator.setNext(new PassTimeValidator(bank));
 

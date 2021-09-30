@@ -4,7 +4,7 @@ public class Savings extends Account {
     private boolean isWithdrawValid;
 
     public Savings(String id, double apr) {
-        super(AccountType.Savings, id, apr);
+        super(AccountType.SAVINGS, id, apr);
         isWithdrawValid = true;
         maxDepositAmount = 2500;
         maxWithdrawAmount = 1000;

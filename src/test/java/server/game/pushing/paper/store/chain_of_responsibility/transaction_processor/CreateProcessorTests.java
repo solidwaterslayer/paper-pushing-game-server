@@ -33,7 +33,7 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
-        AccountType accountType = AccountType.Savings;
+        AccountType accountType = AccountType.SAVINGS;
         String id = SAVINGS_ID;
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
@@ -48,7 +48,7 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_checking_transaction_should_process() {
-        AccountType accountType = AccountType.Checking;
+        AccountType accountType = AccountType.CHECKING;
         String id = CHECKING_ID;
 
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
@@ -62,7 +62,7 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_savings_transaction_should_process() {
-        AccountType accountType = AccountType.Savings;
+        AccountType accountType = AccountType.SAVINGS;
         String id = SAVINGS_ID;
 
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
@@ -97,8 +97,8 @@ public class CreateProcessorTests {
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        assertTrue(processor.handle(String.format("%s %s %s %s %s", transactionType, AccountType.Checking, CHECKING_ID, apr, "0")));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s %s %s %s", transactionType, AccountType.Savings, SAVINGS_ID, apr, "nuke", AccountType.CD, "38ur", 34)));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID, apr, "0")));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID, apr, "nuke", AccountType.CD, "38ur", 34)));
         assertTrue(processor.handle(String.format("%s %s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance, "8", 8, "eight", 4 + 4)));
     }
 }

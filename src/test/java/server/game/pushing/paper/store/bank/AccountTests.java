@@ -39,7 +39,7 @@ public class AccountTests {
 
     @Test
     protected void initialize_checking_should_have_0_balance() {
-        AccountType accountType = AccountType.Checking;
+        AccountType accountType = AccountType.CHECKING;
         String id = CHECKING_ID;
         double apr = CHECKING_APR;
         double balance = 0;
@@ -56,7 +56,7 @@ public class AccountTests {
 
     @Test
     protected void initialize_savings_should_have_0_balance() {
-        AccountType accountType = AccountType.Savings;
+        AccountType accountType = AccountType.SAVINGS;
         String id = SAVINGS_ID;
         double apr = SAVINGS_APR;
         double balance = 0;
@@ -180,7 +180,7 @@ public class AccountTests {
         checking.deposit(checkingDepositAmount);
         checking.applyAPR();
 
-        assertEquals(passTime(0, 1, AccountType.Checking, CHECKING_APR, checkingDepositAmount), checking.getBalance());
+        assertEquals(passTime(0, 1, AccountType.CHECKING, CHECKING_APR, checkingDepositAmount), checking.getBalance());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class AccountTests {
         savings.deposit(savingsDepositAmount);
         savings.applyAPR();
 
-        assertEquals(passTime(0, 1, AccountType.Savings, SAVINGS_APR, savingsDepositAmount), savings.getBalance());
+        assertEquals(passTime(0, 1, AccountType.SAVINGS, SAVINGS_APR, savingsDepositAmount), savings.getBalance());
     }
 
     @Test

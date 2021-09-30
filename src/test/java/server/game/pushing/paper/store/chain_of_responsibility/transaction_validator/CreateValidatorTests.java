@@ -44,7 +44,7 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_contain_the_transaction_type_create_as_the_first_argument() {
-        AccountType accountType = AccountType.Checking;
+        AccountType accountType = AccountType.CHECKING;
 
         assertFalse(validator.handle(""));
         assertFalse(validator.handle(String.format("%s %s %s %s", "", "", "", "")));
@@ -58,14 +58,14 @@ public class CreateValidatorTests {
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "", "", "")));
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "", id1, apr)));
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "the power of friendship", id1, apr)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.Checking, id1, apr)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.Savings, id1, apr)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, id1, apr)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, id1, apr)));
         assertTrue(validator.handle(String.format("%s %s %s %s %s", transactionType, AccountType.CD, id1, apr, initialCDBalance)));
     }
 
     @Test
     protected void transaction_should_contain_an_unique_8_digit_id_as_the_third_argument() {
-        AccountType accountType = AccountType.Savings;
+        AccountType accountType = AccountType.SAVINGS;
         bank.createSavings(id0, apr);
 
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, accountType, id0, apr)));
@@ -137,8 +137,8 @@ public class CreateValidatorTests {
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        assertTrue(validator.handle(String.format("%s %s %s %s %s", transactionType, AccountType.Checking, id0, apr, "the")));
-        assertTrue(validator.handle(String.format("%s %s %s %s %s %s %s  %s", transactionType, AccountType.Savings, id0, apr, "power", "of", "friendship", id0)));
+        assertTrue(validator.handle(String.format("%s %s %s %s %s", transactionType, AccountType.CHECKING, id0, apr, "the")));
+        assertTrue(validator.handle(String.format("%s %s %s %s %s %s %s  %s", transactionType, AccountType.SAVINGS, id0, apr, "power", "of", "friendship", id0)));
         assertTrue(validator.handle(String.format("%s %s %s %s %s  $s    $s     %s %s    ", transactionType, AccountType.CD, id0, apr, initialCDBalance, AccountType.CD, id0)));
     }
 }

@@ -21,12 +21,18 @@ public class CreateProcessor extends ChainOfResponsibility {
     }
 
     private boolean handleSecondArgument(String[] transactionArguments) {
-        if (transactionArguments[1].equalsIgnoreCase(AccountType.Checking.name())) {
-            bank.createChecking(transactionArguments[2], parseDouble(transactionArguments[3]));
-        } else if (transactionArguments[1].equalsIgnoreCase(AccountType.Savings.name())) {
-            bank.createSavings(transactionArguments[2], parseDouble(transactionArguments[3]));
-        } else {
-            bank.createCD(transactionArguments[2], parseDouble(transactionArguments[3]), parseDouble(transactionArguments[4]));
+        AccountType accountType = AccountType.valueOf(transactionArguments[1].toUpperCase());
+
+        switch (accountType) {
+            case CHECKING:
+                bank.createChecking(transactionArguments[2], parseDouble(transactionArguments[3]));
+                break;
+            case SAVINGS:
+                bank.createSavings(transactionArguments[2], parseDouble(transactionArguments[3]));
+                break;
+            default:
+                bank.createCD(transactionArguments[2], parseDouble(transactionArguments[3]), parseDouble(transactionArguments[4]));
+                break;
         }
 
         return true;

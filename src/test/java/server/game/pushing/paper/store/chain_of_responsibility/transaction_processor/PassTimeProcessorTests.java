@@ -67,8 +67,8 @@ public class PassTimeProcessorTests {
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
         assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
-        assertEquals(passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.CHECKING, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.SAVINGS, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
         assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
     }
 
@@ -82,8 +82,8 @@ public class PassTimeProcessorTests {
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
         assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
-        assertEquals(passTime(minBalanceFee, months, AccountType.Checking, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.Savings, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.CHECKING, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(passTime(minBalanceFee, months, AccountType.SAVINGS, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
         assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
     }
 

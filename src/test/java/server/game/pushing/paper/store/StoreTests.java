@@ -54,10 +54,10 @@ public class StoreTests {
 
         initializeStore();
         store.setOrder(Arrays.asList(
-                String.format("%s %s %s %s", transactionType, AccountType.Checking, CHECKING_ID_1, apr),
-                String.format("%s %s %s %s", transactionType, AccountType.Checking, CHECKING_ID_0, apr),
-                String.format("%s %s %s %s", transactionType, AccountType.Savings, SAVINGS_ID_1, apr),
-                String.format("%s %s %s %s", transactionType, AccountType.Savings, SAVINGS_ID_0, apr),
+                String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_1, apr),
+                String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_0, apr),
+                String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_1, apr),
+                String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_0, apr),
                 String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance)
         ));
     }
@@ -253,14 +253,14 @@ public class StoreTests {
         initializeStore();
         TransactionType transactionType = TransactionType.Create;
 
-        store.getOrder().add(0, String.format("%s %s %s %s", "", AccountType.Checking, CHECKING_ID_1, apr));
-        store.getOrder().add(1, String.format("%s %s %s %s", "transactionType", AccountType.Savings, SAVINGS_ID_1, apr));
+        store.getOrder().add(0, String.format("%s %s %s %s", "", AccountType.CHECKING, CHECKING_ID_1, apr));
+        store.getOrder().add(1, String.format("%s %s %s %s", "transactionType", AccountType.SAVINGS, SAVINGS_ID_1, apr));
         store.getOrder().add(2, String.format("%s %s %s %s %s", transactionType, "", CD_ID, apr, initialCDBalance));
         store.getOrder().add(3, String.format("%s %s %s %s", transactionType, "AccountType.Savings", CHECKING_ID_1, apr));
-        store.getOrder().add(4, String.format("%s %s %s %s", transactionType, AccountType.Savings, "", apr));
+        store.getOrder().add(4, String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, "", apr));
         store.getOrder().add(5, String.format("%s %s %s %s %s", transactionType, AccountType.CD, "SAVINGS_ID_0", apr, initialCDBalance));
-        store.getOrder().add(6, String.format("%s %s %s %s", transactionType, AccountType.Checking, CHECKING_ID_1, ""));
-        store.getOrder().add(7, String.format("%s %s %s %s", transactionType, AccountType.Savings, SAVINGS_ID_1, "apr"));
+        store.getOrder().add(6, String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_1, ""));
+        store.getOrder().add(7, String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_1, "apr"));
         store.getOrder().add(8, String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, 235789, initialCDBalance));
         store.getOrder().add(9, String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, ""));
         store.getOrder().add(10, String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, "initialCDBalance"));
@@ -426,12 +426,12 @@ public class StoreTests {
     protected void order_should_output_by_validity_id_and_then_time() {
         initializeStore();
 
-        store.getOrder().add(0, String.format("%s %s %s %s", TransactionType.Create, AccountType.Savings, SAVINGS_ID_1, 0.6));
+        store.getOrder().add(0, String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, SAVINGS_ID_1, 0.6));
         store.getOrder().add(1, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, 700));
 
         store.getOrder().add(2, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, 5000));
 
-        store.getOrder().add(3, String.format("%s %s %s %s", TransactionType.Create, AccountType.Checking, CHECKING_ID_1, 0.01));
+        store.getOrder().add(3, String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, CHECKING_ID_1, 0.01));
         store.getOrder().add(4, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, 300));
         store.getOrder().add(5, String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID_1, SAVINGS_ID_1, 300));
         store.getOrder().add(6, String.format("%s %s", TransactionType.PassTime, 1));

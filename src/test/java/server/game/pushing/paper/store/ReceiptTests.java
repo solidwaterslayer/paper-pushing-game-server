@@ -34,8 +34,8 @@ public class ReceiptTests {
         apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
 
-        receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.Checking, CHECKING_ID, apr));
-        receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.Savings, SAVINGS_ID, apr));
+        receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID, apr));
+        receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID, apr));
         receipt.addTransaction(String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance));
     }
 

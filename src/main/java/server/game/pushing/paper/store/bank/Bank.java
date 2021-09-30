@@ -61,11 +61,11 @@ public class Bank {
     }
 
     public boolean containsChecking() {
-        return getIDs().stream().anyMatch(id -> getAccount(id).getAccountType() == AccountType.Checking);
+        return getIDs().stream().anyMatch(id -> getAccount(id).getAccountType() == AccountType.CHECKING);
     }
 
     public boolean containsSavings() {
-        return getIDs().stream().anyMatch(id -> getAccount(id).getAccountType() == AccountType.Savings);
+        return getIDs().stream().anyMatch(id -> getAccount(id).getAccountType() == AccountType.SAVINGS);
     }
 
     public List<String> getIDs() {
