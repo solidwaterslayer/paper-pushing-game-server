@@ -16,12 +16,10 @@ public class WithdrawFactory extends TransactionFactory {
     public String getTransaction() {
         checkException();
 
-        String id = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
-        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount() * random.nextDouble();
-        String transaction = String.format("%s %s %.2f", transactionType, id, withdrawAmount).toLowerCase();
+        String transaction = "";
         while (!validator.handle(transaction)) {
-            id = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
-            withdrawAmount = bank.getAccount(id).getMaxDepositAmount() * random.nextDouble();
+            String id = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
+            double withdrawAmount = bank.getAccount(id).getMaxDepositAmount() * random.nextDouble();
             transaction = String.format("%s %s %.2f", transactionType, id, withdrawAmount).toLowerCase();
         }
 

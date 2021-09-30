@@ -15,27 +15,19 @@ public class CreateFactory extends TransactionFactory {
 
     public String getTransaction() {
         AccountType accountType = AccountType.values()[random.nextInt(AccountType.values().length)];
-        String id = random.ints(48, 58).limit(8).collect(
-                StringBuilder :: new,
-                StringBuilder :: appendCodePoint,
-                StringBuilder :: append
-        ).toString();
-        while (bank.containsAccount(id)) {
-            id = random.ints(48, 58).limit(8).collect(
+        String transaction = "";
+
+        while (!validator.handle(transaction)) {
+            String id = random.ints(48, 58).limit(8).collect(
                     StringBuilder :: new,
                     StringBuilder :: appendCodePoint,
                     StringBuilder :: append
             ).toString();
+            double apr = bank.getMaxAPR() * random.nextDouble();
+            double initialCDBalance = bank.getMaxInitialCDBalance() * random.nextDouble();
+            transaction = String.format("%s %s %s %.2f %.2f", transactionType, accountType, id, apr, initialCDBalance).toLowerCase();
         }
-        double apr = bank.getMaxAPR() * random.nextDouble();
-        double initialCDBalance = (bank.getMaxInitialCDBalance() - bank.getMinInitialCDBalance()) * random.nextDouble() + bank.getMinInitialCDBalance();
 
-        switch (accountType) {
-            case Checking:
-            case Savings:
-                return String.format("%s %s %s %.2f", transactionType, accountType, id, apr).toLowerCase();
-            default:
-                return String.format("%s %s %s %.2f %.2f", transactionType, AccountType.CD, id, apr, initialCDBalance).toLowerCase();
-        }
+        return transaction;
     }
 }

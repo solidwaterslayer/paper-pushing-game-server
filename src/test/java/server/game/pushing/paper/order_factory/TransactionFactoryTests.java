@@ -68,7 +68,7 @@ public class TransactionFactoryTests {
 
         for (int i = 0; i < 9; i++) {
             processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "0000000" + i, bank.getMaxAPR(), bank.getMinInitialCDBalance()));
-            assertEquals("[error] bank contains 0 checking or savings", assertThrows(IllegalArgumentException.class, transactionFactory::getTransaction).getMessage());
+            assertEquals("[error] bank contains 0 checking or savings", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class TransactionFactoryTests {
         for (int i = 0; i < 9; i++) {
             processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.Savings, "0000000" + i, bank.getMaxAPR()));
             processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "0000000" + i, bank.getMaxAPR(), bank.getMinInitialCDBalance()));
-            assertEquals("[error] bank contains 0 checking", assertThrows(IllegalArgumentException.class, transactionFactory::getTransaction).getMessage());
+            assertEquals("[error] bank contains 0 checking", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
         }
     }
 }
