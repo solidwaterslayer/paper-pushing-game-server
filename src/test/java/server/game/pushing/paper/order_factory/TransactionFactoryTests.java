@@ -12,6 +12,7 @@ import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibi
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -36,11 +37,7 @@ public class TransactionFactoryTests {
 
         logger = LoggerFactory.getLogger(this.getClass());
 
-        transactionFactories.add(new CreateFactory(bank, random));
-        transactionFactories.add(new DepositFactory(bank, random));
-        transactionFactories.add(new WithdrawFactory(bank, random));
-        transactionFactories.add(new TransferFactory(bank, random));
-        transactionFactories.add(new PassTimeFactory(bank, random));
+        transactionFactories.addAll(Arrays.asList(new CreateFactory(bank, random), new DepositFactory(bank, random), new WithdrawFactory(bank, random), new TransferFactory(bank, random), new PassTimeFactory(bank, random)));
     }
 
     @Test
@@ -51,51 +48,34 @@ public class TransactionFactoryTests {
     }
 
     private void getTransaction(TransactionFactory transactionFactory) {
-        for (int i = 0; i < 999; i++) {
+        for (int i = 0; i < 99; i++) {
             String transaction = transactionFactory.getTransaction();
 
-            logger.info(String.format("[test %s] %s", i, transaction));
+            logger.info(String.format("[transaction factory test %s] %s", i, transaction));
             assertTrue(validator.handle(transaction) && processor.handle(transaction));
         }
     }
 
     @Test
-    protected void deposit_factory_when_bank_contains_0_checking_and_savings_accounts_should_throw_an_illegal_argument_exception() {
-        TransactionFactory transactionFactory = transactionFactories.get(1);
+    protected void transfer_factories_when_bank_contains_less_than_2_checking_accounts_should_throw_an_illegal_argument_exception() {
+        TransactionType transactionType = TransactionType.Create;
+        double apr = bank.getMaxAPR();
+        double minInitialCDBalance = bank.getMinInitialCDBalance();
 
+        processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, "11111111", apr));
         for (int i = 0; i < 9; i++) {
-            assertEquals("[error] bank contains 0 checking and savings accounts", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
+            for (int j = 1; j < 4; j++) {
+                assertEquals("[error] bank contains less than 2 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactories.get(j) :: getTransaction).getMessage());
+            }
 
-            processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "0000000" + i, bank.getMaxAPR(), bank.getMinInitialCDBalance()));
-        }
-    }
-
-    @Test
-    protected void withdraw_factory_when_bank_contains_0_checking_accounts_should_throw_an_illegal_argument_exception() {
-        TransactionFactory transactionFactory = transactionFactories.get(2);
-
-        for (int i = 0; i < 9; i++) {
-            assertEquals("[error] bank contains 0 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
-
-            processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, "0000000" + i, bank.getMaxAPR()));
-            processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "0000000" + i, bank.getMaxAPR(), bank.getMinInitialCDBalance()));
-        }
-    }
-
-    @Test
-    protected void transfer_factory_when_bank_contains_less_than_2_checking_accounts_should_throw_an_illegal_argument_exception() {
-        TransactionFactory transactionFactory = transactionFactories.get(3);
-
-        processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, "11111111", bank.getMaxAPR()));
-        for (int i = 0; i < 9; i++) {
-            assertEquals("[error] bank contains less than 2 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactory :: getTransaction).getMessage());
-
-            processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, "0000000" + i, bank.getMaxAPR()));
-            processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "0000000" + i, bank.getMaxAPR(), bank.getMinInitialCDBalance()));
+            processor.handle(String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, "0000000" + i, apr));
+            processor.handle(String.format("%s %s %s %s %s", transactionType, AccountType.CD, "0000000" + i, apr, minInitialCDBalance));
         }
 
-        processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, "11111110", bank.getMaxAPR()));
-        String transaction = transactionFactory.getTransaction();
-        assertTrue(validator.handle(transaction) && processor.handle(transaction));
+        processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, "11111110", apr));
+        for (int i = 1; i < 4; i++) {
+            String transaction = transactionFactories.get(i).getTransaction();
+            assertTrue(validator.handle(transaction) && processor.handle(transaction));
+        }
     }
 }

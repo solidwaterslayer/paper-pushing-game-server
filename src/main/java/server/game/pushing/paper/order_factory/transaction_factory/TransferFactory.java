@@ -1,7 +1,6 @@
 package server.game.pushing.paper.order_factory.transaction_factory;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.Random;
@@ -27,11 +26,5 @@ public class TransferFactory extends TransactionFactory {
         }
 
         return transaction;
-    }
-
-    private void checkException() {
-        if (bank.getIDs().stream().filter(id -> bank.getAccount(id).getAccountType() == AccountType.CHECKING).count() < 2) {
-            throw new IllegalArgumentException("[error] bank contains less than 2 checking accounts");
-        }
     }
 }
