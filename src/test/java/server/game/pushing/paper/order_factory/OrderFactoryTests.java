@@ -7,24 +7,27 @@ import server.game.pushing.paper.store.Store;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrderFactoryTests {
     @Test
     protected void get_order_should_return_a_valid_and_random_order() {
         OrderFactory orderFactory = new OrderFactory();
+        int size = 9;
         Store store = new Store();
 
         Logger logger = LoggerFactory.getLogger(this.getClass());
 
         for (int i = 0; i < 99; i++) {
-            store.setOrder(orderFactory.getOrder(i));
-            List<String> receipt = store.getReceipt();
+            List<String> order = orderFactory.getOrder(i, size);
 
-            for (String transaction : receipt) {
+            store.setOrder(order);
+
+            for (String transaction : store.getReceipt()) {
                 logger.info(String.format("[order factory test %s] %s", i, transaction));
                 assertFalse(transaction.contains("[invalid]"));
             }
+            assertEquals(size, order.size());
         }
     }
 }

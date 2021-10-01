@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Random;
 
 public class OrderFactory {
-    public List<String> getOrder(int seed) {
+    public List<String> getOrder(int seed, int size) {
         List<String> order = new ArrayList<>();
         Bank bank = new Bank();
         Random random = new Random(seed);
         ChainOfResponsibility processor = (new ChainOfResponsibilityFactory(bank)).getChainOfResponsibility(false);
 
-        for (int i = 0; i < random.nextInt(9) + 1; i++) {
+        for (int i = 0; i < size; i++) {
             List<TransactionFactory> transactionFactories = new ArrayList<>(Arrays.asList(new CreateFactory(bank, random), new PassTimeFactory(bank, random)));
             if (!transactionFactories.get(0).isException()) {
                 transactionFactories.addAll(Arrays.asList(new DepositFactory(bank, random), new WithdrawFactory(bank, random), new TransferFactory(bank, random)));

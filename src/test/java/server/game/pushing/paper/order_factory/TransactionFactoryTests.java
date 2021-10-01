@@ -48,7 +48,7 @@ public class TransactionFactoryTests {
     }
 
     private void getTransaction(TransactionFactory transactionFactory) {
-        for (int i = 0; i < 99; i++) {
+        for (int i = 0; i < 999; i++) {
             String transaction = transactionFactory.getTransaction();
 
             logger.info(String.format("[transaction factory test %s] %s", i, transaction));
