@@ -16,7 +16,7 @@ public class PassTimeFactory extends TransactionFactory {
         String transaction = "";
 
         while (!validator.handle(transaction)) {
-            int months = random.nextInt(bank.getMaxMonths() + 1);
+            int months = random.nextInt(bank.getMaxMonths());
             transaction = String.format("%s %s", transactionType, months).toLowerCase();
         }
 

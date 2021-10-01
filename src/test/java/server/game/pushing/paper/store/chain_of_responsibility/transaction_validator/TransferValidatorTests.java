@@ -255,7 +255,7 @@ public class TransferValidatorTests {
         double cdAPR = 0.6;
         initialCDBalance = 2200;
 
-        List<Integer> months = Arrays.asList(getMonthsPerYear(), 60);
+        List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxMonths());
         String fromID = CD_ID_1;
         String toID = SAVINGS_ID_0;
         List<Double> lowerBound = new ArrayList<>();

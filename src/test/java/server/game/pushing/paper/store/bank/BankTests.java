@@ -53,6 +53,7 @@ public class BankTests {
         assertEquals(10, bank.getMaxAPR());
         assertEquals(1000, bank.getMinInitialCDBalance());
         assertEquals(10000, bank.getMaxInitialCDBalance());
+        assertEquals(60, bank.getMaxMonths());
 
         assertTrue(bank.isEmpty());
         assertEquals(0, bank.size());
@@ -689,7 +690,7 @@ public class BankTests {
         double cdAPR = 0.6;
         initialCDBalance = 2200;
 
-        List<Integer> months = Arrays.asList(getMonthsPerYear(), 60);
+        List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxMonths());
         String fromID = CD_ID_1;
         String toID = SAVINGS_ID_1;
         List<Double> lowerBound = new ArrayList<>();
