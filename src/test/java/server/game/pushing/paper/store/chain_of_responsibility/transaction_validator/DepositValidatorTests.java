@@ -38,15 +38,15 @@ public class DepositValidatorTests {
 
     @Test
     protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_down_the_chain_of_responsibility() {
-        String fromID = CHECKING_ID;
-        String toID = SAVINGS_ID;
-        double withdrawAmount = bank.getAccount(fromID).getMaxWithdrawAmount();
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+        String payingID = CHECKING_ID;
+        String receivingID = SAVINGS_ID;
+        double withdrawAmount = bank.getAccount(payingID).getMaxWithdrawAmount();
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
         validator.setNext(new WithdrawValidator(bank));
 
-        assertTrue(validator.handle(String.format("%s %s %s", TransactionType.Withdraw, fromID, withdrawAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s", TransactionType.Withdraw, payingID, withdrawAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount)));
     }
 
     @Test

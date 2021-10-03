@@ -21,22 +21,22 @@ public class ChainOfResponsibilityFactoryTests {
         ChainOfResponsibility processor = chainOfResponsibilityFactory.getChainOfResponsibility(false);
 
         int months = getMonthsPerYear();
-        String fromID = "98340842";
-        String toID = "08429843";
+        String payingID = "98340842";
+        String receivingID = "08429843";
         double apr = bank.getMaxAPR();
-        String transaction0 = String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, fromID, apr);
+        String transaction0 = String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, payingID, apr);
         assertTrue(validator.handle(transaction0));
         assertTrue(processor.handle(transaction0));
-        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, toID, apr)));
-        double depositAmount = bank.getAccount(fromID).getMaxDepositAmount();
-        double withdrawAmount = bank.getAccount(fromID).getMaxWithdrawAmount();
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, receivingID, apr)));
+        double depositAmount = bank.getAccount(payingID).getMaxDepositAmount();
+        double withdrawAmount = bank.getAccount(payingID).getMaxWithdrawAmount();
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
         List<ChainOfResponsibility> chainOfResponsibility0 = new ArrayList<>(Arrays.asList(validator, processor));
         List<String> order = new ArrayList<>(Arrays.asList(
-                String.format("%s %s %s", TransactionType.Deposit, fromID, depositAmount),
-                String.format("%s %s %s", TransactionType.Withdraw, fromID, withdrawAmount),
-                String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount),
+                String.format("%s %s %s", TransactionType.Deposit, payingID, depositAmount),
+                String.format("%s %s %s", TransactionType.Withdraw, payingID, withdrawAmount),
+                String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount),
                 String.format("%s %s", TransactionType.PassTime, months)
         ));
         for (String transaction1 : order) {

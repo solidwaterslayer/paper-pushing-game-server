@@ -94,14 +94,14 @@ public class Bank {
         toAccount.deposit(transferAmount);
     }
 
-    public void passTime(int months) {
-        for (int i = 0; i < months; i++) {
-            for (Account account : new ArrayList<>(ACCOUNTS.values())) {
+    public void timeTravel(int months) {
+        for (Account account : new ArrayList<>(ACCOUNTS.values())) {
+            for (int i = 0; i < months; i++) {
                 if (account.getBalance() <= 100) {
                     account.withdraw(MIN_BALANCE_FEE);
                 }
 
-                account.passTime();
+                account.timeTravel(1);
             }
         }
     }

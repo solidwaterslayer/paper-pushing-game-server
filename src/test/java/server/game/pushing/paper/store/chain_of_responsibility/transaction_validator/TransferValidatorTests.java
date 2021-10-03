@@ -67,175 +67,175 @@ public class TransferValidatorTests {
 
     @Test
     protected void transaction_should_contain_the_transaction_type_transfer_as_the_first_argument() {
-        String fromID = CHECKING_ID_1;
-        String toID = CHECKING_ID_0;
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+        String payingID = CHECKING_ID_1;
+        String receivingID = CHECKING_ID_0;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
         assertFalse(validator.handle(""));
         assertFalse(validator.handle(String.format("%s %s %s %s", "", "", "", "")));
-        assertFalse(validator.handle(String.format("%s %s %s %s", "", fromID, toID, transferAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", "nuke", fromID, toID, transferAmount)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", "", payingID, receivingID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", "nuke", payingID, receivingID, transferAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
     }
 
     @Test
     protected void transaction_should_contain_a_unique_and_taken_from_and_to_id_as_the_second_and_third_argument() {
-        String fromID = SAVINGS_ID_1;
-        String toID = SAVINGS_ID_0;
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+        String payingID = SAVINGS_ID_1;
+        String receivingID = SAVINGS_ID_0;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "", "", "")));
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "", "", transactionType)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "", toID, transferAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, "", "")));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, "", transactionType)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "", receivingID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, "", "")));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, "", transactionType)));
 
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, fromID, transferAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "34782792", toID, transferAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, "78344278", transferAmount)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, payingID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "34782792", receivingID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, "78344278", transferAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
     }
 
     @Test
     protected void transaction_should_contain_a_transfer_amount_as_the_fourth_argument() {
-        String fromID = CD_ID_0;
-        String toID = SAVINGS_ID_0;
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+        String payingID = CD_ID_0;
+        String receivingID = SAVINGS_ID_0;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
-        bank.passTime(getMonthsPerYear());
+        bank.timeTravel(getMonthsPerYear());
 
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, "")));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, "^*(FGd")));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, "")));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, "^*(FGd")));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
     }
 
     @Test
     protected void transaction_when_account_type_is_from_checking_to_checking_should_contain_a_transfer_amount_greater_than_0() {
-        String fromID = CHECKING_ID_0;
-        String toID = CHECKING_ID_1;
+        String payingID = CHECKING_ID_0;
+        String receivingID = CHECKING_ID_1;
         double transferAmount = 0;
 
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 300)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 3)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 300)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 3)));
     }
 
     @Test
     protected void transaction_when_account_type_is_from_checking_to_checking_should_contain_a_transfer_amount_less_than_or_equal_to_400() {
-        String fromID = CHECKING_ID_1;
-        String toID = CHECKING_ID_0;
+        String payingID = CHECKING_ID_1;
+        String receivingID = CHECKING_ID_0;
         double transferAmount = 400;
 
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 3)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 3)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 300)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 3)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 300)));
     }
 
     @Test
     protected void transaction_when_account_type_is_from_checking_to_savings_should_contain_a_transfer_amount_greater_than_0() {
-        String fromID = CHECKING_ID_0;
-        String toID = SAVINGS_ID_0;
+        String payingID = CHECKING_ID_0;
+        String receivingID = SAVINGS_ID_0;
         double transferAmount = 0;
 
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 300)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 3)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 300)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 3)));
     }
 
     @Test
     protected void transaction_when_account_type_is_from_checking_to_savings_should_contain_a_transfer_amount_less_than_or_equal_to_400() {
-        String fromID = CHECKING_ID_1;
-        String toID = SAVINGS_ID_1;
+        String payingID = CHECKING_ID_1;
+        String receivingID = SAVINGS_ID_1;
         double transferAmount = 400;
 
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 3)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 3)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 300)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 3)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 300)));
     }
 
     @Test
     protected void transaction_when_account_type_is_from_savings_should_not_be_possible_twice_a_month_or_more() {
-        String fromID = SAVINGS_ID_1;
-        String toID = CHECKING_ID_1;
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
-        String transaction = String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount);
+        String payingID = SAVINGS_ID_1;
+        String receivingID = CHECKING_ID_1;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
+        String transaction = String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount);
 
         assertTrue(validator.handle(transaction));
-        bank.transfer(fromID, toID, transferAmount);
+        bank.transfer(payingID, receivingID, transferAmount);
 
         assertFalse(validator.handle(transaction));
 
-        bank.passTime(1);
+        bank.timeTravel(1);
         assertTrue(validator.handle(transaction));
     }
 
     @Test
     protected void transaction_when_account_type_is_from_savings_to_checking_should_contain_a_transfer_amount_greater_than_0() {
-        String fromID = SAVINGS_ID_0;
-        String toID = CHECKING_ID_1;
+        String payingID = SAVINGS_ID_0;
+        String receivingID = CHECKING_ID_1;
         double transferAmount = 0;
 
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 300)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 3)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 3)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, 500)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 300)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 3)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, 500)));
     }
 
     @Test
     protected void transaction_when_account_type_is_from_savings_to_checking_should_contain_a_transfer_amount_less_than_or_equal_to_1000() {
-        String fromID = SAVINGS_ID_1;
-        String toID = CHECKING_ID_1;
+        String payingID = SAVINGS_ID_1;
+        String receivingID = CHECKING_ID_1;
         double transferAmount = 1000;
 
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, 600)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 3)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 3)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 300)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, 600)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 3)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 300)));
     }
 
     @Test
     protected void transaction_when_account_type_is_from_savings_to_savings_should_contain_a_transfer_amount_greater_than_0() {
-        String fromID = SAVINGS_ID_0;
-        String toID = SAVINGS_ID_1;
+        String payingID = SAVINGS_ID_0;
+        String receivingID = SAVINGS_ID_1;
         double transferAmount = 0;
 
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 300)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 3)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 3)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, 500)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 300)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 3)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, 500)));
     }
 
     @Test
     protected void transaction_when_account_type_is_from_savings_to_savings_should_contain_a_transfer_amount_less_than_or_equal_to_1000() {
-        String fromID = SAVINGS_ID_1;
-        String toID = SAVINGS_ID_0;
+        String payingID = SAVINGS_ID_1;
+        String receivingID = SAVINGS_ID_0;
         double transferAmount = 1000;
 
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, 600)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount - 3)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 3)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount + 300)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, 600)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount - 3)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 3)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount + 300)));
     }
 
     @Test
     protected void transfer_to_cd_should_not_be_possible() {
-        String toID = CD_ID_1;
+        String receivingID = CD_ID_1;
         List<Double> transferAmounts = Arrays.asList(-300.0, -3.0, 0.0, 3.0, 1200.0, 1300.0, 2497.0, 2500.0, 2503.0, 2800.0);
 
-        bank.passTime(MONTHS);
+        bank.timeTravel(MONTHS);
 
         for (Double transferAmount : transferAmounts) {
-            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID_0, toID, transferAmount)));
-            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, SAVINGS_ID_1, toID, transferAmount)));
-            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, CD_ID_0, toID, transferAmount)));
+            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID_0, receivingID, transferAmount)));
+            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, SAVINGS_ID_1, receivingID, transferAmount)));
+            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, CD_ID_0, receivingID, transferAmount)));
         }
     }
 
@@ -246,7 +246,7 @@ public class TransferValidatorTests {
         for (int month = 0; month < monthsPerYear * 2; month++) {
             assertEquals(month >= monthsPerYear, validator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CD_ID_0, SAVINGS_ID_0, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount())));
 
-            bank.passTime(1);
+            bank.timeTravel(1);
         }
     }
 
@@ -256,51 +256,51 @@ public class TransferValidatorTests {
         initialCDBalance = 2200;
 
         List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxMonths());
-        String fromID = CD_ID_1;
-        String toID = SAVINGS_ID_0;
+        String payingID = CD_ID_1;
+        String receivingID = SAVINGS_ID_0;
         List<Double> lowerBound = new ArrayList<>();
         double upperBound = 2500;
 
-        bank.removeAccount(fromID);
-        bank.createCD(fromID, cdAPR, initialCDBalance);
-        bank.deposit(toID, bank.getAccount(toID).getMaxDepositAmount());
+        bank.removeAccount(payingID);
+        bank.createCD(payingID, cdAPR, initialCDBalance);
+        bank.deposit(receivingID, bank.getAccount(receivingID).getMaxDepositAmount());
         lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(0), initialCDBalance));
         lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));
 
         for (int i = 0; i < 2; i++) {
-            bank.passTime(months.get(i));
+            bank.timeTravel(months.get(i));
 
-            assertEquals(lowerBound.get(i), bank.getAccount(fromID).getBalance());
-            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, lowerBound.get(i) - 500)));
-            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, lowerBound.get(i) - 50)));
-            assertEquals(lowerBound.get(i) <= upperBound, validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, lowerBound.get(i))));
-            assertEquals(lowerBound.get(i) <= upperBound, validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, lowerBound.get(i) + 50)));
+            assertEquals(lowerBound.get(i), bank.getAccount(payingID).getBalance());
+            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, lowerBound.get(i) - 500)));
+            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, lowerBound.get(i) - 50)));
+            assertEquals(lowerBound.get(i) <= upperBound, validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, lowerBound.get(i))));
+            assertEquals(lowerBound.get(i) <= upperBound, validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, lowerBound.get(i) + 50)));
 
-            assertEquals(lowerBound.get(i) <= upperBound, validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, upperBound - 100)));
-            assertEquals(lowerBound.get(i) <= upperBound, validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, upperBound)));
-            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, upperBound + 100)));
-            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, fromID, toID, upperBound + 1000)));
+            assertEquals(lowerBound.get(i) <= upperBound, validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, upperBound - 100)));
+            assertEquals(lowerBound.get(i) <= upperBound, validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, upperBound)));
+            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, upperBound + 100)));
+            assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, upperBound + 1000)));
         }
     }
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        String fromID = CHECKING_ID_1;
-        String toID = CHECKING_ID_0;
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+        String payingID = CHECKING_ID_1;
+        String receivingID = CHECKING_ID_0;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
-        assertTrue(validator.handle(String.format("traNSFer %s %s %s", fromID, toID, transferAmount)));
+        assertTrue(validator.handle(String.format("traNSFer %s %s %s", payingID, receivingID, transferAmount)));
     }
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        String fromID = CD_ID_1;
-        String toID = SAVINGS_ID_1;
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+        String payingID = CD_ID_1;
+        String receivingID = SAVINGS_ID_1;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
-        bank.passTime(12);
+        bank.timeTravel(12);
 
-        assertTrue(validator.handle(String.format("%s %s %s %s %s", transactionType, fromID, toID, transferAmount, "nuke")));
-        assertTrue(validator.handle(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, fromID, toID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
+        assertTrue(validator.handle(String.format("%s %s %s %s %s", transactionType, payingID, receivingID, transferAmount, "nuke")));
+        assertTrue(validator.handle(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, payingID, receivingID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
     }
 }

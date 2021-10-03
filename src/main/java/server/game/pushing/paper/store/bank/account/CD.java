@@ -15,6 +15,6 @@ public class CD extends Account {
 
     @Override
     public boolean isWithdrawAmountValid(double withdrawAmount) {
-        return months >= getMonthsPerYear() && withdrawAmount >= this.balance;
+        return age >= getMonthsPerYear() && withdrawAmount >= this.balance;
     }
 }

@@ -15,7 +15,7 @@ public class PassTimeProcessor extends ChainOfResponsibility {
     @Override
     public boolean handle(String[] transactionArguments) {
         if ((transactionArguments[0] + transactionArguments[1]).equalsIgnoreCase(transactionType.name())) {
-            bank.passTime(parseInt(transactionArguments[2]));
+            bank.timeTravel(parseInt(transactionArguments[2]));
             return true;
         }
 

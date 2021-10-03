@@ -47,15 +47,15 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void withdraw_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
-        String fromID = SAVINGS_ID;
-        String toID = CHECKING_ID;
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
+        String payingID = SAVINGS_ID;
+        String receivingID = CHECKING_ID;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
         processor.setNext(new TransferProcessor(bank));
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount)));
-        assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());
-        assertEquals(checkingDepositAmount + transferAmount, bank.getAccount(toID).getBalance());
+        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount)));
+        assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
+        assertEquals(checkingDepositAmount + transferAmount, bank.getAccount(receivingID).getBalance());
         assertFalse(processor.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));
     }
 
@@ -84,7 +84,7 @@ public class WithdrawProcessorTests {
         double checkingWithdrawAmount = passTime(minBalanceFee, MONTHS, checkingDepositAmount);
         double savingsWithdrawAmount = passTime(minBalanceFee, MONTHS, savingsDepositAmount);
         double cdWithdrawAmount = passTime(minBalanceFee, MONTHS, initialCDBalance);
-        bank.passTime(MONTHS);
+        bank.timeTravel(MONTHS);
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());
         assertTrue(processor.handle(String.format("%s %s %s", transactionType, CHECKING_ID, checkingWithdrawAmount)));
@@ -108,7 +108,7 @@ public class WithdrawProcessorTests {
         bank.withdraw(CHECKING_ID, checkingWithdrawAmount);
         bank.withdraw(SAVINGS_ID, savingsWithdrawAmount);
         bank.withdraw(SAVINGS_ID, savingsWithdrawAmount);
-        bank.passTime(12);
+        bank.timeTravel(12);
 
         assertTrue(checkingWithdrawAmount > bank.getAccount(CHECKING_ID).getBalance());
         assertTrue(processor.handle(String.format("%s %s %s", transactionType, CHECKING_ID, checkingWithdrawAmount)));
@@ -125,7 +125,7 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        bank.passTime(MONTHS);
+        bank.timeTravel(MONTHS);
 
         assertTrue(processor.handle(String.format("withdraw %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount())));
         assertTrue(processor.handle(String.format("wITHdrAw %s %s", SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount())));
@@ -134,7 +134,7 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        bank.passTime(MONTHS);
+        bank.timeTravel(MONTHS);
 
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount(), "nuke")));
         assertTrue(processor.handle(String.format("%s %s %s %s %s  %s    %s         %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount(), "00", "000", "00000", "000", 0)));

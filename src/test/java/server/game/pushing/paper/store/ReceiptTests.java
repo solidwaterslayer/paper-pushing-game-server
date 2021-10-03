@@ -127,12 +127,12 @@ public class ReceiptTests {
 
     @Test
     protected void add_valid_transfer_transaction_should_be_possible() {
-        String fromID = CHECKING_ID;
-        String toID = SAVINGS_ID;
-        double depositAmount = bank.getAccount(fromID).getMaxDepositAmount();
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
-        String transaction0 = String.format("%s %s %s", TransactionType.Deposit, fromID, depositAmount);
-        String transaction1 = String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount);
+        String payingID = CHECKING_ID;
+        String receivingID = SAVINGS_ID;
+        double depositAmount = bank.getAccount(payingID).getMaxDepositAmount();
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
+        String transaction0 = String.format("%s %s %s", TransactionType.Deposit, payingID, depositAmount);
+        String transaction1 = String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount);
 
         receipt.addTransaction(transaction0);
         receipt.addTransaction(transaction1);

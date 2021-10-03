@@ -46,7 +46,7 @@ public class BankTests {
     }
 
     @Test
-    protected void initialize_bank_should_have_0_accounts() {
+    protected void banks_should_start_with_0_accounts() {
         bank = new Bank();
 
         assertEquals(25, bank.getMinBalanceFee());
@@ -60,7 +60,7 @@ public class BankTests {
     }
 
     @Test
-    protected void create_checking_should_be_possible() {
+    protected void banks_can_create_checking_accounts() {
         Account account = bank.getAccount(CHECKING_ID_0);
         assertEquals(AccountType.CHECKING, account.getAccountType());
         assertEquals(CHECKING_ID_0, account.getID());
@@ -69,7 +69,7 @@ public class BankTests {
     }
 
     @Test
-    protected void create_savings_should_be_possible() {
+    protected void banks_can_create_savings_accounts() {
         Account account = bank.getAccount(SAVINGS_ID_0);
         assertEquals(AccountType.SAVINGS, account.getAccountType());
         assertEquals(SAVINGS_ID_0, account.getID());
@@ -78,7 +78,7 @@ public class BankTests {
     }
 
     @Test
-    protected void create_cd_should_be_possible() {
+    protected void banks_can_create_cd_accounts() {
         Account account = bank.getAccount(CD_ID_0);
         assertEquals(AccountType.CD, account.getAccountType());
         assertEquals(CD_ID_0, account.getID());
@@ -87,7 +87,7 @@ public class BankTests {
     }
 
     @Test
-    protected void deposit_checking_should_be_possible() {
+    protected void banks_can_deposit_to_checking_accounts() {
         String id = CHECKING_ID_0;
         double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
 
@@ -97,7 +97,7 @@ public class BankTests {
     }
 
     @Test
-    protected void deposit_savings_should_be_possible() {
+    protected void banks_can_deposit_savings_accounts() {
         String id = SAVINGS_ID_0;
         double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
 
@@ -107,7 +107,7 @@ public class BankTests {
     }
 
     @Test
-    protected void withdraw_should_be_possible() {
+    protected void banks_can_withdraw_from_accounts() {
         double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
         double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
         double checkingWithdrawAmount = bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount();
@@ -126,114 +126,114 @@ public class BankTests {
     }
 
     @Test
-    protected void transfer_from_checking_to_checking_should_be_possible() {
-        String fromID = CHECKING_ID_0;
-        String toID = CHECKING_ID_1;
+    protected void banks_can_transfer_from_checking_to_checking() {
+        String payingID = CHECKING_ID_0;
+        String receivingID = CHECKING_ID_1;
         double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
         double transferAmount = min(bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount(), bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
 
-        bank.deposit(fromID, checkingDepositAmount);
-        bank.transfer(fromID, toID, transferAmount);
+        bank.deposit(payingID, checkingDepositAmount);
+        bank.transfer(payingID, receivingID, transferAmount);
 
-        assertEquals(checkingDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());
-        assertEquals(transferAmount, bank.getAccount(toID).getBalance());
+        assertEquals(checkingDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
+        assertEquals(transferAmount, bank.getAccount(receivingID).getBalance());
     }
 
     @Test
-    protected void transfer_from_checking_to_savings_should_be_possible() {
-        String fromID = CHECKING_ID_1;
-        String toID = SAVINGS_ID_1;
+    protected void banks_can_transfer_from_checking_to_savings() {
+        String payingID = CHECKING_ID_1;
+        String receivingID = SAVINGS_ID_1;
         double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
         double transferAmount = min(bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
 
-        bank.deposit(fromID, checkingDepositAmount);
-        bank.transfer(fromID, toID, transferAmount);
+        bank.deposit(payingID, checkingDepositAmount);
+        bank.transfer(payingID, receivingID, transferAmount);
 
-        assertEquals(checkingDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());
-        assertEquals(transferAmount, bank.getAccount(toID).getBalance());
+        assertEquals(checkingDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
+        assertEquals(transferAmount, bank.getAccount(receivingID).getBalance());
     }
 
     @Test
-    protected void transfer_from_savings_to_checking_should_be_possible() {
-        String fromID = SAVINGS_ID_0;
-        String toID = CHECKING_ID_0;
+    protected void banks_can_transfer_from_savings_to_checking() {
+        String payingID = SAVINGS_ID_0;
+        String receivingID = CHECKING_ID_0;
         double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
         double transferAmount = min(bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount(), bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
 
-        bank.deposit(fromID, savingsDepositAmount);
-        bank.transfer(fromID, toID, transferAmount);
+        bank.deposit(payingID, savingsDepositAmount);
+        bank.transfer(payingID, receivingID, transferAmount);
 
-        assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());
-        assertEquals(transferAmount, bank.getAccount(toID).getBalance());
+        assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
+        assertEquals(transferAmount, bank.getAccount(receivingID).getBalance());
     }
 
     @Test
-    protected void transfer_from_savings_to_savings_should_be_possible() {
-        String fromID = SAVINGS_ID_1;
-        String toID = SAVINGS_ID_0;
+    protected void banks_can_transfer_from_savings_to_savings() {
+        String payingID = SAVINGS_ID_1;
+        String receivingID = SAVINGS_ID_0;
         double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
         double transferAmount = min(bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
 
-        bank.deposit(fromID, savingsDepositAmount);
-        bank.transfer(fromID, toID, transferAmount);
+        bank.deposit(payingID, savingsDepositAmount);
+        bank.transfer(payingID, receivingID, transferAmount);
 
-        assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(fromID).getBalance());
-        assertEquals(transferAmount, bank.getAccount(toID).getBalance());
+        assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
+        assertEquals(transferAmount, bank.getAccount(receivingID).getBalance());
     }
 
     @Test
-    protected void transfer_from_cd_to_savings_should_be_possible() {
+    protected void banks_can_transfer_from_cd_to_savings() {
         double minBalanceFee = bank.getMinBalanceFee();
         int months = getMonthsPerYear();
-        String fromID = CD_ID_0;
-        String toID = SAVINGS_ID_0;
+        String payingID = CD_ID_0;
+        String receivingID = SAVINGS_ID_0;
         double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
         double transferAmount = min(bank.getAccount(CD_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
-        bank.deposit(toID, savingsDepositAmount);
-        bank.passTime(months);
+        bank.deposit(receivingID, savingsDepositAmount);
+        bank.timeTravel(months);
 
-        bank.transfer(fromID, toID, transferAmount);
+        bank.transfer(payingID, receivingID, transferAmount);
 
-        assertEquals(0, bank.getAccount(fromID).getBalance());
+        assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(
                 passTime(minBalanceFee, months, savingsDepositAmount)
                         + passTime(minBalanceFee, months, initialCDBalance),
-                bank.getAccount(toID).getBalance()
+                bank.getAccount(receivingID).getBalance()
         );
     }
 
     @Test
-    protected void transfer_when_less_than_or_equal_to_balance_should_be_possible() {
-        String fromID = CHECKING_ID_1;
-        String toID = SAVINGS_ID_0;
+    protected void banks_can_transfer_when_the_transfer_amount_is_less_than_or_equal_to_the_paying_account_balance() {
+        String payingID = CHECKING_ID_1;
+        String receivingID = SAVINGS_ID_0;
         double checkingWithdrawAmount = 400;
         double savingsWithdrawAmount = 700;
-        bank.deposit(fromID, checkingWithdrawAmount);
-        bank.deposit(toID, savingsWithdrawAmount);
+        bank.deposit(payingID, checkingWithdrawAmount);
+        bank.deposit(receivingID, savingsWithdrawAmount);
 
-        assertEquals(checkingWithdrawAmount, bank.getAccount(fromID).getBalance());
-        bank.transfer(fromID, toID, checkingWithdrawAmount);
+        assertEquals(checkingWithdrawAmount, bank.getAccount(payingID).getBalance());
+        bank.transfer(payingID, receivingID, checkingWithdrawAmount);
 
-        assertTrue(savingsWithdrawAmount < bank.getAccount(toID).getBalance());
-        bank.transfer(toID, fromID, savingsWithdrawAmount);
+        assertTrue(savingsWithdrawAmount < bank.getAccount(receivingID).getBalance());
+        bank.transfer(receivingID, payingID, savingsWithdrawAmount);
 
-        assertEquals(savingsWithdrawAmount, bank.getAccount(fromID).getBalance());
-        assertEquals(checkingWithdrawAmount, bank.getAccount(toID).getBalance());
+        assertEquals(savingsWithdrawAmount, bank.getAccount(payingID).getBalance());
+        assertEquals(checkingWithdrawAmount, bank.getAccount(receivingID).getBalance());
     }
 
     @Test
-    protected void transfer_when_greater_than_balance_should_transfer_amount_equal_to_balance() {
-        String fromID = SAVINGS_ID_0;
-        String toID = SAVINGS_ID_1;
+    protected void banks_should_transfer_the_paying_account_balance_when_the_transfer_amount_is_greater_than_the_paying_account_balance() {
+        String payingID = SAVINGS_ID_0;
+        String receivingID = SAVINGS_ID_1;
         double savingsDepositAmount = 100;
         double savingsWithdrawAmount = bank.getAccount(SAVINGS_ID_1).getMaxWithdrawAmount();
-        bank.deposit(fromID, savingsDepositAmount);
+        bank.deposit(payingID, savingsDepositAmount);
 
-        assertTrue(savingsWithdrawAmount > bank.getAccount(fromID).getBalance());
-        bank.transfer(fromID, toID, savingsWithdrawAmount);
+        assertTrue(savingsWithdrawAmount > bank.getAccount(payingID).getBalance());
+        bank.transfer(payingID, receivingID, savingsWithdrawAmount);
 
-        assertEquals(0, bank.getAccount(fromID).getBalance());
-        assertEquals(savingsDepositAmount, bank.getAccount(toID).getBalance());
+        assertEquals(0, bank.getAccount(payingID).getBalance());
+        assertEquals(savingsDepositAmount, bank.getAccount(receivingID).getBalance());
     }
 
     @Test
@@ -245,7 +245,7 @@ public class BankTests {
         bank.deposit(CHECKING_ID_1, checkingDepositAmount);
         bank.deposit(SAVINGS_ID_0, savingsDepositAmount);
 
-        bank.passTime(months);
+        bank.timeTravel(months);
 
         assertEquals(passTime(minBalanceFee, months, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
         assertEquals(passTime(minBalanceFee, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
@@ -425,7 +425,7 @@ public class BankTests {
 
         assertFalse(bank.isWithdrawAmountValid(id, savingsWithdrawAmount));
 
-        bank.passTime(1);
+        bank.timeTravel(1);
         assertTrue(bank.isWithdrawAmountValid(id, savingsWithdrawAmount));
     }
 
@@ -454,13 +454,13 @@ public class BankTests {
     }
 
     @Test
-    protected void withdraw_cd_should_be_possible_after_a_year_inclusive() {
+    protected void withdraw_cd_after_a_year_inclusive() {
         int monthsPerYear = getMonthsPerYear();
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
             assertEquals(month >= getMonthsPerYear(), bank.isWithdrawAmountValid(CD_ID_0, bank.getAccount(CD_ID_1).getMaxWithdrawAmount()));
 
-            bank.passTime(1);
+            bank.timeTravel(1);
         }
     }
 
@@ -470,7 +470,7 @@ public class BankTests {
         String id = CD_ID_0;
         double cdWithdrawAmount = passTime(bank.getMinBalanceFee(), months, initialCDBalance);
 
-        bank.passTime(months);
+        bank.timeTravel(months);
 
         assertEquals(cdWithdrawAmount, bank.getAccount(id).getBalance());
         assertFalse(bank.isWithdrawAmountValid(id, cdWithdrawAmount - 1000));
@@ -486,140 +486,140 @@ public class BankTests {
 
     @Test
     protected void transfer_should_contain_unique_and_taken_from_id_and_to_id() {
-        String fromID = CHECKING_ID_1;
-        String toID = CHECKING_ID_0;
+        String payingID = CHECKING_ID_1;
+        String receivingID = CHECKING_ID_0;
         double transferAmount = min(bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount(), bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
 
-        assertFalse(bank.isTransferAmountValid(fromID, fromID, transferAmount));
-        assertFalse(bank.isTransferAmountValid("34782794", toID, transferAmount));
-        assertFalse(bank.isTransferAmountValid(fromID, "78344279", transferAmount));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount));
+        assertFalse(bank.isTransferAmountValid(payingID, payingID, transferAmount));
+        assertFalse(bank.isTransferAmountValid("34782794", receivingID, transferAmount));
+        assertFalse(bank.isTransferAmountValid(payingID, "78344279", transferAmount));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
     }
 
     @Test
     protected void transfer_from_checking_to_checking_should_be_greater_than_0() {
-        String fromID = CHECKING_ID_0;
-        String toID = CHECKING_ID_1;
+        String payingID = CHECKING_ID_0;
+        String receivingID = CHECKING_ID_1;
         double transferAmount = 0;
 
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount - 500));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount - 50));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount + 50));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 500));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 50));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 50));
     }
 
     @Test
     protected void transfer_from_checking_to_checking_should_be_less_than_or_equal_to_400() {
-        String fromID = CHECKING_ID_1;
-        String toID = CHECKING_ID_0;
+        String payingID = CHECKING_ID_1;
+        String receivingID = CHECKING_ID_0;
         double transferAmount = 400;
 
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount - 50));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount + 50));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount + 500));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 50));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 50));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 500));
     }
 
     @Test
     protected void transfer_from_checking_to_savings_should_be_greater_than_0() {
-        String fromID = CHECKING_ID_1;
-        String toID = SAVINGS_ID_0;
+        String payingID = CHECKING_ID_1;
+        String receivingID = SAVINGS_ID_0;
         double transferAmount = 0;
 
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount - 1000));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount - 100));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount + 100));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 1000));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 100));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 100));
     }
 
     @Test
     protected void transfer_from_checking_to_savings_should_be_less_than_or_equal_to_400() {
-        String fromID = CHECKING_ID_1;
-        String toID = SAVINGS_ID_1;
+        String payingID = CHECKING_ID_1;
+        String receivingID = SAVINGS_ID_1;
         double transferAmount = 400;
 
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount - 100));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount + 100));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount + 1000));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 100));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 100));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 1000));
     }
 
     @Test
     protected void transfer_from_savings_should_not_be_possible_twice_a_month_or_more() {
-        String fromID = SAVINGS_ID_1;
-        String toID = CHECKING_ID_1;
+        String payingID = SAVINGS_ID_1;
+        String receivingID = CHECKING_ID_1;
         double checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
         double savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
         double transferAmount = min(bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
-        bank.deposit(fromID, savingsDepositAmount);
-        bank.deposit(toID, checkingDepositAmount);
+        bank.deposit(payingID, savingsDepositAmount);
+        bank.deposit(receivingID, checkingDepositAmount);
 
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount));
-        bank.transfer(fromID, toID, transferAmount);
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+        bank.transfer(payingID, receivingID, transferAmount);
 
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
 
-        bank.passTime(1);
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount));
+        bank.timeTravel(1);
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
     }
 
     @Test
     protected void transfer_from_savings_to_checking_should_be_greater_than_0() {
-        String fromID = SAVINGS_ID_0;
-        String toID = CHECKING_ID_0;
+        String payingID = SAVINGS_ID_0;
+        String receivingID = CHECKING_ID_0;
         double transferAmount = 0;
 
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount - 500));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount - 50));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount + 50));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, 500));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 500));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 50));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 50));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, 500));
     }
 
     @Test
     protected void transfer_from_savings_to_checking_should_be_less_than_or_equal_to_1000() {
-        String fromID = SAVINGS_ID_0;
-        String toID = CHECKING_ID_1;
+        String payingID = SAVINGS_ID_0;
+        String receivingID = CHECKING_ID_1;
         double transferAmount = 1000;
 
-        assertTrue(bank.isTransferAmountValid(fromID, toID, 600));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount - 50));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount + 50));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount + 500));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, 600));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 50));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 50));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 500));
     }
 
     @Test
     protected void transfer_from_savings_to_savings_should_be_greater_than_0() {
-        String fromID = SAVINGS_ID_0;
-        String toID = SAVINGS_ID_1;
+        String payingID = SAVINGS_ID_0;
+        String receivingID = SAVINGS_ID_1;
         double transferAmount = 0;
 
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount - 500));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount - 50));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount + 50));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, 500));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 500));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 50));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 50));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, 500));
     }
 
     @Test
     protected void transfer_from_savings_to_savings_should_be_less_than_or_equal_to_1000() {
-        String fromID = SAVINGS_ID_0;
-        String toID = SAVINGS_ID_1;
+        String payingID = SAVINGS_ID_0;
+        String receivingID = SAVINGS_ID_1;
         double transferAmount = 1000;
 
-        assertTrue(bank.isTransferAmountValid(fromID, toID, 600));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount - 50));
-        assertTrue(bank.isTransferAmountValid(fromID, toID, transferAmount));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount + 50));
-        assertFalse(bank.isTransferAmountValid(fromID, toID, transferAmount + 500));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, 600));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount - 50));
+        assertTrue(bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 50));
+        assertFalse(bank.isTransferAmountValid(payingID, receivingID, transferAmount + 500));
     }
 
     @Test
     protected void transfer_to_cd_should_not_be_possible() {
         List<Double> transferAmounts = Arrays.asList(-500.0, -100.0, 0.0, 100.0, 1200.0, 1300.0, 2400.0, 2500.0, 2600.0, 3500.0);
 
-        bank.passTime(getMonthsPerYear());
+        bank.timeTravel(getMonthsPerYear());
 
         for (Double transferAmount : transferAmounts) {
             assertFalse(bank.isTransferAmountValid(CHECKING_ID_1, CD_ID_0, transferAmount));
@@ -629,7 +629,7 @@ public class BankTests {
     }
 
     @Test
-    protected void transfer_from_cd_to_savings_should_be_possible_after_12_month_inclusive() {
+    protected void transfer_from_cd_to_savings_after_12_month_inclusive() {
         int monthsPerYear = getMonthsPerYear();
         double transferAmount = min(bank.getAccount(CD_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
         bank.deposit(SAVINGS_ID_0, transferAmount);
@@ -637,7 +637,7 @@ public class BankTests {
         for (int month = 0; month < monthsPerYear * 2; month++) {
             assertEquals(month >= monthsPerYear, bank.isTransferAmountValid(CD_ID_0, SAVINGS_ID_0, transferAmount));
 
-            bank.passTime(1);
+            bank.timeTravel(1);
         }
     }
 
@@ -647,30 +647,30 @@ public class BankTests {
         initialCDBalance = 2200;
 
         List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxMonths());
-        String fromID = CD_ID_1;
-        String toID = SAVINGS_ID_1;
+        String payingID = CD_ID_1;
+        String receivingID = SAVINGS_ID_1;
         List<Double> lowerBound = new ArrayList<>();
         double upperBound = 2500;
 
-        bank.removeAccount(fromID);
-        bank.createCD(fromID, cdAPR, initialCDBalance);
-        bank.deposit(toID, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
+        bank.removeAccount(payingID);
+        bank.createCD(payingID, cdAPR, initialCDBalance);
+        bank.deposit(receivingID, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
         lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(0), initialCDBalance));
         lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));
 
         for (int i = 0; i < 2; i++) {
-            bank.passTime(months.get(i));
+            bank.timeTravel(months.get(i));
 
-            assertEquals(lowerBound.get(i), bank.getAccount(fromID).getBalance());
-            assertFalse(bank.isTransferAmountValid(fromID, toID, lowerBound.get(i) - 500));
-            assertFalse(bank.isTransferAmountValid(fromID, toID, lowerBound.get(i) - 50));
-            assertEquals(lowerBound.get(i) <= upperBound, bank.isTransferAmountValid(fromID, toID, lowerBound.get(i)));
-            assertEquals(lowerBound.get(i) <= upperBound, bank.isTransferAmountValid(fromID, toID, lowerBound.get(i) + 50));
+            assertEquals(lowerBound.get(i), bank.getAccount(payingID).getBalance());
+            assertFalse(bank.isTransferAmountValid(payingID, receivingID, lowerBound.get(i) - 500));
+            assertFalse(bank.isTransferAmountValid(payingID, receivingID, lowerBound.get(i) - 50));
+            assertEquals(lowerBound.get(i) <= upperBound, bank.isTransferAmountValid(payingID, receivingID, lowerBound.get(i)));
+            assertEquals(lowerBound.get(i) <= upperBound, bank.isTransferAmountValid(payingID, receivingID, lowerBound.get(i) + 50));
 
-            assertEquals(lowerBound.get(i) <= upperBound, bank.isTransferAmountValid(fromID, toID, upperBound - 100));
-            assertEquals(lowerBound.get(i) <= upperBound, bank.isTransferAmountValid(fromID, toID, upperBound));
-            assertFalse(bank.isTransferAmountValid(fromID, toID, upperBound + 100));
-            assertFalse(bank.isTransferAmountValid(fromID, toID, upperBound + 1000));
+            assertEquals(lowerBound.get(i) <= upperBound, bank.isTransferAmountValid(payingID, receivingID, upperBound - 100));
+            assertEquals(lowerBound.get(i) <= upperBound, bank.isTransferAmountValid(payingID, receivingID, upperBound));
+            assertFalse(bank.isTransferAmountValid(payingID, receivingID, upperBound + 100));
+            assertFalse(bank.isTransferAmountValid(payingID, receivingID, upperBound + 1000));
         }
     }
 

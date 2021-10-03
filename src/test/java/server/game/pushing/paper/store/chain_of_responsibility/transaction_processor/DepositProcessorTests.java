@@ -31,18 +31,18 @@ public class DepositProcessorTests {
 
     @Test
     protected void deposit_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
-        String fromID = SAVINGS_ID;
-        String toID = CHECKING_ID;
-        double depositAmount = bank.getAccount(fromID).getMaxDepositAmount();
-        double withdrawAmount = bank.getAccount(fromID).getMaxWithdrawAmount();
-        double transferAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount());
-        assertTrue(processor.handle(String.format("%s %s %s", transactionType, fromID, depositAmount)));
+        String payingID = SAVINGS_ID;
+        String receivingID = CHECKING_ID;
+        double depositAmount = bank.getAccount(payingID).getMaxDepositAmount();
+        double withdrawAmount = bank.getAccount(payingID).getMaxWithdrawAmount();
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
+        assertTrue(processor.handle(String.format("%s %s %s", transactionType, payingID, depositAmount)));
 
         processor.setNext(new WithdrawProcessor(bank));
 
-        assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Withdraw, fromID, withdrawAmount)));
-        assertEquals(depositAmount - withdrawAmount, bank.getAccount(fromID).getBalance());
-        assertFalse(processor.handle(String.format("%s %s %s %s", TransactionType.Transfer, fromID, toID, transferAmount)));
+        assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Withdraw, payingID, withdrawAmount)));
+        assertEquals(depositAmount - withdrawAmount, bank.getAccount(payingID).getBalance());
+        assertFalse(processor.handle(String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount)));
     }
 
     @Test
