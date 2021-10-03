@@ -4,10 +4,10 @@ public class Savings extends Account {
     private boolean isWithdrawValid;
 
     public Savings(String id, double apr) {
-        super(AccountType.SAVINGS, id, apr);
-        isWithdrawValid = true;
+        super(AccountType.SAVINGS, id, apr, 0);
         maxDepositAmount = 2500;
         maxWithdrawAmount = 1000;
+        isWithdrawValid = true;
     }
 
     @Override
@@ -17,8 +17,8 @@ public class Savings extends Account {
     }
 
     @Override
-    public void applyAPR() {
-        super.applyAPR();
+    public void passTime() {
+        super.passTime();
         isWithdrawValid = true;
     }
 

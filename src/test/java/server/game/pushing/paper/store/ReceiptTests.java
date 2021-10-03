@@ -163,6 +163,12 @@ public class ReceiptTests {
 
         List<String> output = receipt.output();
         int i = 0;
+        assertEquals(outputValid(bank, CHECKING_ID), output.get(i)); i++;
+        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+
+        assertEquals(outputValid(bank, SAVINGS_ID), output.get(i)); i++;
+        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+
         assertEquals(outputValid(bank, CD_ID), output.get(i)); i++;
         assertEquals(outputValid(bank, ""), output.get(i)); i++;
 

@@ -264,8 +264,8 @@ public class TransferValidatorTests {
         bank.removeAccount(fromID);
         bank.createCD(fromID, cdAPR, initialCDBalance);
         bank.deposit(toID, bank.getAccount(toID).getMaxDepositAmount());
-        lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(0), AccountType.CD, cdAPR, initialCDBalance));
-        lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(1), AccountType.CD, cdAPR, lowerBound.get(0)));
+        lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(0), initialCDBalance));
+        lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));
 
         for (int i = 0; i < 2; i++) {
             bank.passTime(months.get(i));

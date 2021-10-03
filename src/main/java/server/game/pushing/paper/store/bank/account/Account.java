@@ -3,6 +3,7 @@ package server.game.pushing.paper.store.bank.account;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public abstract class Account {
+    protected int months;
     protected AccountType accountType;
     protected final String ID;
     protected final double APR;
@@ -12,11 +13,12 @@ public abstract class Account {
     protected double minWithdrawAmount;
     protected double maxWithdrawAmount;
 
-    protected Account(AccountType accountType, String id, double apr) {
+    protected Account(AccountType accountType, String id, double apr, double balance) {
+        months = 0;
         this.accountType = accountType;
         this.ID = id;
         this.APR = apr;
-        balance = 0;
+        this.balance = balance;
         minDepositAmount = 0;
         minWithdrawAmount = 0;
     }
@@ -63,8 +65,8 @@ public abstract class Account {
         this.balance -= withdrawAmount;
     }
 
-    public void applyAPR() {
-        deposit(APR * balance / getMonthsPerYear() / 100);
+    public void passTime() {
+        months++;
     }
 
     public abstract boolean isDepositAmountValid(double depositAmount);

@@ -3,7 +3,6 @@ package server.game.pushing.paper.store.chain_of_responsibility.transaction_proc
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
@@ -82,9 +81,9 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void transaction_when_withdraw_amount_is_equal_to_balance_should_process() {
-        double checkingWithdrawAmount = passTime(minBalanceFee, MONTHS, AccountType.CHECKING, apr, checkingDepositAmount);
-        double savingsWithdrawAmount = passTime(minBalanceFee, MONTHS, AccountType.SAVINGS, apr, savingsDepositAmount);
-        double cdWithdrawAmount = passTime(minBalanceFee, MONTHS, AccountType.CD, apr, initialCDBalance);
+        double checkingWithdrawAmount = passTime(minBalanceFee, MONTHS, checkingDepositAmount);
+        double savingsWithdrawAmount = passTime(minBalanceFee, MONTHS, savingsDepositAmount);
+        double cdWithdrawAmount = passTime(minBalanceFee, MONTHS, initialCDBalance);
         bank.passTime(MONTHS);
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());

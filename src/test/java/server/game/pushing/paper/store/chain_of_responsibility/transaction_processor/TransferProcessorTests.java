@@ -57,11 +57,11 @@ public class TransferProcessorTests {
         processor.setNext(new PassTimeProcessor(bank));
 
         assertTrue(processor.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));
-        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.CHECKING, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.CHECKING, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.SAVINGS, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.SAVINGS, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
-        assertEquals(passTime(minBalanceFee, MONTHS, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertEquals(passTime(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(passTime(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(passTime(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
+        assertEquals(passTime(minBalanceFee, MONTHS, initialCDBalance), bank.getAccount(CD_ID).getBalance());
         assertFalse(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", apr, initialCDBalance)));
     }
 
@@ -120,8 +120,8 @@ public class TransferProcessorTests {
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, fromID, toID, transferAmount)));
         assertEquals(0, bank.getAccount(fromID).getBalance());
         assertEquals(
-                passTime(minBalanceFee, MONTHS, AccountType.SAVINGS, apr, savingsDepositAmount)
-                        + passTime(minBalanceFee, MONTHS, AccountType.CD, apr, initialCDBalance)
+                passTime(minBalanceFee, MONTHS, savingsDepositAmount)
+                        + passTime(minBalanceFee, MONTHS, initialCDBalance)
                 , bank.getAccount(toID).getBalance()
         );
     }

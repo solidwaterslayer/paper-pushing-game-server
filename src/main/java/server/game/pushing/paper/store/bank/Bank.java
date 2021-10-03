@@ -101,13 +101,11 @@ public class Bank {
     public void passTime(int months) {
         for (int i = 0; i < months; i++) {
             for (Account account : new ArrayList<>(ACCOUNTS.values())) {
-                if (account.getBalance() == 0) {
-                    ACCOUNTS.remove(account.getID());
-                } else if (account.getBalance() <= 100) {
+                if (account.getBalance() <= 100) {
                     account.withdraw(MIN_BALANCE_FEE);
                 }
 
-                account.applyAPR();
+                account.passTime();
             }
         }
     }

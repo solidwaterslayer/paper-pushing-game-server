@@ -59,21 +59,7 @@ public class PassTimeProcessorTests {
     }
 
     @Test
-    protected void transaction_should_apply_apr() {
-        double checkingDepositAmount = bank.getAccount(CHECKING_ID).getMaxDepositAmount();
-        double savingsDepositAmount = bank.getAccount(SAVINGS_ID).getMaxDepositAmount();
-
-        bank.deposit(CHECKING_ID, checkingDepositAmount);
-        bank.deposit(SAVINGS_ID, savingsDepositAmount);
-
-        assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
-        assertEquals(passTime(minBalanceFee, months, AccountType.CHECKING, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.SAVINGS, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
-    }
-
-    @Test
-    protected void transaction_when_balance_is_less_than_or_equal_to_100_should_apply_min_balance_fee_then_apr() {
+    protected void transaction_when_balance_is_less_than_or_equal_to_100_should_apply_min_balance_fee() {
         months = 2;
         double checkingDepositAmount = 75;
         double savingsDepositAmount = 100;
@@ -82,23 +68,9 @@ public class PassTimeProcessorTests {
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
         assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
-        assertEquals(passTime(minBalanceFee, months, AccountType.CHECKING, apr, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.SAVINGS, apr, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
-        assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
-    }
-
-    @Test
-    protected void transaction_when_balance_is_0_should_remove_account() {
-        months = 2;
-        double depositAmount = 25;
-
-        bank.deposit(SAVINGS_ID, depositAmount);
-
-        assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
-        assertFalse(bank.containsAccount(CHECKING_ID));
-        assertFalse(bank.containsAccount(SAVINGS_ID));
-        assertTrue(bank.containsAccount(CD_ID));
-        assertEquals(passTime(minBalanceFee, months, AccountType.CD, apr, initialCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertEquals(passTime(minBalanceFee, months, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(passTime(minBalanceFee, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(passTime(minBalanceFee, months, initialCDBalance), bank.getAccount(CD_ID).getBalance());
     }
 
     @Test

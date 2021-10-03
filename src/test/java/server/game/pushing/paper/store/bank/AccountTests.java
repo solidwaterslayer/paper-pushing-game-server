@@ -135,10 +135,10 @@ public class AccountTests {
         savingsDepositAmount = 400;
         checkingWithdrawAmount = checkingDepositAmount;
         savingsWithdrawAmount = savingsDepositAmount;
-        cdWithdrawAmount = passTime(0, months, AccountType.CD, CD_APR, INITIAL_CD_BALANCE);
+        cdWithdrawAmount = passTime(0, months, INITIAL_CD_BALANCE);
 
         for (int i = 0; i < months; i++) {
-            cd.applyAPR();
+            cd.passTime();
         }
         transfer();
 
@@ -156,7 +156,7 @@ public class AccountTests {
         cdWithdrawAmount = cd.getMaxWithdrawAmount();
 
         for (int i = 0; i < getMonthsPerYear(); i++) {
-            cd.applyAPR();
+            cd.passTime();
         }
         transfer();
 
@@ -178,9 +178,9 @@ public class AccountTests {
         checkingDepositAmount = 200;
 
         checking.deposit(checkingDepositAmount);
-        checking.applyAPR();
+        checking.passTime();
 
-        assertEquals(passTime(0, 1, AccountType.CHECKING, CHECKING_APR, checkingDepositAmount), checking.getBalance());
+        assertEquals(passTime(0, 1, checkingDepositAmount), checking.getBalance());
     }
 
     @Test
@@ -188,16 +188,16 @@ public class AccountTests {
         savingsDepositAmount = 400;
 
         savings.deposit(savingsDepositAmount);
-        savings.applyAPR();
+        savings.passTime();
 
-        assertEquals(passTime(0, 1, AccountType.SAVINGS, SAVINGS_APR, savingsDepositAmount), savings.getBalance());
+        assertEquals(passTime(0, 1, savingsDepositAmount), savings.getBalance());
     }
 
     @Test
     protected void apply_apr_cd_should_apply_apr_4_times() {
-        cd.applyAPR();
+        cd.passTime();
 
-        assertEquals(passTime(0, 1, AccountType.CD, CD_APR, INITIAL_CD_BALANCE), cd.getBalance());
+        assertEquals(passTime(0, 1, INITIAL_CD_BALANCE), cd.getBalance());
     }
 
     @Test
@@ -286,7 +286,7 @@ public class AccountTests {
 
         assertFalse(savings.isWithdrawAmountValid(savingsWithdrawAmount));
 
-        savings.applyAPR();
+        savings.passTime();
         assertTrue(savings.isWithdrawAmountValid(savingsWithdrawAmount));
     }
 
@@ -319,17 +319,17 @@ public class AccountTests {
         for (int month = 0; month < monthsPerYear * 2; month++) {
             assertEquals(month >= monthsPerYear, cd.isWithdrawAmountValid(cd.getMaxWithdrawAmount()));
 
-            cd.applyAPR();
+            cd.passTime();
         }
     }
 
     @Test
     protected void withdraw_cd_should_be_greater_than_or_equal_to_balance() {
         int months = getMonthsPerYear();
-        cdWithdrawAmount = passTime(0, months, AccountType.CD, CD_APR, INITIAL_CD_BALANCE);
+        cdWithdrawAmount = passTime(0, months, INITIAL_CD_BALANCE);
 
         for (int i = 0; i < months; i++) {
-            cd.applyAPR();
+            cd.passTime();
         }
 
         assertEquals(cdWithdrawAmount, cd.getBalance());
