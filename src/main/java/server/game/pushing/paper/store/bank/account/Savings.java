@@ -18,7 +18,6 @@ public class Savings extends Account {
 
     @Override
     public void passTime() {
-        super.passTime();
         isWithdrawValid = true;
     }
 

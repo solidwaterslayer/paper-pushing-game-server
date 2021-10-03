@@ -1,4 +1,4 @@
-package server.game.pushing.paper;
+package server.game.pushing.paper.game_level;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,9 @@ import server.game.pushing.paper.store.bank.account.Checking;
 
 @RestController
 @RequestMapping("/")
-public class LevelController {
+public class GameLevelController {
     @GetMapping
-    public @ResponseBody ResponseEntity<Account> getLevel() {
+    public @ResponseBody ResponseEntity<Account> getGameLevel() {
         return new ResponseEntity<>(new Checking("34782479", 0.6), HttpStatus.OK);
     }
 }

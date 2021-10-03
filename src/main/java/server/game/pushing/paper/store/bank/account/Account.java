@@ -1,7 +1,5 @@
 package server.game.pushing.paper.store.bank.account;
 
-import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-
 public abstract class Account {
     protected int months;
     protected AccountType accountType;
