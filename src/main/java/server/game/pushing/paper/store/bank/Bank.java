@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Bank {
-    private final Map<String, Account> ACCOUNTS;
     private final double MIN_BALANCE_FEE;
+    private final Map<String, Account> ACCOUNTS;
 
     private final String VALID_ID;
     private final double MIN_APR;
@@ -31,6 +31,10 @@ public class Bank {
         MIN_INITIAL_CD_BALANCE = 1000;
         MAX_INITIAL_CD_BALANCE = 10000;
         MAX_MONTHS = 60;
+    }
+
+    public double getMinBalanceFee() {
+        return MIN_BALANCE_FEE;
     }
 
     public void createChecking(String id, double apr) {
@@ -69,20 +73,12 @@ public class Bank {
         return new ArrayList<>(ACCOUNTS.keySet());
     }
 
-    public double getMinBalanceFee() {
-        return MIN_BALANCE_FEE;
-    }
-
     public void deposit(String id, double depositAmount) {
         getAccount(id).deposit(depositAmount);
     }
 
     public void withdraw(String id, double withdrawAmount) {
         getAccount(id).withdraw(withdrawAmount);
-    }
-
-    public static int getMonthsPerYear() {
-        return 12;
     }
 
     public void transfer(String fromID, String toID, double transferAmount) {
@@ -148,6 +144,10 @@ public class Bank {
 
     public boolean isPassTimeValid(int months) {
         return 1 <= months && months <= MAX_MONTHS;
+    }
+
+    public static int getMonthsPerYear() {
+        return 12;
     }
 
     public int getMaxMonths() {
