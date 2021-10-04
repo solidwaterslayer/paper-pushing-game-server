@@ -56,7 +56,7 @@ public class WithdrawProcessorTests {
         assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount)));
         assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
         assertEquals(checkingDepositAmount + transferAmount, bank.getAccount(receivingID).getBalance());
-        assertFalse(processor.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));
+        assertFalse(processor.handle(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
     }
 
     @Test

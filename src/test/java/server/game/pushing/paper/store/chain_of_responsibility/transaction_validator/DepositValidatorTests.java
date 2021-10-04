@@ -37,20 +37,7 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void deposit_validator_when_transaction_is_not_valid_should_pass_transaction_down_the_chain_of_responsibility() {
-        String payingID = CHECKING_ID;
-        String receivingID = SAVINGS_ID;
-        double withdrawAmount = bank.getAccount(payingID).getMaxWithdrawAmount();
-        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
-
-        validator.setNext(new WithdrawValidator(bank));
-
-        assertTrue(validator.handle(String.format("%s %s %s", TransactionType.Withdraw, payingID, withdrawAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount)));
-    }
-
-    @Test
-    protected void transaction_should_contain_the_transaction_type_deposit_as_the_first_argument() {
+    protected void the_first_argument_of_deposit_transactions_is_the_transaction_type_deposit() {
         String id = SAVINGS_ID;
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
 
@@ -62,7 +49,7 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void transaction_should_contain_a_taken_id_as_the_second_argument() {
+    protected void the_second_argument_of_deposit_transactions_is_a_taken_id() {
         String id = SAVINGS_ID;
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
 
@@ -73,7 +60,7 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void transaction_should_contain_a_deposit_amount_as_the_third_argument() {
+    protected void the_third_argument_of_deposit_transactions_is_a_deposit_amount() {
         String id = SAVINGS_ID;
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
 
@@ -83,7 +70,7 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_checking_should_contain_a_deposit_amount_greater_than_0() {
+    protected void deposit_amounts_to_checking_accounts_should_be_greater_than_0() {
         String id = CHECKING_ID;
         double depositAmount = 0;
 
@@ -95,7 +82,7 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_checking_should_contain_a_deposit_amount_less_than_or_equal_to_1000() {
+    protected void deposit_amounts_to_checking_accounts_should_be_less_than_or_equal_to_1000() {
         String id = CHECKING_ID;
         double depositAmount = 1000;
 
@@ -107,7 +94,7 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_savings_should_contain_a_deposit_amount_greater_than_0() {
+    protected void deposit_amounts_to_savings_accounts_should_be_greater_than_0() {
         String id = SAVINGS_ID;
         double depositAmount = 0;
 
@@ -119,7 +106,7 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_savings_should_contain_a_deposit_amount_less_than_or_equal_to_2500() {
+    protected void deposit_amounts_to_savings_accounts_should_be_less_than_or_equal_to_2500() {
         String id = SAVINGS_ID;
         double depositAmount = 2500;
 
@@ -131,7 +118,7 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_cd_should_not_be_possible() {
+    protected void deposit_amounts_to_cd_accounts_are_invalid() {
         List<Double> depositAmounts = Arrays.asList(-1000.0, -1.0, 0.0, 1.0, 1200.0, 1300.0, 2400.0, 2500.0, 2501.0, 3500.0);
 
         for (Double depositAmount : depositAmounts) {
@@ -140,14 +127,27 @@ public class DepositValidatorTests {
     }
 
     @Test
-    protected void transaction_should_be_case_insensitive() {
+    protected void deposit_validators_can_ignore_additional_arguments() {
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount(), "nuke")));
+        assertTrue(validator.handle(String.format("%s %s %s %s %s %s  %s %s  %s %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount(), "0", "0", "0", "0", "0", "0", "0")));
+    }
+
+    @Test
+    protected void deposit_validators_are_insensitive() {
         assertTrue(validator.handle(String.format("dePoSIT %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount())));
         assertTrue(validator.handle(String.format("deposit %s %s", SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount())));
     }
 
     @Test
-    protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount(), "nuke")));
-        assertTrue(validator.handle(String.format("%s %s %s %s %s %s  %s %s  %s %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount(), "0", "0", "0", "0", "0", "0", "0")));
+    protected void deposit_validators_can_be_in_a_chain_of_responsibility() {
+        String payingID = CHECKING_ID;
+        String receivingID = SAVINGS_ID;
+        double withdrawAmount = bank.getAccount(payingID).getMaxWithdrawAmount();
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
+
+        validator.setNext(new WithdrawValidator(bank));
+
+        assertTrue(validator.handle(String.format("%s %s %s", TransactionType.Withdraw, payingID, withdrawAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount)));
     }
 }

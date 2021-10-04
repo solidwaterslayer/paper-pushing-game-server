@@ -6,10 +6,10 @@ import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import static java.lang.Integer.parseInt;
 
-public class PassTimeValidator extends ChainOfResponsibility {
-    public PassTimeValidator(Bank bank) {
+public class TimeTravelValidator extends ChainOfResponsibility {
+    public TimeTravelValidator(Bank bank) {
         super(bank);
-        transactionType = TransactionType.PassTime;
+        transactionType = TransactionType.TimeTravel;
     }
 
     @Override

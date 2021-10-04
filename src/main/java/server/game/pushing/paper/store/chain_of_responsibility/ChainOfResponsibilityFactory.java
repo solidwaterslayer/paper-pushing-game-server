@@ -23,7 +23,7 @@ public class ChainOfResponsibilityFactory {
                     new DepositValidator(BANK),
                     new WithdrawValidator(BANK),
                     new TransferValidator(BANK),
-                    new PassTimeValidator(BANK)
+                    new TimeTravelValidator(BANK)
             );
         } else {
             chainOfResponsibility = Arrays.asList(
@@ -31,7 +31,7 @@ public class ChainOfResponsibilityFactory {
                     new DepositProcessor(BANK),
                     new WithdrawProcessor(BANK),
                     new TransferProcessor(BANK),
-                    new PassTimeProcessor(BANK)
+                    new TimeTravelProcessor(BANK)
             );
         }
 

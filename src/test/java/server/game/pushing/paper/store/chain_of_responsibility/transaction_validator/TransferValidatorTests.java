@@ -53,20 +53,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transfer_validator_when_transaction_is_not_valid_should_pass_transaction_down_the_chain_of_responsibility() {
-        bank = new Bank();
-        validator = new TransferValidator(bank);
-
-        AccountType accountType = AccountType.SAVINGS;
-
-        validator.setNext(new PassTimeValidator(bank));
-
-        assertTrue(validator.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, SAVINGS_ID_1, apr)));
-    }
-
-    @Test
-    protected void transaction_should_contain_the_transaction_type_transfer_as_the_first_argument() {
+    protected void the_first_argument_of_transfer_transactions_is_the_transaction_type_transfer() {
         String payingID = CHECKING_ID_1;
         String receivingID = CHECKING_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -79,7 +66,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_should_contain_a_unique_and_taken_from_and_to_id_as_the_second_and_third_argument() {
+    protected void the_second_and_third_argument_of_transfer_transactions_is_a_different_and_taken_paying_id_and_receiving_id() {
         String payingID = SAVINGS_ID_1;
         String receivingID = SAVINGS_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -97,7 +84,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_should_contain_a_transfer_amount_as_the_fourth_argument() {
+    protected void the_fourth_argument_of_transfer_transactions_is_a_transfer_amount() {
         String payingID = CD_ID_0;
         String receivingID = SAVINGS_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -110,7 +97,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_from_checking_to_checking_should_contain_a_transfer_amount_greater_than_0() {
+    protected void transfer_amounts_from_checking_to_checking_should_be_greater_than_0() {
         String payingID = CHECKING_ID_0;
         String receivingID = CHECKING_ID_1;
         double transferAmount = 0;
@@ -122,7 +109,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_from_checking_to_checking_should_contain_a_transfer_amount_less_than_or_equal_to_400() {
+    protected void transfer_amounts_from_checking_to_checking_should_be_less_than_or_equal_to_400() {
         String payingID = CHECKING_ID_1;
         String receivingID = CHECKING_ID_0;
         double transferAmount = 400;
@@ -134,7 +121,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_from_checking_to_savings_should_contain_a_transfer_amount_greater_than_0() {
+    protected void transfer_amounts_from_checking_to_savings_should_be_greater_than_0() {
         String payingID = CHECKING_ID_0;
         String receivingID = SAVINGS_ID_0;
         double transferAmount = 0;
@@ -146,7 +133,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_from_checking_to_savings_should_contain_a_transfer_amount_less_than_or_equal_to_400() {
+    protected void transfer_amounts_from_checking_to_savings_should_be_less_than_or_equal_to_400() {
         String payingID = CHECKING_ID_1;
         String receivingID = SAVINGS_ID_1;
         double transferAmount = 400;
@@ -158,23 +145,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_from_savings_should_not_be_possible_twice_a_month_or_more() {
-        String payingID = SAVINGS_ID_1;
-        String receivingID = CHECKING_ID_1;
-        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
-        String transaction = String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount);
-
-        assertTrue(validator.handle(transaction));
-        bank.transfer(payingID, receivingID, transferAmount);
-
-        assertFalse(validator.handle(transaction));
-
-        bank.timeTravel(1);
-        assertTrue(validator.handle(transaction));
-    }
-
-    @Test
-    protected void transaction_when_account_type_is_from_savings_to_checking_should_contain_a_transfer_amount_greater_than_0() {
+    protected void transfer_amounts_from_savings_to_checking_should_be_greater_than_0() {
         String payingID = SAVINGS_ID_0;
         String receivingID = CHECKING_ID_1;
         double transferAmount = 0;
@@ -187,7 +158,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_from_savings_to_checking_should_contain_a_transfer_amount_less_than_or_equal_to_1000() {
+    protected void transfer_amounts_from_savings_to_checking_should_be_less_than_or_equal_to_1000() {
         String payingID = SAVINGS_ID_1;
         String receivingID = CHECKING_ID_1;
         double transferAmount = 1000;
@@ -200,7 +171,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_from_savings_to_savings_should_contain_a_transfer_amount_greater_than_0() {
+    protected void transfer_amounts_from_savings_to_savings_should_be_greater_than_0() {
         String payingID = SAVINGS_ID_0;
         String receivingID = SAVINGS_ID_1;
         double transferAmount = 0;
@@ -213,7 +184,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_from_savings_to_savings_should_contain_a_transfer_amount_less_than_or_equal_to_1000() {
+    protected void transfer_amounts_from_savings_to_savings_should_be_less_than_or_equal_to_1000() {
         String payingID = SAVINGS_ID_1;
         String receivingID = SAVINGS_ID_0;
         double transferAmount = 1000;
@@ -226,7 +197,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transfer_to_cd_should_not_be_possible() {
+    protected void transfer_amounts_to_cd_are_invalid() {
         String receivingID = CD_ID_1;
         List<Double> transferAmounts = Arrays.asList(-300.0, -3.0, 0.0, 3.0, 1200.0, 1300.0, 2497.0, 2500.0, 2503.0, 2800.0);
 
@@ -240,18 +211,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transfer_from_cd_to_savings_should_be_possible_after_12_month_inclusive() {
-        int monthsPerYear = getMonthsPerYear();
-
-        for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(month >= monthsPerYear, validator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CD_ID_0, SAVINGS_ID_0, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount())));
-
-            bank.timeTravel(1);
-        }
-    }
-
-    @Test
-    protected void transfer_from_cd_to_savings_should_be_between_balance_and_2500_inclusive() {
+    protected void transfer_amounts_from_cd_to_savings_should_be_between_the_paying_account_balance_and_2500_inclusive() {
         double cdAPR = 0.6;
         initialCDBalance = 2200;
 
@@ -284,16 +244,7 @@ public class TransferValidatorTests {
     }
 
     @Test
-    protected void transaction_should_be_case_insensitive() {
-        String payingID = CHECKING_ID_1;
-        String receivingID = CHECKING_ID_0;
-        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
-
-        assertTrue(validator.handle(String.format("traNSFer %s %s %s", payingID, receivingID, transferAmount)));
-    }
-
-    @Test
-    protected void transaction_should_be_possible_with_useless_additional_arguments() {
+    protected void transfer_validators_can_ignore_additional_arguments() {
         String payingID = CD_ID_1;
         String receivingID = SAVINGS_ID_1;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -302,5 +253,27 @@ public class TransferValidatorTests {
 
         assertTrue(validator.handle(String.format("%s %s %s %s %s", transactionType, payingID, receivingID, transferAmount, "nuke")));
         assertTrue(validator.handle(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, payingID, receivingID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
+    }
+
+    @Test
+    protected void transfer_validators_are_case_insensitive() {
+        String payingID = CHECKING_ID_1;
+        String receivingID = CHECKING_ID_0;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
+
+        assertTrue(validator.handle(String.format("traNSFer %s %s %s", payingID, receivingID, transferAmount)));
+    }
+
+    @Test
+    protected void transfer_validators_can_be_in_a_chain_of_responsibility() {
+        bank = new Bank();
+        validator = new TransferValidator(bank);
+
+        AccountType accountType = AccountType.SAVINGS;
+
+        validator.setNext(new TimeTravelValidator(bank));
+
+        assertTrue(validator.handle(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
+        assertFalse(validator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, SAVINGS_ID_1, apr)));
     }
 }

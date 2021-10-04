@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.bank.BankTests.timeTravel;
 
-public class PassTimeProcessorTests {
+public class TimeTravelProcessorTests {
     private Bank bank;
     private ChainOfResponsibility processor;
 
@@ -29,7 +29,7 @@ public class PassTimeProcessorTests {
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        processor = new PassTimeProcessor(bank);
+        processor = new TimeTravelProcessor(bank);
 
         minBalanceFee = bank.getMinBalanceFee();
         months = getMonthsPerYear();
@@ -75,7 +75,7 @@ public class PassTimeProcessorTests {
 
     @Test
     protected void transaction_should_be_case_insensitive() {
-        assertTrue(processor.handle(String.format("%s %s", "PaSs tIme", months)));
+        assertTrue(processor.handle(String.format("%s %s", "tImE tRaVel", months)));
     }
 
     @Test

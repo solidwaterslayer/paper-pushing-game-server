@@ -130,7 +130,7 @@ public class StoreTests {
     protected void valid_withdraw_order_should_output_itself() {
         store.getOrder().add(5, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, checkingDepositAmount));
         store.getOrder().add(6, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, savingsDepositAmount));
-        store.getOrder().add(7, String.format("%s %s", TransactionType.PassTime, MONTHS));
+        store.getOrder().add(7, String.format("%s %s", TransactionType.TimeTravel, MONTHS));
         store.getOrder().add(8, String.format("%s %s %s", TransactionType.Withdraw, CHECKING_ID_1, checkingWithdrawAmount));
         store.getOrder().add(9, String.format("%s %s %s", TransactionType.Withdraw, SAVINGS_ID_1, savingsWithdrawAmount));
         store.getOrder().add(10, String.format("%s %s %s", TransactionType.Withdraw, CD_ID, cdWithdrawAmount));
@@ -166,7 +166,7 @@ public class StoreTests {
         store.getOrder().add(6, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_0, checkingDepositAmount));
         store.getOrder().add(7, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, savingsDepositAmount));
         store.getOrder().add(8, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_0, savingsDepositAmount));
-        store.getOrder().add(9, String.format("%s %s", TransactionType.PassTime, MONTHS));
+        store.getOrder().add(9, String.format("%s %s", TransactionType.TimeTravel, MONTHS));
         store.getOrder().add(10, String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID_1, CHECKING_ID_0, min(checkingWithdrawAmount, checkingDepositAmount)));
         store.getOrder().add(11, String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID_1, SAVINGS_ID_1, min(checkingWithdrawAmount, savingsDepositAmount)));
         store.getOrder().add(12, String.format("%s %s %s %s", TransactionType.Transfer, SAVINGS_ID_1, CHECKING_ID_1, min(savingsWithdrawAmount, checkingDepositAmount)));
@@ -211,7 +211,7 @@ public class StoreTests {
     protected void valid_pass_time_order_should_not_output() {
         store.getOrder().add(5, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, checkingDepositAmount));
         store.getOrder().add(6, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, savingsDepositAmount));
-        store.getOrder().add(7, String.format("%s %s", TransactionType.PassTime, MONTHS));
+        store.getOrder().add(7, String.format("%s %s", TransactionType.TimeTravel, MONTHS));
 
         List<String> receipt = store.getReceipt();
         int i = 0;
@@ -239,7 +239,7 @@ public class StoreTests {
     protected void valid_order_should_output_lower_case_and_trim_useless_additional_arguments() {
         store.getOrder().add(5, String.format("%s %s %s %s %s %s %s", "dEpOsIt", SAVINGS_ID_0, savingsDepositAmount, "the", "power", "of", "friendship"));
         store.getOrder().add(6, String.format("%s %s %s %s %s %s %s %s", "tRAnSFeR", SAVINGS_ID_0, CHECKING_ID_1, min(savingsWithdrawAmount, checkingDepositAmount), store, 1, minBalanceFee, min(437, 234)));
-        store.getOrder().add(7, String.format("%s %s %s %s %s %s %s %s    %s %s %s    %s %s %s    %s %s %s %s %s %s %s %s %s %s %s %s   %s %s %s   %s %s %s", "paSS tImE", MONTHS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "last one"));
+        store.getOrder().add(7, String.format("%s %s %s %s %s %s %s %s    %s %s %s    %s %s %s    %s %s %s %s %s %s %s %s %s %s %s %s   %s %s %s   %s %s %s", "tiMe tRaVeL", MONTHS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "last one"));
         store.getOrder().add(8, String.format("%s %s %s %s        ", "wiTHdRAW", SAVINGS_ID_0, savingsWithdrawAmount, 0));
 
         List<String> receipt = store.getReceipt();
@@ -423,7 +423,7 @@ public class StoreTests {
     @Test
     protected void invalid_pass_time_order_should_output_as_invalid() {
         initializeStore();
-        TransactionType transactionType = TransactionType.PassTime;
+        TransactionType transactionType = TransactionType.TimeTravel;
 
         store.getOrder().add(0, String.format("%s %s", "", MONTHS));
         store.getOrder().add(1, String.format("%s %s", "transactionType", MONTHS));
@@ -452,7 +452,7 @@ public class StoreTests {
         store.getOrder().add(3, String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, CHECKING_ID_1, 0.01));
         store.getOrder().add(4, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, 300));
         store.getOrder().add(5, String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID_1, SAVINGS_ID_1, 300));
-        store.getOrder().add(6, String.format("%s %s", TransactionType.PassTime, 1));
+        store.getOrder().add(6, String.format("%s %s", TransactionType.TimeTravel, 1));
         store.getOrder().add(7, String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, CD_ID, 1.2, 2000));
 
         List<String> receipt = store.getReceipt();

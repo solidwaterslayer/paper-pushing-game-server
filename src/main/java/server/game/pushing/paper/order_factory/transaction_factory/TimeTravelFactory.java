@@ -5,11 +5,11 @@ import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.Random;
 
-public class PassTimeFactory extends TransactionFactory {
-    public PassTimeFactory(Bank bank, Random random) {
+public class TimeTravelFactory extends TransactionFactory {
+    public TimeTravelFactory(Bank bank, Random random) {
         super(bank, random);
 
-        transactionType = TransactionType.PassTime;
+        transactionType = TransactionType.TimeTravel;
     }
 
     public String getTransaction() {

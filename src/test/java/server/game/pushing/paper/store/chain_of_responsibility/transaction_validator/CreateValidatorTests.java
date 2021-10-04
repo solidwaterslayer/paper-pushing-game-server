@@ -31,19 +31,7 @@ public class CreateValidatorTests {
     }
 
     @Test
-    protected void create_validator_when_transaction_is_not_valid_should_pass_transaction_down_the_chain_of_responsibility() {
-        bank.createChecking(id1, apr);
-        double depositAmount = bank.getAccount(id1).getMaxDepositAmount();
-        double withdrawAmount = bank.getAccount(id1).getMaxWithdrawAmount();
-
-        validator.setNext(new DepositValidator(bank));
-
-        assertTrue(validator.handle(String.format("%s %s %s", TransactionType.Deposit, id1, depositAmount)));
-        assertFalse(validator.handle(String.format("%s %s %s", TransactionType.Withdraw, id1, withdrawAmount)));
-    }
-
-    @Test
-    protected void transaction_should_contain_the_transaction_type_create_as_the_first_argument() {
+    protected void the_first_argument_in_create_transactions_is_the_transaction_type_create() {
         AccountType accountType = AccountType.CHECKING;
 
         assertFalse(validator.handle(""));
@@ -54,7 +42,7 @@ public class CreateValidatorTests {
     }
 
     @Test
-    protected void transaction_should_contain_a_account_type_as_the_second_argument() {
+    protected void the_second_argument_in_create_transactions_an_account_type() {
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "", "", "")));
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "", id1, apr)));
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, "the power of friendship", id1, apr)));
@@ -64,7 +52,7 @@ public class CreateValidatorTests {
     }
 
     @Test
-    protected void transaction_should_contain_an_unique_8_digit_id_as_the_third_argument() {
+    protected void the_third_argument_in_create_transactions_is_a_unique_8_digit_id() {
         AccountType accountType = AccountType.SAVINGS;
         bank.createSavings(id0, apr);
 
@@ -85,7 +73,7 @@ public class CreateValidatorTests {
     }
 
     @Test
-    protected void transaction_should_contain_an_apr_between_0_and_10_inclusive_as_the_fourth_argument() {
+    protected void the_fourth_argument_in_create_transactions_is_an_apr_between_0_and_10_inclusive() {
         AccountType accountType = AccountType.CD;
 
         assertFalse(validator.handle(String.format("%s %s %s %s %s", transactionType, accountType, id0, "", "")));
@@ -106,7 +94,7 @@ public class CreateValidatorTests {
     }
 
     @Test
-    protected void transaction_when_account_type_is_cd_should_contain_an_initial_balance_between_1000_and_10000_inclusive_as_the_fifth_argument() {
+    protected void the_fifth_argument_in_create_cd_transactions_is_an_initial_balance_between_1000_and_10000_inclusive() {
         AccountType accountType = AccountType.CD;
 
         assertFalse(validator.handle(String.format("%s %s %s %s %s", transactionType, accountType, id0, apr, "")));
@@ -129,16 +117,28 @@ public class CreateValidatorTests {
     }
 
     @Test
-    protected void transaction_should_be_case_insensitive() {
+    protected void create_validators_can_ignore_additional_arguments() {
+        assertTrue(validator.handle(String.format("%s %s %s %s %s", transactionType, AccountType.CHECKING, id0, apr, "the")));
+        assertTrue(validator.handle(String.format("%s %s %s %s %s %s %s  %s", transactionType, AccountType.SAVINGS, id0, apr, "power", "of", "friendship", id0)));
+        assertTrue(validator.handle(String.format("%s %s %s %s %s  $s    $s     %s %s    ", transactionType, AccountType.CD, id0, apr, initialCDBalance, AccountType.CD, id0)));
+    }
+
+    @Test
+    protected void create_validators_are_case_insensitive() {
         assertTrue(validator.handle(String.format("%s %s %s %s", "crEaTe", "checking", id0, apr)));
         assertTrue(validator.handle(String.format("%s %s %s %s", "create", "saVINgs", id0, apr)));
         assertTrue(validator.handle(String.format("%s %s %s %s %s", "creATe", "Cd", id0, apr, initialCDBalance)));
     }
 
     @Test
-    protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        assertTrue(validator.handle(String.format("%s %s %s %s %s", transactionType, AccountType.CHECKING, id0, apr, "the")));
-        assertTrue(validator.handle(String.format("%s %s %s %s %s %s %s  %s", transactionType, AccountType.SAVINGS, id0, apr, "power", "of", "friendship", id0)));
-        assertTrue(validator.handle(String.format("%s %s %s %s %s  $s    $s     %s %s    ", transactionType, AccountType.CD, id0, apr, initialCDBalance, AccountType.CD, id0)));
+    protected void create_validators_can_be_in_a_chain_of_responsibility() {
+        bank.createChecking(id1, apr);
+        double depositAmount = bank.getAccount(id1).getMaxDepositAmount();
+        double withdrawAmount = bank.getAccount(id1).getMaxWithdrawAmount();
+
+        validator.setNext(new DepositValidator(bank));
+
+        assertTrue(validator.handle(String.format("%s %s %s", TransactionType.Deposit, id1, depositAmount)));
+        assertFalse(validator.handle(String.format("%s %s %s", TransactionType.Withdraw, id1, withdrawAmount)));
     }
 }

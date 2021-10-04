@@ -37,7 +37,7 @@ public class TransactionFactoryTests {
 
         logger = LoggerFactory.getLogger(this.getClass());
 
-        transactionFactories.addAll(Arrays.asList(new CreateFactory(bank, random), new DepositFactory(bank, random), new WithdrawFactory(bank, random), new TransferFactory(bank, random), new PassTimeFactory(bank, random)));
+        transactionFactories.addAll(Arrays.asList(new CreateFactory(bank, random), new DepositFactory(bank, random), new WithdrawFactory(bank, random), new TransferFactory(bank, random), new TimeTravelFactory(bank, random)));
     }
 
     @Test

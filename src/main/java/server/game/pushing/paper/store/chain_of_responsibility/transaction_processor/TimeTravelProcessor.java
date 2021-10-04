@@ -6,10 +6,10 @@ import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import static java.lang.Integer.parseInt;
 
-public class PassTimeProcessor extends ChainOfResponsibility {
-    public PassTimeProcessor(Bank bank) {
+public class TimeTravelProcessor extends ChainOfResponsibility {
+    public TimeTravelProcessor(Bank bank) {
         super(bank);
-        transactionType = TransactionType.PassTime;
+        transactionType = TransactionType.TimeTravel;
     }
 
     @Override

@@ -156,7 +156,7 @@ public class ReceiptTests {
 
     @Test
     protected void add_valid_pass_time_transaction_should_be_possible() {
-        TransactionType transactionType = TransactionType.PassTime;
+        TransactionType transactionType = TransactionType.TimeTravel;
         String transaction = String.format("%s %s", transactionType, MONTHS);
 
         receipt.addTransaction(transaction);

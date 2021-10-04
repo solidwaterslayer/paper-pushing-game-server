@@ -37,7 +37,7 @@ public class ChainOfResponsibilityFactoryTests {
                 String.format("%s %s %s", TransactionType.Deposit, payingID, depositAmount),
                 String.format("%s %s %s", TransactionType.Withdraw, payingID, withdrawAmount),
                 String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount),
-                String.format("%s %s", TransactionType.PassTime, months)
+                String.format("%s %s", TransactionType.TimeTravel, months)
         ));
         for (String transaction1 : order) {
             for (ChainOfResponsibility chainOfResponsibility1 : chainOfResponsibility0) {
