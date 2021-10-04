@@ -161,7 +161,7 @@ public class AccountTests {
         assertEquals(0, cd.getBalance());
     }
 
-    protected void transfer() {
+    private void transfer() {
         checking.deposit(checkingDepositAmount);
         savings.deposit(savingsDepositAmount);
         checking.withdraw(checkingWithdrawAmount);
