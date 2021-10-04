@@ -17,9 +17,9 @@ public class OrderFactory {
         ChainOfResponsibility processor = (new ChainOfResponsibilityFactory(bank)).getChainOfResponsibility(false);
 
         for (int i = 0; i < size; i++) {
-            List<TransactionFactory> transactionFactories = new ArrayList<>(Arrays.asList(new CreateFactory(bank, random), new TimeTravelFactory(bank, random)));
+            List<TransactionFactory> transactionFactories = new ArrayList<>(List.of(new CreateFactory(bank, random)));
             if (!transactionFactories.get(0).isException()) {
-                transactionFactories.addAll(Arrays.asList(new DepositFactory(bank, random), new WithdrawFactory(bank, random), new TransferFactory(bank, random)));
+                transactionFactories.addAll(Arrays.asList(new DepositFactory(bank, random), new WithdrawFactory(bank, random), new TransferFactory(bank, random), new TimeTravelFactory(bank, random)));
             }
 
             String transaction = transactionFactories.get(random.nextInt(transactionFactories.size())).getTransaction();
