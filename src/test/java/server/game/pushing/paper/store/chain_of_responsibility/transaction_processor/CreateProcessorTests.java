@@ -32,22 +32,7 @@ public class CreateProcessorTests {
     }
 
     @Test
-    protected void create_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
-        AccountType accountType = AccountType.SAVINGS;
-        String id = SAVINGS_ID;
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
-        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
-        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
-
-        processor.setNext(new DepositProcessor(bank));
-
-        assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
-        assertEquals(depositAmount, bank.getAccount(id).getBalance());
-        assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
-    }
-
-    @Test
-    protected void create_checking_transaction_should_process() {
+    protected void create_processors_can_create_checking_accounts() {
         AccountType accountType = AccountType.CHECKING;
         String id = CHECKING_ID;
 
@@ -61,7 +46,7 @@ public class CreateProcessorTests {
     }
 
     @Test
-    protected void create_savings_transaction_should_process() {
+    protected void create_processors_can_create_savings_accounts() {
         AccountType accountType = AccountType.SAVINGS;
         String id = SAVINGS_ID;
 
@@ -75,7 +60,7 @@ public class CreateProcessorTests {
     }
 
     @Test
-    protected void create_cd_transaction_should_process() {
+    protected void create_processors_can_create_cd_accounts() {
         AccountType accountType = AccountType.CD;
         String id = CD_ID;
 
@@ -89,16 +74,31 @@ public class CreateProcessorTests {
     }
 
     @Test
-    protected void transaction_should_be_case_insensitive() {
+    protected void create_processors_can_ignore_additional_arguments() {
+        assertTrue(processor.handle(String.format("%s %s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID, apr, "0")));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID, apr, "nuke", AccountType.CD, "38ur", 34)));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance, "8", 8, "eight", 4 + 4)));
+    }
+
+    @Test
+    protected void create_processors_are_case_insensitive() {
         assertTrue(processor.handle(String.format("%s %s %s %s", "crEaTe", "checking", CHECKING_ID, apr)));
         assertTrue(processor.handle(String.format("%s %s %s %s", "create", "saVINgs", SAVINGS_ID, apr)));
         assertTrue(processor.handle(String.format("%s %s %s %s %s", "creATe", "Cd", CD_ID, apr, initialCDBalance)));
     }
 
     @Test
-    protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        assertTrue(processor.handle(String.format("%s %s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID, apr, "0")));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID, apr, "nuke", AccountType.CD, "38ur", 34)));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance, "8", 8, "eight", 4 + 4)));
+    protected void create_processors_can_be_in_a_chain_of_responsibility() {
+        AccountType accountType = AccountType.SAVINGS;
+        String id = SAVINGS_ID;
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, apr)));
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
+        double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
+
+        processor.setNext(new DepositProcessor(bank));
+
+        assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
+        assertEquals(depositAmount, bank.getAccount(id).getBalance());
+        assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
     }
 }

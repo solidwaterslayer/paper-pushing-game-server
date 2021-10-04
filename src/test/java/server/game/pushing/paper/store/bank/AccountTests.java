@@ -48,8 +48,6 @@ public class AccountTests {
         assertEquals(id, checking.getID());
         assertEquals(apr, checking.getAPR());
         assertEquals(balance, checking.getBalance());
-        assertEquals(1000, checking.getMaxDepositAmount());
-        assertEquals(400, checking.getMaxWithdrawAmount());
 
         assertEquals(String.format("%s %s %.2f %.2f", accountType, id, apr, balance).toLowerCase(), String.format("%s", checking));
     }
@@ -65,8 +63,6 @@ public class AccountTests {
         assertEquals(id, savings.getID());
         assertEquals(apr, savings.getAPR());
         assertEquals(balance, savings.getBalance());
-        assertEquals(2500, savings.getMaxDepositAmount());
-        assertEquals(1000, savings.getMaxWithdrawAmount());
 
         assertEquals(String.format("%s %s %.2f %.2f", accountType, id, apr, balance).toLowerCase(), String.format("%s", savings));
     }
@@ -82,8 +78,6 @@ public class AccountTests {
         assertEquals(id, cd.getID());
         assertEquals(apr, cd.getAPR());
         assertEquals(balance, cd.getBalance());
-        assertEquals(0, cd.getMaxDepositAmount());
-        assertEquals(Double.POSITIVE_INFINITY, cd.getMaxWithdrawAmount());
 
         assertEquals(String.format("%s %s %.2f %.2f", accountType, id, apr, balance).toLowerCase(), String.format("%s", cd));
     }
@@ -224,6 +218,7 @@ public class AccountTests {
     protected void checking_accounts_should_deposit_amounts_less_than_or_equal_to_1000() {
         checkingDepositAmount = 1000;
 
+        assertEquals(1000, checking.getMaxDepositAmount());
         assertTrue(checking.isDepositAmountValid(600));
         assertTrue(checking.isDepositAmountValid(checkingDepositAmount - 50));
         assertTrue(checking.isDepositAmountValid(checkingDepositAmount));
@@ -246,6 +241,7 @@ public class AccountTests {
     protected void savings_accounts_should_deposit_amounts_less_than_or_equal_to_2500() {
         savingsDepositAmount = 2500;
 
+        assertEquals(2500, savings.getMaxDepositAmount());
         assertTrue(savings.isDepositAmountValid(1300));
         assertTrue(savings.isDepositAmountValid(savingsDepositAmount - 100));
         assertTrue(savings.isDepositAmountValid(savingsDepositAmount));
@@ -257,6 +253,7 @@ public class AccountTests {
     protected void cd_accounts_can_not_deposit() {
         List<Double> depositAmounts = Arrays.asList(-500.0, -100.0, 0.0, 100.0, 1200.0, 1300.0, 2400.0, 2500.0, 2600.0, 3000.0);
 
+        assertEquals(0, cd.getMaxDepositAmount());
         for (Double depositAmount : depositAmounts) {
             assertFalse(cd.isDepositAmountValid(depositAmount));
         }
@@ -277,6 +274,7 @@ public class AccountTests {
     protected void checking_accounts_should_withdraw_amounts_less_than_or_equal_to_400() {
         checkingWithdrawAmount = 400;
 
+        assertEquals(400, checking.getMaxWithdrawAmount());
         assertTrue(checking.isWithdrawAmountValid(200));
         assertTrue(checking.isWithdrawAmountValid(checkingWithdrawAmount - 100));
         assertTrue(checking.isWithdrawAmountValid(checkingWithdrawAmount));
@@ -299,6 +297,7 @@ public class AccountTests {
     protected void savings_accounts_should_withdraw_amounts_less_than_or_equal_to_1000() {
         savingsWithdrawAmount = 1000;
 
+        assertEquals(1000, savings.getMaxWithdrawAmount());
         assertTrue(savings.isWithdrawAmountValid(600));
         assertTrue(savings.isWithdrawAmountValid(savingsWithdrawAmount - 50));
         assertTrue(savings.isWithdrawAmountValid(savingsWithdrawAmount));
@@ -320,6 +319,7 @@ public class AccountTests {
         assertTrue(cd.isWithdrawAmountValid(cdWithdrawAmount + 100));
         assertTrue(cd.isWithdrawAmountValid(cdWithdrawAmount + 500));
 
+        assertEquals(Double.POSITIVE_INFINITY, cd.getMaxWithdrawAmount());
         assertFalse(cd.isWithdrawAmountValid(-1000));
         assertFalse(cd.isWithdrawAmountValid(0));
         assertTrue(cd.isWithdrawAmountValid(Double.POSITIVE_INFINITY));

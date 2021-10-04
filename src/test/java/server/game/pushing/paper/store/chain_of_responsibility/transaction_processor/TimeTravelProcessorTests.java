@@ -43,23 +43,7 @@ public class TimeTravelProcessorTests {
     }
 
     @Test
-    protected void pass_time_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
-        String id0 = "10000010";
-        String id1 = SAVINGS_ID;
-
-        processor.setNext(new CreateProcessor(bank));
-
-        assertTrue(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, id0, apr, initialCDBalance)));
-        Account account = bank.getAccount(id0);
-        assertEquals(AccountType.CD, account.getAccountType());
-        assertEquals(id0, account.getID());
-        assertEquals(apr, account.getAPR());
-        assertEquals(initialCDBalance, account.getBalance());
-        assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
-    }
-
-    @Test
-    protected void transaction_when_balance_is_less_than_or_equal_to_100_should_apply_min_balance_fee() {
+    protected void time_travel_processors_can_withdraw_the_min_balance_fee_from_low_balance_accounts_during_time_travel() {
         months = 2;
         double checkingDepositAmount = 75;
         double savingsDepositAmount = 100;
@@ -74,13 +58,29 @@ public class TimeTravelProcessorTests {
     }
 
     @Test
-    protected void transaction_should_be_case_insensitive() {
+    protected void time_travel_processors_can_ignore_additional_arguments() {
+        assertTrue(processor.handle(String.format("%s %s %s", transactionType, months, "0")));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s %s", transactionType, months, 89, 23892398, 92839233, 23)));
+    }
+
+    @Test
+    protected void time_travel_processors_are_case_insensitive() {
         assertTrue(processor.handle(String.format("%s %s", "tImE tRaVel", months)));
     }
 
     @Test
-    protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        assertTrue(processor.handle(String.format("%s %s %s", transactionType, months, "0")));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s %s", transactionType, months, 89, 23892398, 92839233, 23)));
+    protected void time_travel_processors_can_be_in_a_chain_of_responsibility() {
+        String id0 = "10000010";
+        String id1 = SAVINGS_ID;
+
+        processor.setNext(new CreateProcessor(bank));
+
+        assertTrue(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, id0, apr, initialCDBalance)));
+        Account account = bank.getAccount(id0);
+        assertEquals(AccountType.CD, account.getAccountType());
+        assertEquals(id0, account.getID());
+        assertEquals(apr, account.getAPR());
+        assertEquals(initialCDBalance, account.getBalance());
+        assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
     }
 }

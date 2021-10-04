@@ -53,20 +53,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transfer_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
-        processor.setNext(new TimeTravelProcessor(bank));
-
-        assertTrue(processor.handle(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
-        assertEquals(timeTravel(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(timeTravel(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(timeTravel(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(timeTravel(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
-        assertEquals(timeTravel(minBalanceFee, MONTHS, initialCDBalance), bank.getAccount(CD_ID).getBalance());
-        assertFalse(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", apr, initialCDBalance)));
-    }
-
-    @Test
-    protected void transfer_from_checking_to_checking_transaction_should_process() {
+    protected void transfer_processors_can_handle_transfer_transactions_from_checking_to_checking() {
         String payingID = CHECKING_ID_0;
         String receivingID = CHECKING_ID_1;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -77,7 +64,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transfer_from_checking_to_savings_transaction_should_process() {
+    protected void transfer_processors_can_handle_transfer_transactions_from_checking_to_savings_transaction() {
         String payingID = CHECKING_ID_0;
         String receivingID = SAVINGS_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -88,7 +75,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transfer_from_savings_to_checking_transaction_should_process() {
+    protected void transfer_processors_can_handle_transfer_transactions_from_savings_to_checking_transaction() {
         String payingID = SAVINGS_ID_1;
         String receivingID = CHECKING_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -99,7 +86,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transfer_from_savings_to_savings_transaction_should_process() {
+    protected void transfer_processors_can_handle_transfer_transactions_from_savings_to_savings_transaction() {
         String payingID = SAVINGS_ID_1;
         String receivingID = SAVINGS_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -110,7 +97,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transfer_from_cd_to_savings_transaction_should_process() {
+    protected void transfer_processors_can_handle_transfer_transactions_from_cd_to_savings_transaction() {
         String payingID = CD_ID;
         String receivingID = SAVINGS_ID_1;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -127,7 +114,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transaction_when_transaction_amount_is_less_than_or_equal_to_balance_should_process() {
+    protected void transfer_processors_can_transfer_when_the_transfer_amount_is_less_than_or_equal_to_the_paying_account_balance() {
         String id0 = SAVINGS_ID_0;
         String id1 = CHECKING_ID_1;
         double transferAmount = 400;
@@ -147,7 +134,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transaction_when_transfer_amount_is_greater_than_balance_should_transfer_amount_equal_to_balance() {
+    protected void transfer_processors_should_transfer_the_paying_account_balance_when_the_transfer_amount_is_greater_than_the_paying_account_balance() {
         String payingID = SAVINGS_ID_0;
         String receivingID = SAVINGS_ID_1;
         double transferAmount = 1000;
@@ -163,16 +150,7 @@ public class TransferProcessorTests {
     }
 
     @Test
-    protected void transaction_should_be_case_insensitive() {
-        String payingID = CHECKING_ID_1;
-        String receivingID = CHECKING_ID_0;
-        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
-
-        assertTrue(processor.handle(String.format("traNSFer %s %s %s", payingID, receivingID, transferAmount)));
-    }
-
-    @Test
-    protected void transaction_should_be_possible_with_useless_additional_arguments() {
+    protected void transfer_processors_can_ignore_additional_arguments() {
         String payingID = CD_ID;
         String receivingID = SAVINGS_ID_1;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -181,5 +159,27 @@ public class TransferProcessorTests {
 
         assertTrue(processor.handle(String.format("%s %s %s %s %s", transactionType, payingID, receivingID, transferAmount, "nuke")));
         assertTrue(processor.handle(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, payingID, receivingID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
+    }
+
+    @Test
+    protected void transfer_processors_are_case_insensitive() {
+        String payingID = CHECKING_ID_1;
+        String receivingID = CHECKING_ID_0;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
+
+        assertTrue(processor.handle(String.format("traNSFer %s %s %s", payingID, receivingID, transferAmount)));
+    }
+
+    @Test
+    protected void transfer_processors_can_be_in_a_chain_of_responsibility() {
+        processor.setNext(new TimeTravelProcessor(bank));
+
+        assertTrue(processor.handle(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
+        assertEquals(timeTravel(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
+        assertEquals(timeTravel(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(timeTravel(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(timeTravel(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
+        assertEquals(timeTravel(minBalanceFee, MONTHS, initialCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertFalse(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", apr, initialCDBalance)));
     }
 }

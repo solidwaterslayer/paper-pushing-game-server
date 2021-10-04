@@ -49,12 +49,6 @@ public class BankTests {
     protected void banks_should_start_with_0_accounts() {
         bank = new Bank();
 
-        assertEquals(25, bank.getMinBalanceFee());
-        assertEquals(10, bank.getMaxAPR());
-        assertEquals(1000, bank.getMinInitialCDBalance());
-        assertEquals(10000, bank.getMaxInitialCDBalance());
-        assertEquals(60, bank.getMaxMonths());
-
         assertTrue(bank.isEmpty());
         assertEquals(0, bank.size());
     }
@@ -114,6 +108,7 @@ public class BankTests {
         assertTrue(bank.isAPRValid(6));
         assertTrue(bank.isAPRValid(9));
         assertTrue(bank.isAPRValid(10));
+        assertEquals(10, bank.getMaxAPR());
         assertFalse(bank.isAPRValid(11));
         assertFalse(bank.isAPRValid(20));
     }
@@ -122,6 +117,7 @@ public class BankTests {
     protected void banks_should_use_a_starting_cd_balance_between_1000_and_10000_inclusive_during_account_creation() {
         assertFalse(bank.isInitialCDBalanceValid(500));
         assertFalse(bank.isInitialCDBalanceValid(900));
+        assertEquals(1000, bank.getMinInitialCDBalance());
         assertTrue(bank.isInitialCDBalanceValid(1000));
         assertTrue(bank.isInitialCDBalanceValid(1100));
         assertTrue(bank.isInitialCDBalanceValid(5000));
@@ -129,6 +125,7 @@ public class BankTests {
         assertTrue(bank.isInitialCDBalanceValid(6000));
         assertTrue(bank.isInitialCDBalanceValid(9000));
         assertTrue(bank.isInitialCDBalanceValid(10000));
+        assertEquals(10000, bank.getMaxInitialCDBalance());
         assertFalse(bank.isInitialCDBalanceValid(11000));
         assertFalse(bank.isInitialCDBalanceValid(20000));
 
@@ -584,6 +581,11 @@ public class BankTests {
     }
 
     @Test
+    protected void the_min_balance_fee_is_25() {
+        assertEquals(25, bank.getMinBalanceFee());
+    }
+
+    @Test
     protected void low_balance_accounts_are_accounts_with_less_than_or_equal_to_900_balance() {
         double depositAmount = 900;
 
@@ -698,6 +700,7 @@ public class BankTests {
         assertTrue(bank.isPassTimeValid(40));
         assertTrue(bank.isPassTimeValid(50));
         assertTrue(bank.isPassTimeValid(60));
+        assertEquals(60, bank.getMaxMonths());
         assertFalse(bank.isPassTimeValid(70));
         assertFalse(bank.isPassTimeValid(100));
     }

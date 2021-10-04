@@ -21,7 +21,6 @@ public class WithdrawProcessorTests {
     private final String CHECKING_ID = "87439752";
     private final String SAVINGS_ID = "09329843";
     private final String CD_ID = "43894280";
-    private double apr;
     private double initialCDBalance;
     private double checkingDepositAmount;
     private double savingsDepositAmount;
@@ -33,7 +32,7 @@ public class WithdrawProcessorTests {
 
         minBalanceFee = bank.getMinBalanceFee();
         transactionType = processor.getTransactionType();
-        apr = bank.getMaxAPR();
+        double apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
         bank.createChecking(CHECKING_ID, apr);
         bank.createSavings(SAVINGS_ID, apr);
@@ -46,21 +45,7 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    protected void withdraw_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
-        String payingID = SAVINGS_ID;
-        String receivingID = CHECKING_ID;
-        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
-
-        processor.setNext(new TransferProcessor(bank));
-
-        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount)));
-        assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
-        assertEquals(checkingDepositAmount + transferAmount, bank.getAccount(receivingID).getBalance());
-        assertFalse(processor.handle(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
-    }
-
-    @Test
-    protected void withdraw_checking_transaction_when_withdraw_amount_is_less_than_balance_should_process() {
+    protected void withdraw_processors_can_withdraw_from_checking_accounts_when_the_withdraw_amount_is_less_than_the_account_balance() {
         String id = CHECKING_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
@@ -70,7 +55,7 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    protected void withdraw_savings_transaction_when_withdraw_amount_is_less_than_balance_should_process() {
+    protected void withdraw_processors_can_withdraw_from_savings_accounts_when_the_withdraw_amount_is_less_than_the_account_balance() {
         String id = SAVINGS_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
@@ -80,7 +65,7 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    protected void transaction_when_withdraw_amount_is_equal_to_balance_should_process() {
+    protected void withdraw_processors_can_withdraw_when_the_withdraw_amount_is_equal_to_the_account_balance() {
         double checkingWithdrawAmount = timeTravel(minBalanceFee, MONTHS, checkingDepositAmount);
         double savingsWithdrawAmount = timeTravel(minBalanceFee, MONTHS, savingsDepositAmount);
         double cdWithdrawAmount = timeTravel(minBalanceFee, MONTHS, initialCDBalance);
@@ -100,7 +85,7 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    protected void transaction_when_withdraw_amount_is_greater_than_balance_should_withdraw_amount_equal_to_balance() {
+    protected void withdraw_processors_can_withdraw_when_the_withdraw_amount_is_greater_than_the_account_balance() {
         double checkingWithdrawAmount = bank.getAccount(CHECKING_ID).getMaxWithdrawAmount();
         double savingsWithdrawAmount = bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount();
         double cdWithdrawAmount = bank.getAccount(CD_ID).getMaxWithdrawAmount();
@@ -124,7 +109,16 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    protected void transaction_should_be_case_insensitive() {
+    protected void withdraw_processors_can_ignore_additional_arguments() {
+        bank.timeTravel(MONTHS);
+
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount(), "nuke")));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s  %s    %s         %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount(), "00", "000", "00000", "000", 0)));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s %s", transactionType, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount(), "d", "e", "r")));
+    }
+
+    @Test
+    protected void withdraw_processors_are_case_insensitive() {
         bank.timeTravel(MONTHS);
 
         assertTrue(processor.handle(String.format("withdraw %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount())));
@@ -133,11 +127,16 @@ public class WithdrawProcessorTests {
     }
 
     @Test
-    protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        bank.timeTravel(MONTHS);
+    protected void withdraw_processors_can_be_in_a_chain_of_responsibility() {
+        String payingID = SAVINGS_ID;
+        String receivingID = CHECKING_ID;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxWithdrawAmount(), "nuke")));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s  %s    %s         %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxWithdrawAmount(), "00", "000", "00000", "000", 0)));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s %s", transactionType, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount(), "d", "e", "r")));
+        processor.setNext(new TransferProcessor(bank));
+
+        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount)));
+        assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
+        assertEquals(checkingDepositAmount + transferAmount, bank.getAccount(receivingID).getBalance());
+        assertFalse(processor.handle(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
     }
 }

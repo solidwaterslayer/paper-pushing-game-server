@@ -30,7 +30,37 @@ public class DepositProcessorTests {
     }
 
     @Test
-    protected void deposit_processor_when_transaction_can_not_process_should_pass_transaction_down_the_chain_of_responsibility() {
+    protected void deposit_processors_can_handle_deposit_transactions_to_checking() {
+        String id = CHECKING_ID;
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
+
+        assertTrue(processor.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
+        assertEquals(depositAmount, bank.getAccount(id).getBalance());
+    }
+
+    @Test
+    protected void deposit_processors_can_handle_deposit_transactions_to_savings() {
+        String id = SAVINGS_ID;
+        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
+
+        assertTrue(processor.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
+        assertEquals(depositAmount, bank.getAccount(id).getBalance());
+    }
+
+    @Test
+    protected void deposit_processors_can_ignore_additional_arguments() {
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount(), "nuke")));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s %s  %s %s  %s %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount(), "0", "0", "0", "0", "0", "0", "0")));
+    }
+
+    @Test
+    protected void deposit_processors_are_case_insensitive() {
+        assertTrue(processor.handle(String.format("dePoSIT %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount())));
+        assertTrue(processor.handle(String.format("deposit %s %s", SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount())));
+    }
+
+    @Test
+    protected void deposit_processors_can_be_in_a_chain_of_responsibility() {
         String payingID = SAVINGS_ID;
         String receivingID = CHECKING_ID;
         double depositAmount = bank.getAccount(payingID).getMaxDepositAmount();
@@ -43,35 +73,5 @@ public class DepositProcessorTests {
         assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Withdraw, payingID, withdrawAmount)));
         assertEquals(depositAmount - withdrawAmount, bank.getAccount(payingID).getBalance());
         assertFalse(processor.handle(String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount)));
-    }
-
-    @Test
-    protected void deposit_checking_transaction_should_process() {
-        String id = CHECKING_ID;
-        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
-
-        assertTrue(processor.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
-        assertEquals(depositAmount, bank.getAccount(id).getBalance());
-    }
-
-    @Test
-    protected void deposit_savings_transaction_should_process() {
-        String id = SAVINGS_ID;
-        double depositAmount = bank.getAccount(id).getMaxDepositAmount();
-
-        assertTrue(processor.handle(String.format("%s %s %s", transactionType, id, depositAmount)));
-        assertEquals(depositAmount, bank.getAccount(id).getBalance());
-    }
-
-    @Test
-    protected void transaction_should_be_case_insensitive() {
-        assertTrue(processor.handle(String.format("dePoSIT %s %s", CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount())));
-        assertTrue(processor.handle(String.format("deposit %s %s", SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount())));
-    }
-
-    @Test
-    protected void transaction_should_be_possible_with_useless_additional_arguments() {
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount(), "nuke")));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s %s  %s %s  %s %s", transactionType, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount(), "0", "0", "0", "0", "0", "0", "0")));
     }
 }
