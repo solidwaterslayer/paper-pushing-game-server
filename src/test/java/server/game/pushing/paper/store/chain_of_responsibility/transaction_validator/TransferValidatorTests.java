@@ -14,7 +14,7 @@ import java.util.List;
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-import static server.game.pushing.paper.store.bank.BankTests.passTime;
+import static server.game.pushing.paper.store.bank.BankTests.timeTravel;
 
 public class TransferValidatorTests {
     private Bank bank;
@@ -264,8 +264,8 @@ public class TransferValidatorTests {
         bank.removeAccount(payingID);
         bank.createCD(payingID, cdAPR, initialCDBalance);
         bank.deposit(receivingID, bank.getAccount(receivingID).getMaxDepositAmount());
-        lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(0), initialCDBalance));
-        lowerBound.add(passTime(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));
+        lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(0), initialCDBalance));
+        lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));
 
         for (int i = 0; i < 2; i++) {
             bank.timeTravel(months.get(i));

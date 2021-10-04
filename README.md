@@ -1,77 +1,81 @@
 <br>
 
 > ---
-> 
-> # Paper Pushing Game Server :joystick:
-> 
-> This is a game about pushing papers :stuck_out_tongue_winking_eye:.
-> 
-> I made this project in **_Fall 2020_** as a school assignment.
-> 
-> The initial scope: create store.
-> 
-> Since then, this is a personal project, and I've added stuff for fun :sweat_smile: and to learn:
-> 
-> * 100% Mutation Coverage :blush:
-> * TDD :exploding_head:
-> * Chain Of Responsibility Design Pattern
-> * Angular
-> * Spring
 >
-> ---
-
-<br>
-<br>
-
-> ---
->
-> # Usage :hugs:
+> # Main Project And README :hugs:
 > 
-> Here is a running instance of the project:
-> https://solidwaterslayer.github.io/paper-pushing-game-client/
->
-> ---
-
-<br>
-<br>
-
-> ---
->
-> # Installation :thinking:
-> 
-> Client Code:
-> 
+> Here is a main repository of the project w/ README:
 > https://github.com/solidwaterslayer/paper-pushing-game-client
-> 
-> Server Code:
-> 
-> https://github.com/solidwaterslayer/paper-pushing-game-server
-> <br>
-> <br>
-> # Run Your Own Instance :sleepy:
-> 
-> How to run the client:
-> 
-> 1. Download ```Node.js```
-> 2. Follow directions: https://angular.io/guide/deployment
-> 
-> How to run the server :mask::
-> 
-> 1. Download ```Java```
-> 2. Follow directions: https://dashboard.heroku.com/apps/
-> 
-> Here is a running instance of the server:
->
-> https://paper-pushing-game-server.herokuapp.com/
-> <br>
-> <br>
-> # Code Coverage :sparkling_heart: :sparkling_heart:
-> 
-> How to run mutation testing :sparkling_heart::
-> 
-> 1. Download ```apache-maven```
-> 2. Add ```C:\Program Files\apache-maven\bin``` to your path
-> 3. Run ```mvn org.pitest:pitest-maven:mutationCoverage```
-> 4. Open ```paper-pushing-game-server\target\pit-reports\202109200554\index.html```
 >
 > ---
+
+checking_accounts_should_start_with_0_balance
+savings_accounts_should_start_with_0_balance
+cd_accounts_can_be_created
+checking_accounts_can_deposit
+savings_accounts_can_deposit
+checking_accounts_can_withdraw_when_the_withdraw_amount_is_less_than_the_account_balance
+savings_accounts_can_withdraw_when_the_withdraw_amount_is_less_than_the_account_balance
+accounts_can_withdraw_when_the_withdraw_amount_is_equal_to_the_account_balance
+accounts_should_withdraw_the_account_balance_when_the_withdraw_amount_is_greater_than_the_account_balance
+transfer
+accounts_can_time_travel
+savings_accounts_can_withdraw_once_per_time_travel_event
+cd_accounts_can_withdraw_after_time_traveling_12_months
+checking_accounts_should_deposit_amounts_greater_than_0
+checking_accounts_should_deposit_amounts_less_than_or_equal_to_1000
+savings_accounts_should_deposit_amounts_greater_than_0
+savings_accounts_should_deposit_amounts_less_than_or_equal_to_2500
+cd_accounts_can_not_deposit
+checking_accounts_should_withdraw_amounts_greater_than_0
+checking_accounts_should_withdraw_amounts_less_than_or_equal_to_400
+savings_accounts_should_withdraw_amounts_greater_than_0
+savings_accounts_should_withdraw_amounts_less_than_or_equal_to_1000
+cd_accounts_should_withdraw_amounts_greater_than_or_equal_to_the_account_balance
+banks_should_start_with_0_accounts
+banks_can_create_checking_accounts
+banks_can_create_savings_accounts
+banks_can_create_cd_accounts
+banks_can_deposit_to_checking_accounts
+banks_can_deposit_savings_accounts
+banks_can_withdraw_from_accounts
+banks_can_transfer_from_checking_to_checking
+banks_can_transfer_from_checking_to_savings
+banks_can_transfer_from_savings_to_checking
+banks_can_transfer_from_savings_to_savings
+banks_can_transfer_from_cd_to_savings
+banks_can_transfer_when_the_transfer_amount_is_less_than_or_equal_to_the_paying_account_balance
+banks_should_transfer_the_paying_account_balance_when_the_transfer_amount_is_greater_than_the_paying_account_balance
+low_balance_accounts_are_accounts_with_less_than_or_equal_to_900_balance
+banks_should_withdraw_the_min_balance_fee_from_low_balance_accounts_during_time_travel
+banks_can_withdraw_from_savings_accounts_once_per_time_travel_event
+banks_can_transfer_from_savings_accounts_once_per_time_travel_event
+banks_can_withdraw_from_cd_accounts_after_time_traveling_12_months
+banks_can_transfer_from_cd_accounts_after_time_traveling_12_months
+banks_should_use_a_unique_and_8_digit_id_during_account_creation
+banks_should_use_an_apr_between_0_and_10_inclusive_during_account_creation
+banks_should_use_a_starting_cd_balance_between_1000_and_10000_inclusive_during_account_creation
+bank_deposits_should_use_a_taken_id
+bank_deposits_to_checking_accounts_should_use_a_deposit_amount_be_greater_than_0
+bank_deposits_to_checking_accounts_should_use_a_deposit_amount_less_than_or_equal_to_1000
+bank_deposits_to_savings_accounts_should_use_a_deposit_amount_greater_than_0
+bank_deposits_to_savings_accounts_should_use_a_deposit_amount_less_than_or_equal_to_2500
+banks_can_not_deposit_to_cd_accounts
+bank_withdraws_should_use_a_taken_id
+bank_withdraws_from_checking_accounts_should_use_a_withdraw_amount_greater_than_0
+bank_withdraws_from_checking_accounts_should_use_a_withdraw_amount_less_than_or_equal_to_400
+bank_withdraws_from_savings_accounts_should_use_a_withdraw_amount_greater_than_0
+bank_withdraws_from_savings_accounts_should_use_a_withdraw_amount_less_than_or_equal_to_1000
+bank_withdraws_from_cd_accounts_should_use_a_withdraw_amount_greater_than_or_equal_to_balance
+bank_transfers_should_use_a_different_and_taken_paying_id_and_receiving_id
+bank_transfers_from_checking_to_checking_should_use_a_transfer_amount_greater_than_0
+bank_transfers_from_checking_to_checking_should_use_a_transfer_amount_less_than_or_equal_to_400
+bank_transfers_from_checking_to_savings_should_use_a_transfer_amount_greater_than_0
+bank_transfers_from_checking_to_savings_should_use_a_transfer_amount_less_than_or_equal_to_400
+bank_transfers_from_savings_to_checking_should_use_a_transfer_amount_greater_than_0
+bank_transfers_from_savings_to_checking_should_use_a_transfer_amount_less_than_or_equal_to_1000
+bank_transfers_from_savings_to_savings_should_use_a_transfer_amount_greater_than_0
+bank_transfers_from_savings_to_savings_should_use_a_transfer_amount_less_than_or_equal_to_1000
+banks_can_not_transfer_to_cd_accounts
+bank_transfers_from_cd_to_savings_should_use_a_transfer_amount_between_the_paying_account_balance_and_2500_inclusive
+bank_time_travels_should_use_months_between_1_and_60_inclusive

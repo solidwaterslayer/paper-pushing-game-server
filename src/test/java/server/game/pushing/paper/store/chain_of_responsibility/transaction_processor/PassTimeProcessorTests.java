@@ -10,7 +10,7 @@ import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-import static server.game.pushing.paper.store.bank.BankTests.passTime;
+import static server.game.pushing.paper.store.bank.BankTests.timeTravel;
 
 public class PassTimeProcessorTests {
     private Bank bank;
@@ -68,9 +68,9 @@ public class PassTimeProcessorTests {
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
         assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
-        assertEquals(passTime(minBalanceFee, months, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(passTime(minBalanceFee, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
-        assertEquals(passTime(minBalanceFee, months, initialCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertEquals(timeTravel(minBalanceFee, months, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(timeTravel(minBalanceFee, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(timeTravel(minBalanceFee, months, initialCDBalance), bank.getAccount(CD_ID).getBalance());
     }
 
     @Test

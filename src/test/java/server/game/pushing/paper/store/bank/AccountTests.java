@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-import static server.game.pushing.paper.store.bank.BankTests.passTime;
+import static server.game.pushing.paper.store.bank.BankTests.timeTravel;
 
 public class AccountTests {
     private Account checking;
@@ -135,7 +135,7 @@ public class AccountTests {
         savingsDepositAmount = 400;
         checkingWithdrawAmount = checkingDepositAmount;
         savingsWithdrawAmount = savingsDepositAmount;
-        cdWithdrawAmount = passTime(0, months, INITIAL_CD_BALANCE);
+        cdWithdrawAmount = timeTravel(0, months, INITIAL_CD_BALANCE);
 
         cd.timeTravel(12);
         transfer();
@@ -146,7 +146,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void accounts_can_withdraw_when_the_withdraw_amount_is_greater_than_the_account_balance() {
+    protected void accounts_should_withdraw_the_account_balance_when_the_withdraw_amount_is_greater_than_the_account_balance() {
         checkingDepositAmount = 300;
         savingsDepositAmount = 400;
         checkingWithdrawAmount = checking.getMaxWithdrawAmount();
@@ -185,7 +185,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void savings_accounts_should_reset_monthly_withdraw_limit_after_time_traveling_1_month() {
+    protected void savings_accounts_can_withdraw_once_per_time_travel_event() {
         double withdrawAmount = savings.getMaxWithdrawAmount();
 
         assertTrue(savings.isWithdrawAmountValid(withdrawAmount));
@@ -210,7 +210,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void checking_deposit_amounts_should_be_greater_than_0() {
+    protected void checking_accounts_should_deposit_amounts_greater_than_0() {
         checkingDepositAmount = 0;
 
         assertFalse(checking.isDepositAmountValid(checkingDepositAmount - 500));
@@ -221,7 +221,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void checking_deposit_amounts_should_be_less_than_or_equal_to_1000() {
+    protected void checking_accounts_should_deposit_amounts_less_than_or_equal_to_1000() {
         checkingDepositAmount = 1000;
 
         assertTrue(checking.isDepositAmountValid(600));
@@ -232,7 +232,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void savings_deposit_amounts_should_be_greater_than_0() {
+    protected void savings_accounts_should_deposit_amounts_greater_than_0() {
         savingsDepositAmount = 0;
 
         assertFalse(savings.isDepositAmountValid(savingsDepositAmount - 1000));
@@ -243,7 +243,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void savings_deposit_amounts_should_be_less_than_or_equal_to_2500() {
+    protected void savings_accounts_should_deposit_amounts_less_than_or_equal_to_2500() {
         savingsDepositAmount = 2500;
 
         assertTrue(savings.isDepositAmountValid(1300));
@@ -263,7 +263,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void checking_withdraw_amounts_should_be_greater_than_0() {
+    protected void checking_accounts_should_withdraw_amounts_greater_than_0() {
         checkingWithdrawAmount = 0;
 
         assertFalse(checking.isWithdrawAmountValid(checkingWithdrawAmount - 500));
@@ -274,7 +274,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void checking_withdraw_amounts_should_be_less_than_or_equal_to_400() {
+    protected void checking_accounts_should_withdraw_amounts_less_than_or_equal_to_400() {
         checkingWithdrawAmount = 400;
 
         assertTrue(checking.isWithdrawAmountValid(200));
@@ -285,7 +285,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void savings_withdraw_amounts_should_be_greater_than_0() {
+    protected void savings_accounts_should_withdraw_amounts_greater_than_0() {
         savingsWithdrawAmount = 0;
 
         assertFalse(savings.isWithdrawAmountValid(savingsWithdrawAmount - 1000));
@@ -296,7 +296,7 @@ public class AccountTests {
     }
 
     @Test
-    protected void savings_withdraw_amounts_should_be_less_than_or_equal_to_1000() {
+    protected void savings_accounts_should_withdraw_amounts_less_than_or_equal_to_1000() {
         savingsWithdrawAmount = 1000;
 
         assertTrue(savings.isWithdrawAmountValid(600));
@@ -307,9 +307,9 @@ public class AccountTests {
     }
 
     @Test
-    protected void cd_withdraw_amounts_should_be_greater_than_or_equal_to_the_account_balance() {
+    protected void cd_accounts_should_withdraw_amounts_greater_than_or_equal_to_the_account_balance() {
         int months = getMonthsPerYear();
-        cdWithdrawAmount = passTime(0, months, INITIAL_CD_BALANCE);
+        cdWithdrawAmount = timeTravel(0, months, INITIAL_CD_BALANCE);
 
         cd.timeTravel(12);
 

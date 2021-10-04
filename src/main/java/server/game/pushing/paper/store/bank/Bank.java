@@ -97,13 +97,17 @@ public class Bank {
     public void timeTravel(int months) {
         for (Account account : new ArrayList<>(ACCOUNTS.values())) {
             for (int i = 0; i < months; i++) {
-                if (account.getBalance() <= 100) {
+                if (isLowBalanceAccount(account)) {
                     account.withdraw(MIN_BALANCE_FEE);
                 }
 
                 account.timeTravel(1);
             }
         }
+    }
+
+    public boolean isLowBalanceAccount(Account account) {
+        return account.getBalance() <= 900;
     }
 
     public boolean isIDValid(String id) {

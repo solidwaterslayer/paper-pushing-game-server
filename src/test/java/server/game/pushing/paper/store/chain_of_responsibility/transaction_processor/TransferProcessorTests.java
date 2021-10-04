@@ -10,7 +10,7 @@ import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-import static server.game.pushing.paper.store.bank.BankTests.passTime;
+import static server.game.pushing.paper.store.bank.BankTests.timeTravel;
 
 public class TransferProcessorTests {
     private Bank bank;
@@ -57,11 +57,11 @@ public class TransferProcessorTests {
         processor.setNext(new PassTimeProcessor(bank));
 
         assertTrue(processor.handle(String.format("%s %s", TransactionType.PassTime, MONTHS)));
-        assertEquals(passTime(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(passTime(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(passTime(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(passTime(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
-        assertEquals(passTime(minBalanceFee, MONTHS, initialCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertEquals(timeTravel(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_0).getBalance());
+        assertEquals(timeTravel(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(timeTravel(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(timeTravel(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
+        assertEquals(timeTravel(minBalanceFee, MONTHS, initialCDBalance), bank.getAccount(CD_ID).getBalance());
         assertFalse(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", apr, initialCDBalance)));
     }
 
@@ -120,8 +120,8 @@ public class TransferProcessorTests {
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
         assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(
-                passTime(minBalanceFee, MONTHS, savingsDepositAmount)
-                        + passTime(minBalanceFee, MONTHS, initialCDBalance)
+                timeTravel(minBalanceFee, MONTHS, savingsDepositAmount)
+                        + timeTravel(minBalanceFee, MONTHS, initialCDBalance)
                 , bank.getAccount(receivingID).getBalance()
         );
     }
