@@ -11,10 +11,9 @@ import java.util.List;
 import java.util.Random;
 
 public class OrderFactory {
-    public List<String> getOrder(int seed, int size) {
+    public List<String> getOrder(int size, Random random) {
         List<String> order = new ArrayList<>();
         Bank bank = new Bank();
-        Random random = new Random(seed);
         ChainOfResponsibility processor = (new ChainOfResponsibilityFactory(bank)).getChainOfResponsibility(false);
 
         for (int i = 0; i < size; i++) {

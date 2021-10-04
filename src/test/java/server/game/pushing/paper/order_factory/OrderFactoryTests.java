@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import server.game.pushing.paper.store.Store;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -20,7 +21,7 @@ public class OrderFactoryTests {
         Logger logger = LoggerFactory.getLogger(this.getClass());
 
         for (int i = 0; i < 99; i++) {
-            List<String> order = orderFactory.getOrder(i, size);
+            List<String> order = orderFactory.getOrder(size, new Random(i));
 
             store.setOrder(order);
 
