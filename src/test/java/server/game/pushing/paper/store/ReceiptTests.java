@@ -45,7 +45,7 @@ public class ReceiptTests {
     }
 
     @Test
-    protected void initialize_receipt_should_be_empty() {
+    protected void receipts_should_start_with_0_transactions() {
         initializeReceipt();
 
         List<String> output = receipt.output();
@@ -53,29 +53,29 @@ public class ReceiptTests {
     }
 
     @Test
-    protected void output_when_state_change_should_update() {
-        add_valid_create_transaction_should_be_possible();
-        add_valid_deposit_transaction_should_be_possible();
+    protected void receipts_should_update_when_their_state_changes() {
+        receipts_can_add_valid_create_transactions();
+        receipts_can_add_valid_deposit_transactions();
     }
 
     @Test
-    protected void add_valid_create_transaction_should_be_possible() {
+    protected void receipts_can_add_valid_create_transactions() {
         List<String> output = receipt.output();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CHECKING_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, SAVINGS_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CD_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
         assertEquals(i, output.size());
     }
 
     @Test
-    protected void add_valid_deposit_transaction_should_be_possible() {
+    protected void receipts_can_add_valid_deposit_transactions() {
         TransactionType transactionType = TransactionType.Deposit;
         String id = SAVINGS_ID;
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
@@ -85,21 +85,21 @@ public class ReceiptTests {
 
         List<String> output = receipt.output();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CHECKING_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, transaction), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, SAVINGS_ID), output.get(i)); i++;
+        assertEquals(output(bank, transaction), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CD_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
         assertEquals(i, output.size());
     }
 
     @Test
-    protected void add_valid_withdraw_transaction_should_be_possible() {
+    protected void receipts_can_add_valid_withdraw_transactions() {
         String id = CHECKING_ID;
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
@@ -111,22 +111,22 @@ public class ReceiptTests {
 
         List<String> output = receipt.output();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, transaction0), output.get(i)); i++;
-        assertEquals(outputValid(bank, transaction1), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CHECKING_ID), output.get(i)); i++;
+        assertEquals(output(bank, transaction0), output.get(i)); i++;
+        assertEquals(output(bank, transaction1), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, SAVINGS_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CD_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
         assertEquals(i, output.size());
     }
 
     @Test
-    protected void add_valid_transfer_transaction_should_be_possible() {
+    protected void receipts_can_add_valid_transfer_transactions() {
         String payingID = CHECKING_ID;
         String receivingID = SAVINGS_ID;
         double depositAmount = bank.getAccount(payingID).getMaxDepositAmount();
@@ -139,23 +139,23 @@ public class ReceiptTests {
 
         List<String> output = receipt.output();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, transaction0), output.get(i)); i++;
-        assertEquals(outputValid(bank, transaction1), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CHECKING_ID), output.get(i)); i++;
+        assertEquals(output(bank, transaction0), output.get(i)); i++;
+        assertEquals(output(bank, transaction1), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, transaction1), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, SAVINGS_ID), output.get(i)); i++;
+        assertEquals(output(bank, transaction1), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CD_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
         assertEquals(i, output.size());
     }
 
     @Test
-    protected void add_valid_pass_time_transaction_should_be_possible() {
+    protected void receipts_can_add_valid_time_travel_transactions() {
         TransactionType transactionType = TransactionType.TimeTravel;
         String transaction = String.format("%s %s", transactionType, MONTHS);
 
@@ -163,19 +163,19 @@ public class ReceiptTests {
 
         List<String> output = receipt.output();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CHECKING_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, SAVINGS_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), output.get(i)); i++;
-        assertEquals(outputValid(bank, ""), output.get(i)); i++;
+        assertEquals(output(bank, CD_ID), output.get(i)); i++;
+        assertEquals(output(bank, ""), output.get(i)); i++;
 
         assertEquals(i, output.size());
     }
 
-    public static String outputValid(Bank bank, String string) {
+    public static String output(Bank bank, String string) {
         if (bank.containsAccount(string)) {
             Account account = bank.getAccount(string);
             return String.format("%s %s %.2f %.2f", account.getAccountType(), account.getID(), account.getAPR(), account.getBalance()).toLowerCase();
@@ -192,7 +192,7 @@ public class ReceiptTests {
     }
 
     @Test
-    protected void add_invalid_transaction_should_be_possible() {
+    protected void receipts_can_add_invalid_transactions() {
         initializeReceipt();
 
         TransactionType transactionType = TransactionType.Create;
@@ -204,12 +204,12 @@ public class ReceiptTests {
 
         List<String> output = receipt.output();
         int i = 0;
-        assertEquals(outputInvalid(transaction), output.get(i)); i++;
+        assertEquals(output(transaction), output.get(i)); i++;
 
         assertEquals(i, output.size());
     }
 
-    public static String outputInvalid(String transaction) {
+    public static String output(String transaction) {
         return "[invalid] " + transaction;
     }
 }

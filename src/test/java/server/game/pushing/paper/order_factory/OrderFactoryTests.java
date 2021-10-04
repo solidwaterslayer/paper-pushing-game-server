@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class OrderFactoryTests {
     @Test
-    protected void get_order_should_return_a_valid_and_random_order() {
+    protected void order_factories_should_return_a_valid_order() {
         OrderFactory orderFactory = new OrderFactory();
         int size = 9;
         Store store = new Store();

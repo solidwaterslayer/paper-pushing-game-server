@@ -41,7 +41,7 @@ public class TransactionFactoryTests {
     }
 
     @Test
-    protected void get_transaction_should_return_a_valid_and_random_transaction() {
+    protected void transaction_factories_should_return_a_valid_transaction() {
         for (TransactionFactory transactionFactory : transactionFactories) {
             getTransaction(transactionFactory);
         }
@@ -51,13 +51,13 @@ public class TransactionFactoryTests {
         for (int i = 0; i < 999; i++) {
             String transaction = transactionFactory.getTransaction();
 
-            logger.info(String.format("[transaction factory test %s] %s", i, transaction));
+            logger.info(String.format("[transaction test %s] %s", i, transaction));
             assertTrue(validator.handle(transaction) && processor.handle(transaction));
         }
     }
 
     @Test
-    protected void transfer_factories_when_bank_contains_less_than_2_checking_accounts_should_throw_an_illegal_argument_exception() {
+    protected void deposit_withdraw_and_transfer_factories_should_throw_an_illegal_argument_exception_when_the_bank_contains_less_than_2_checking_accounts() {
         TransactionType transactionType = TransactionType.Create;
         double apr = bank.getMaxAPR();
         double minInitialCDBalance = bank.getMinInitialCDBalance();
@@ -65,7 +65,7 @@ public class TransactionFactoryTests {
         processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, "11111111", apr));
         for (int i = 0; i < 9; i++) {
             for (int j = 1; j < 4; j++) {
-                assertEquals("[error] bank contains less than 2 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactories.get(j) :: getTransaction).getMessage());
+                assertEquals("[error] the bank contains less than 2 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactories.get(j) :: getTransaction).getMessage());
             }
 
             processor.handle(String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, "0000000" + i, apr));

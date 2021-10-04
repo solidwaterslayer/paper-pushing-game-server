@@ -12,8 +12,6 @@ import java.util.List;
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static server.game.pushing.paper.store.ReceiptTests.outputInvalid;
-import static server.game.pushing.paper.store.ReceiptTests.outputValid;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class StoreTests {
@@ -68,7 +66,7 @@ public class StoreTests {
     }
 
     @Test
-    protected void empty_order_should_output_empty_receipt() {
+    protected void stores_should_start_with_an_empty_receipt() {
         initializeStore();
 
         List<String> receipt = store.getReceipt();
@@ -76,29 +74,35 @@ public class StoreTests {
     }
 
     @Test
-    protected void valid_create_order_should_output_account_type_id_apr_and_balance() {
+    protected void stores_should_update_when_their_state_changes() {
+        valid_create_transactions_should_output_account_type_id_apr_and_balance();
+        valid_deposit_transactions_should_output_themselves();
+    }
+
+    @Test
+    protected void valid_create_transactions_should_output_account_type_id_apr_and_balance() {
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void valid_deposit_order_should_output_itself() {
+    protected void valid_deposit_transactions_should_output_themselves() {
         TransactionType transactionType = TransactionType.Deposit;
 
         store.getOrder().add(5, String.format("%s %s %s", transactionType, CHECKING_ID_1, checkingDepositAmount));
@@ -106,28 +110,28 @@ public class StoreTests {
 
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(6)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void valid_withdraw_order_should_output_itself() {
+    protected void valid_withdraw_transactions_should_output_themselves() {
         store.getOrder().add(5, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, checkingDepositAmount));
         store.getOrder().add(6, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, savingsDepositAmount));
         store.getOrder().add(7, String.format("%s %s", TransactionType.TimeTravel, MONTHS));
@@ -137,31 +141,31 @@ public class StoreTests {
 
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(8)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(8)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(9)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(6)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(9)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(10)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(10)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void valid_transfer_order_should_output_itself_twice() {
+    protected void valid_transfer_transactions_should_output_themselves_twice() {
         store.getOrder().add(5, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, checkingDepositAmount));
         store.getOrder().add(6, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_0, checkingDepositAmount));
         store.getOrder().add(7, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, savingsDepositAmount));
@@ -175,68 +179,68 @@ public class StoreTests {
 
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(10)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(11)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(12)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(10)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(11)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(12)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(10)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(6)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(10)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(7)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(11)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(12)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(13)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(14)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(7)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(11)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(12)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(13)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(14)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(8)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(13)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(8)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(13)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(14)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(14)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void valid_pass_time_order_should_not_output() {
+    protected void valid_time_travel_transactions_should_not_output() {
         store.getOrder().add(5, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, checkingDepositAmount));
         store.getOrder().add(6, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, savingsDepositAmount));
         store.getOrder().add(7, String.format("%s %s", TransactionType.TimeTravel, MONTHS));
 
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(6)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void valid_order_should_output_lower_case_and_trim_useless_additional_arguments() {
+    protected void valid_transactions_should_output_lower_case_without_additional_arguments() {
         store.getOrder().add(5, String.format("%s %s %s %s %s %s %s", "dEpOsIt", SAVINGS_ID_0, savingsDepositAmount, "the", "power", "of", "friendship"));
         store.getOrder().add(6, String.format("%s %s %s %s %s %s %s %s", "tRAnSFeR", SAVINGS_ID_0, CHECKING_ID_1, min(savingsWithdrawAmount, checkingDepositAmount), store, 1, minBalanceFee, min(437, 234)));
         store.getOrder().add(7, String.format("%s %s %s %s %s %s %s %s    %s %s %s    %s %s %s    %s %s %s %s %s %s %s %s %s %s %s %s   %s %s %s   %s %s %s", "tiMe tRaVeL", MONTHS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "last one"));
@@ -244,30 +248,30 @@ public class StoreTests {
 
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(6)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(8)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(6)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(8)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void invalid_create_order_should_output_itself_as_invalid() {
+    protected void invalid_create_transactions_should_output_themselves_after_an_invalid_tag() {
         initializeStore();
         TransactionType transactionType = TransactionType.Create;
 
@@ -287,14 +291,14 @@ public class StoreTests {
         List<String> receipt = store.getReceipt();
         int i;
         for (i = 0; i < 12; i++) {
-            assertEquals(outputInvalid(store.getOrder().get(i)), receipt.get(i));
+            assertEquals(ReceiptTests.output(store.getOrder().get(i)), receipt.get(i));
         }
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void invalid_deposit_order_should_output_itself_as_invalid() {
+    protected void invalid_deposit_transactions_should_output_themselves_after_an_invalid_tag() {
         TransactionType transactionType = TransactionType.Deposit;
 
         store.getOrder().add(5, String.format("%s %s %s", "", CHECKING_ID_1, checkingDepositAmount));
@@ -308,30 +312,30 @@ public class StoreTests {
 
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
         for (int j = 5; j < 13; j++) {
-            assertEquals(outputInvalid(store.getOrder().get(j)), receipt.get(i)); i++;
+            assertEquals(ReceiptTests.output(store.getOrder().get(j)), receipt.get(i)); i++;
         }
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void invalid_withdraw_order_should_output_itself_as_invalid() {
+    protected void invalid_withdraw_transactions_should_output_themselves_after_an_invalid_tag() {
         store.getOrder().add(5, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, checkingDepositAmount));
         store.getOrder().add(6, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, savingsDepositAmount));
         store.getOrder().add(7, String.format("%s %s %s", TransactionType.Withdraw, SAVINGS_ID_1, savingsWithdrawAmount));
@@ -348,33 +352,33 @@ public class StoreTests {
 
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(7)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(6)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(7)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
         for (int j = 8; j < 17; j++) {
-            assertEquals(outputInvalid(store.getOrder().get(j)), receipt.get(i)); i++;
+            assertEquals(ReceiptTests.output(store.getOrder().get(j)), receipt.get(i)); i++;
         }
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void invalid_transfer_order_should_output_itself_as_invalid() {
+    protected void invalid_transfer_transactions_should_output_themselves_after_an_invalid_tag() {
         store.getOrder().add(5, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, checkingDepositAmount));
         store.getOrder().add(6, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, savingsDepositAmount));
         store.getOrder().add(7, String.format("%s %s %s", TransactionType.Withdraw, SAVINGS_ID_1, savingsWithdrawAmount));
@@ -395,33 +399,33 @@ public class StoreTests {
 
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(6)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(7)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(6)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(7)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, SAVINGS_ID_0), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_0), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
         for (int j = 8; j < 21; j++) {
-            assertEquals(outputInvalid(store.getOrder().get(j)), receipt.get(i)); i++;
+            assertEquals(ReceiptTests.output(store.getOrder().get(j)), receipt.get(i)); i++;
         }
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void invalid_pass_time_order_should_output_as_invalid() {
+    protected void invalid_time_travel_transactions_should_output_themselves_after_an_invalid_tag() {
         initializeStore();
         TransactionType transactionType = TransactionType.TimeTravel;
 
@@ -434,14 +438,14 @@ public class StoreTests {
         List<String> receipt = store.getReceipt();
         int i;
         for (i = 0; i < 5; i++) {
-            assertEquals(outputInvalid(store.getOrder().get(i)), receipt.get(i));
+            assertEquals(ReceiptTests.output(store.getOrder().get(i)), receipt.get(i));
         }
 
         assertEquals(i, receipt.size());
     }
 
     @Test
-    protected void order_should_output_by_validity_id_and_then_time() {
+    protected void output_should_be_sorted_by_validity_first_id_second_and_time_third() {
         initializeStore();
 
         store.getOrder().add(0, String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, SAVINGS_ID_1, 0.6));
@@ -457,27 +461,21 @@ public class StoreTests {
 
         List<String> receipt = store.getReceipt();
         int i = 0;
-        assertEquals(outputValid(bank, SAVINGS_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(1)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, SAVINGS_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(1)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CHECKING_ID_1), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(4)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, store.getOrder().get(5)), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(4)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, store.getOrder().get(5)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputValid(bank, CD_ID), receipt.get(i)); i++;
-        assertEquals(outputValid(bank, ""), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, CD_ID), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(bank, ""), receipt.get(i)); i++;
 
-        assertEquals(outputInvalid(store.getOrder().get(2)), receipt.get(i)); i++;
+        assertEquals(ReceiptTests.output(store.getOrder().get(2)), receipt.get(i)); i++;
 
         assertEquals(i, receipt.size());
-    }
-
-    @Test
-    protected void output_when_state_change_should_update() {
-        valid_create_order_should_output_account_type_id_apr_and_balance();
-        valid_deposit_order_should_output_itself();
     }
 }

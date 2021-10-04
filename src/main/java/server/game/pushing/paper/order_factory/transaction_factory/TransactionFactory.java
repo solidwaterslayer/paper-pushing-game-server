@@ -25,7 +25,7 @@ public abstract class TransactionFactory {
 
     protected void checkException() {
         if (isException()) {
-            throw new IllegalArgumentException("[error] bank contains less than 2 checking accounts");
+            throw new IllegalArgumentException("[error] the bank contains less than 2 checking accounts");
         }
     }
 

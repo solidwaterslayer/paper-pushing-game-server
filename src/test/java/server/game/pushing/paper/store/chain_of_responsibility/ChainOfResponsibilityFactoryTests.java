@@ -14,7 +14,7 @@ import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class ChainOfResponsibilityFactoryTests {
     @Test
-    protected void get_chain_of_responsiblity_should_return_each_validator_or_each_processor() {
+    protected void chain_of_responsibility_factories_should_return_every_validator_or_every_processor() {
         Bank bank = new Bank();
         ChainOfResponsibilityFactory chainOfResponsibilityFactory = new ChainOfResponsibilityFactory(bank);
         ChainOfResponsibility validator = chainOfResponsibilityFactory.getChainOfResponsibility(true);
