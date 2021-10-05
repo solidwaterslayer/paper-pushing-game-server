@@ -51,13 +51,11 @@ public class StoreTests {
         cdWithdrawAmount = bank.getAccount(CD_ID).getMaxWithdrawAmount();
 
         initializeStore();
-        store.setOrder(Arrays.asList(
-                String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_1, apr),
-                String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_0, apr),
-                String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_1, apr),
-                String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_0, apr),
-                String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance)
-        ));
+        store.getOrder().add(0, String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_1, apr));
+        store.getOrder().add(1, String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_0, apr));
+        store.getOrder().add(2, String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_1, apr));
+        store.getOrder().add(3, String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_0, apr));
+        store.getOrder().add(4, String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance));
     }
 
     private void initializeStore() {

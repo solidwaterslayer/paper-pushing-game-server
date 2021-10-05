@@ -29,7 +29,7 @@ public class OrderFactoryTests {
             assertTrue(order.get(1).contains(AccountType.CHECKING.name().toLowerCase()));
             assertEquals(size, order.size());
 
-            store.setOrder(order);
+            store.getOrder().addAll(order);
             receipt = store.getReceipt();
             for (int j = 0; j < receipt.size(); j++) {
                 transaction = receipt.get(j);

@@ -26,10 +26,6 @@ public class Store {
         return ORDER;
     }
 
-    public void setOrder(List<String> order) {
-        this.ORDER.addAll(order);
-    }
-
     public List<String> getReceipt() {
         for (int i = receiptInputSize; i < ORDER.size(); i++) {
             RECEIPT.addTransaction(ORDER.get(i));
