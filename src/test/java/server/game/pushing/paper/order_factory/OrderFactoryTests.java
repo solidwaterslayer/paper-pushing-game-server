@@ -16,7 +16,6 @@ public class OrderFactoryTests {
     protected void order_factories_should_return_a_valid_order() {
         OrderFactory orderFactory = new OrderFactory();
         int size = 9;
-        Store store = new Store();
         List<String> order;
         List<String> receipt;
 
@@ -29,6 +28,7 @@ public class OrderFactoryTests {
             assertTrue(order.get(1).contains(AccountType.CHECKING.name().toLowerCase()));
             assertEquals(size, order.size());
 
+            Store store = new Store();
             store.getOrder().addAll(order);
             receipt = store.getReceipt();
             for (int j = 0; j < receipt.size(); j++) {

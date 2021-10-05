@@ -18,6 +18,9 @@ public class CreateFactory extends TransactionFactory {
     }
 
     public String getTransaction() {
+        // TODO: remove apr
+        // TODO: refactor transfer amounts
+        // TODO: test full bank
         return getTransaction(AccountType.values()[random.nextInt(AccountType.values().length)]);
     }
 
@@ -25,16 +28,17 @@ public class CreateFactory extends TransactionFactory {
         String transaction = "";
 
         while (!validator.handle(transaction)) {
-            String id = random.ints(48, 58).limit(8).collect(
-                    StringBuilder :: new,
-                    StringBuilder :: appendCodePoint,
-                    StringBuilder :: append
-            ).toString();
+            String id = getID();
             double apr = bank.getMaxAPR() * random.nextDouble();
             double initialCDBalance = bank.getMaxInitialCDBalance() * random.nextDouble();
             transaction = String.format("%s %s %s %.2f %.2f", transactionType, accountType, id, apr, initialCDBalance).toLowerCase();
         }
 
         return transaction;
+    }
+
+    private String getID() {
+        String id = "0000000" + bank.size();
+        return id.substring(id.length() - 8);
     }
 }
