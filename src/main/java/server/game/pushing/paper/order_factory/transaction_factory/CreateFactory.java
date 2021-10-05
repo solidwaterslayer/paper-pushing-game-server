@@ -13,8 +13,15 @@ public class CreateFactory extends TransactionFactory {
         transactionType = TransactionType.Create;
     }
 
+    public String getLoadedTransaction(AccountType accountType) {
+        return getTransaction(accountType);
+    }
+
     public String getTransaction() {
-        AccountType accountType = AccountType.values()[random.nextInt(AccountType.values().length)];
+        return getTransaction(AccountType.values()[random.nextInt(AccountType.values().length)]);
+    }
+
+    private String getTransaction(AccountType accountType) {
         String transaction = "";
 
         while (!validator.handle(transaction)) {

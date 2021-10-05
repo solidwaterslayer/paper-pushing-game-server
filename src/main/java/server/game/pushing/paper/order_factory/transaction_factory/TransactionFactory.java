@@ -24,12 +24,8 @@ public abstract class TransactionFactory {
     public abstract String getTransaction();
 
     protected void checkException() {
-        if (isException()) {
+        if (bank.getIDs().stream().filter(id -> bank.getAccount(id).getAccountType() == AccountType.CHECKING).count() < 2) {
             throw new IllegalArgumentException("[error] the bank contains less than 2 checking accounts");
         }
-    }
-
-    public boolean isException() {
-        return bank.getIDs().stream().filter(id -> bank.getAccount(id).getAccountType() == AccountType.CHECKING).count() < 2;
     }
 }

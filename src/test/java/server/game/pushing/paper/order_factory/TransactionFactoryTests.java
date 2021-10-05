@@ -57,6 +57,19 @@ public class TransactionFactoryTests {
     }
 
     @Test
+    protected void create_factories_can_return_a_valid_but_loaded_transaction() {
+        for (AccountType accountType : AccountType.values()) {
+            for (int i = 0; i < 333; i++) {
+                String transaction = ((CreateFactory) transactionFactories.get(0)).getLoadedTransaction(accountType);
+
+                logger.info(String.format("[transaction test %s] %s", i, transaction));
+                assertTrue(validator.handle(transaction) && processor.handle(transaction));
+                assertTrue(transaction.contains(accountType.toString().toLowerCase()));
+            }
+        }
+    }
+
+    @Test
     protected void deposit_withdraw_and_transfer_factories_should_throw_an_illegal_argument_exception_when_the_bank_contains_less_than_2_checking_accounts() {
         TransactionType transactionType = TransactionType.Create;
         double apr = bank.getMaxAPR();
