@@ -51,22 +51,30 @@ public class TransactionFactoryTests {
         for (int i = 0; i < 999; i++) {
             String transaction = transactionFactory.getTransaction();
 
-            logger.info(String.format("[transaction test %s] %s", i, transaction));
+            logger.info(String.format("[%s] %s", i, transaction));
             assertTrue(validator.handle(transaction) && processor.handle(transaction));
         }
     }
 
-    @Test
-    protected void create_factories_can_return_a_valid_but_loaded_transaction() {
+    private void create_factories_can_return_a_valid_but_loaded_transaction() {
         for (AccountType accountType : AccountType.values()) {
             for (int i = 0; i < 333; i++) {
                 String transaction = ((CreateFactory) transactionFactories.get(0)).getLoadedTransaction(accountType);
 
-                logger.info(String.format("[transaction test %s] %s", i, transaction));
+                logger.info(String.format("[%s] %s", i, transaction));
                 assertTrue(validator.handle(transaction) && processor.handle(transaction));
                 assertTrue(transaction.contains(accountType.toString().toLowerCase()));
             }
         }
+    }
+
+    @Test
+    protected void create_factories_can_not_support_more_than_1000_create_transactions() {
+        create_factories_can_return_a_valid_but_loaded_transaction();
+
+        String transaction = transactionFactories.get(0).getTransaction();
+        assertTrue(validator.handle(transaction) && processor.handle(transaction));
+        assertEquals("create factories can not support more than 1000 create transactions", assertThrows(IllegalArgumentException.class, transactionFactories.get(0) :: getTransaction).getMessage());
     }
 
     @Test
@@ -78,7 +86,7 @@ public class TransactionFactoryTests {
         processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, "11111111", apr));
         for (int i = 0; i < 9; i++) {
             for (int j = 1; j < 4; j++) {
-                assertEquals("[error] the bank contains less than 2 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactories.get(j) :: getTransaction).getMessage());
+                assertEquals("the bank contains less than 2 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactories.get(j) :: getTransaction).getMessage());
             }
 
             processor.handle(String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, "0000000" + i, apr));

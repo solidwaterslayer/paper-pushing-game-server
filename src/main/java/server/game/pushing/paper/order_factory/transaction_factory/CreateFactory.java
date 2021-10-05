@@ -18,15 +18,13 @@ public class CreateFactory extends TransactionFactory {
     }
 
     public String getTransaction() {
-        // TODO: remove apr
-        // TODO: refactor transfer amounts
-        // TODO: test full bank
         return getTransaction(AccountType.values()[random.nextInt(AccountType.values().length)]);
     }
 
     private String getTransaction(AccountType accountType) {
-        String transaction = "";
+        checkException();
 
+        String transaction = "";
         while (!validator.handle(transaction)) {
             String id = getID();
             double apr = bank.getMaxAPR() * random.nextDouble();

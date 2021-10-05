@@ -33,7 +33,7 @@ public class OrderFactoryTests {
             receipt = store.getReceipt();
             for (int j = 0; j < receipt.size(); j++) {
                 transaction = receipt.get(j);
-                logger.info(String.format("[order factory test %s] %s", j, transaction));
+                logger.info(String.format("[%s] %s", j, transaction));
                 assertFalse(transaction.contains("[invalid]"));
             }
         }
