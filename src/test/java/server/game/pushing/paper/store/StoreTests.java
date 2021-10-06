@@ -6,7 +6,6 @@ import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Math.min;
@@ -25,7 +24,6 @@ public class StoreTests {
     private final String SAVINGS_ID_0 = "00000001";
     private final String SAVINGS_ID_1 = "10000001";
     private final String CD_ID = "10000010";
-    private double apr;
     private double initialCDBalance;
     private double checkingDepositAmount;
     private double savingsDepositAmount;
@@ -39,10 +37,9 @@ public class StoreTests {
 
         TransactionType transactionType = TransactionType.Create;
         minBalanceFee = bank.getMinBalanceFee();
-        apr = bank.getMaxAPR();
-        bank.createChecking(CHECKING_ID_1, apr);
-        bank.createSavings(SAVINGS_ID_1, apr);
-        bank.createCD(CD_ID, apr, initialCDBalance);
+        bank.createChecking(CHECKING_ID_1);
+        bank.createSavings(SAVINGS_ID_1);
+        bank.createCD(CD_ID, initialCDBalance);
         initialCDBalance = bank.getMinInitialCDBalance();
         checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
         savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
@@ -51,11 +48,11 @@ public class StoreTests {
         cdWithdrawAmount = bank.getAccount(CD_ID).getMaxWithdrawAmount();
 
         initializeStore();
-        store.getOrder().add(0, String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_1, apr));
-        store.getOrder().add(1, String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_0, apr));
-        store.getOrder().add(2, String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_1, apr));
-        store.getOrder().add(3, String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_0, apr));
-        store.getOrder().add(4, String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance));
+        store.getOrder().add(0, String.format("%s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_1));
+        store.getOrder().add(1, String.format("%s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_0));
+        store.getOrder().add(2, String.format("%s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_1));
+        store.getOrder().add(3, String.format("%s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_0));
+        store.getOrder().add(4, String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, initialCDBalance));
     }
 
     private void initializeStore() {
@@ -73,12 +70,12 @@ public class StoreTests {
 
     @Test
     protected void stores_should_update_when_their_state_changes() {
-        valid_create_transactions_should_output_account_type_id_apr_and_balance();
+        valid_create_transactions_should_output_account_type_id_and_balance();
         valid_deposit_transactions_should_output_themselves();
     }
 
     @Test
-    protected void valid_create_transactions_should_output_account_type_id_apr_and_balance() {
+    protected void valid_create_transactions_should_output_account_type_id_and_balance() {
         List<String> receipt = store.getReceipt();
         int i = 0;
         assertEquals(ReceiptTests.output(bank, CHECKING_ID_1), receipt.get(i)); i++;
@@ -273,22 +270,19 @@ public class StoreTests {
         initializeStore();
         TransactionType transactionType = TransactionType.Create;
 
-        store.getOrder().add(0, String.format("%s %s %s %s", "", AccountType.CHECKING, CHECKING_ID_1, apr));
-        store.getOrder().add(1, String.format("%s %s %s %s", "transactionType", AccountType.SAVINGS, SAVINGS_ID_1, apr));
-        store.getOrder().add(2, String.format("%s %s %s %s %s", transactionType, "", CD_ID, apr, initialCDBalance));
-        store.getOrder().add(3, String.format("%s %s %s %s", transactionType, "AccountType.Savings", CHECKING_ID_1, apr));
-        store.getOrder().add(4, String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, "", apr));
-        store.getOrder().add(5, String.format("%s %s %s %s %s", transactionType, AccountType.CD, "SAVINGS_ID_0", apr, initialCDBalance));
-        store.getOrder().add(6, String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_1, ""));
-        store.getOrder().add(7, String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_1, "apr"));
-        store.getOrder().add(8, String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, 235789, initialCDBalance));
-        store.getOrder().add(9, String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, ""));
-        store.getOrder().add(10, String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, "initialCDBalance"));
-        store.getOrder().add(11, String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, -178234));
+        store.getOrder().add(0, String.format("%s %s %s", "", AccountType.CHECKING, CHECKING_ID_1));
+        store.getOrder().add(1, String.format("%s %s %s", "transactionType", AccountType.SAVINGS, SAVINGS_ID_1));
+        store.getOrder().add(2, String.format("%s %s %s %s", transactionType, "", CD_ID, initialCDBalance));
+        store.getOrder().add(3, String.format("%s %s %s", transactionType, "AccountType.Savings", CHECKING_ID_1));
+        store.getOrder().add(4, String.format("%s %s %s", transactionType, AccountType.SAVINGS, ""));
+        store.getOrder().add(5, String.format("%s %s %s %s", transactionType, AccountType.CD, "SAVINGS_ID_0", initialCDBalance));
+        store.getOrder().add(6, String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, ""));
+        store.getOrder().add(7, String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, "initialCDBalance"));
+        store.getOrder().add(8, String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, -178234));
 
         List<String> receipt = store.getReceipt();
         int i;
-        for (i = 0; i < 12; i++) {
+        for (i = 0; i < 9; i++) {
             assertEquals(ReceiptTests.output(store.getOrder().get(i)), receipt.get(i));
         }
 
@@ -446,16 +440,16 @@ public class StoreTests {
     protected void output_should_be_sorted_by_validity_first_id_second_and_time_third() {
         initializeStore();
 
-        store.getOrder().add(0, String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, SAVINGS_ID_1, 0.6));
+        store.getOrder().add(0, String.format("%s %s %s", TransactionType.Create, AccountType.SAVINGS, SAVINGS_ID_1));
         store.getOrder().add(1, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, 700));
 
         store.getOrder().add(2, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, 5000));
 
-        store.getOrder().add(3, String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, CHECKING_ID_1, 0.01));
+        store.getOrder().add(3, String.format("%s %s %s", TransactionType.Create, AccountType.CHECKING, CHECKING_ID_1));
         store.getOrder().add(4, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, 300));
         store.getOrder().add(5, String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID_1, SAVINGS_ID_1, 300));
         store.getOrder().add(6, String.format("%s %s", TransactionType.TimeTravel, 1));
-        store.getOrder().add(7, String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, CD_ID, 1.2, 2000));
+        store.getOrder().add(7, String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, CD_ID, 2000));
 
         List<String> receipt = store.getReceipt();
         int i = 0;

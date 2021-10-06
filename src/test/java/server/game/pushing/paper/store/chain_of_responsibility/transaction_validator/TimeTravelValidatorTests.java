@@ -20,7 +20,6 @@ public class TimeTravelValidatorTests {
     private final String CHECKING_ID = "98430843";
     private final String SAVINGS_ID = "98430842";
     private final String CD_ID = "87439742";
-    private double apr;
 
     @BeforeEach
     protected void setUp() {
@@ -28,12 +27,11 @@ public class TimeTravelValidatorTests {
         validator = new TimeTravelValidator(bank);
 
         transactionType = validator.getTransactionType();
-        apr = bank.getMaxAPR();
         double initialCDBalance = bank.getMinInitialCDBalance();
 
-        bank.createChecking(CHECKING_ID, apr);
-        bank.createSavings(SAVINGS_ID, apr);
-        bank.createCD(CD_ID, apr, initialCDBalance);
+        bank.createChecking(CHECKING_ID);
+        bank.createSavings(SAVINGS_ID);
+        bank.createCD(CD_ID, initialCDBalance);
     }
 
     @Test
@@ -86,7 +84,7 @@ public class TimeTravelValidatorTests {
 
         validator.setNext(new CreateValidator(bank));
 
-        assertTrue(validator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, id, apr)));
+        assertTrue(validator.handle(String.format("%s %s %s", TransactionType.Create, accountType, id)));
         assertFalse(validator.handle(String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID, depositAmount)));
     }
 

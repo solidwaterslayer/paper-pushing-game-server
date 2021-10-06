@@ -28,20 +28,17 @@ public class CreateValidator extends ChainOfResponsibility {
 
     private boolean handleCreateCheckingTransaction(String[] transactionArguments) {
         return transactionArguments[1].equalsIgnoreCase("checking")
-                && bank.isIDValid(transactionArguments[2])
-                && bank.isAPRValid(parseDouble(transactionArguments[3]));
+                && bank.isIDValid(transactionArguments[2]);
     }
 
     private boolean handleCreateSavingsTransaction(String[] transactionArguments) {
         return transactionArguments[1].equalsIgnoreCase("savings")
-                && bank.isIDValid(transactionArguments[2])
-                && bank.isAPRValid(parseDouble(transactionArguments[3]));
+                && bank.isIDValid(transactionArguments[2]);
     }
 
     private boolean handleCreateCDTransaction(String[] transactionArguments) {
         return transactionArguments[1].equalsIgnoreCase("cd")
                 && bank.isIDValid(transactionArguments[2])
-                && bank.isAPRValid(parseDouble(transactionArguments[3]))
-                && bank.isInitialCDBalanceValid(parseDouble(transactionArguments[4]));
+                && bank.isInitialCDBalanceValid(parseDouble(transactionArguments[3]));
     }
 }

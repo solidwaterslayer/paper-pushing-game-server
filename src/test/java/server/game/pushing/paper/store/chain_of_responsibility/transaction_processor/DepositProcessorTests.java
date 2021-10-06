@@ -23,10 +23,9 @@ public class DepositProcessorTests {
         processor = new DepositProcessor(bank);
 
         transactionType = processor.getTransactionType();
-        double apr = bank.getMaxAPR();
 
-        bank.createChecking(CHECKING_ID, apr);
-        bank.createSavings(SAVINGS_ID, apr);
+        bank.createChecking(CHECKING_ID);
+        bank.createSavings(SAVINGS_ID);
     }
 
     @Test

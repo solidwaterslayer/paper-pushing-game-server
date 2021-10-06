@@ -23,11 +23,10 @@ public class ChainOfResponsibilityFactoryTests {
         int months = getMonthsPerYear();
         String payingID = "98340842";
         String receivingID = "08429843";
-        double apr = bank.getMaxAPR();
-        String transaction0 = String.format("%s %s %s %s", TransactionType.Create, AccountType.CHECKING, payingID, apr);
+        String transaction0 = String.format("%s %s %s", TransactionType.Create, AccountType.CHECKING, payingID);
         assertTrue(validator.handle(transaction0));
         assertTrue(processor.handle(transaction0));
-        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.SAVINGS, receivingID, apr)));
+        assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Create, AccountType.SAVINGS, receivingID)));
         double depositAmount = bank.getAccount(payingID).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(payingID).getMaxWithdrawAmount();
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());

@@ -32,11 +32,10 @@ public class WithdrawProcessorTests {
 
         minBalanceFee = bank.getMinBalanceFee();
         transactionType = processor.getTransactionType();
-        double apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
-        bank.createChecking(CHECKING_ID, apr);
-        bank.createSavings(SAVINGS_ID, apr);
-        bank.createCD(CD_ID, apr, initialCDBalance);
+        bank.createChecking(CHECKING_ID);
+        bank.createSavings(SAVINGS_ID);
+        bank.createCD(CD_ID, initialCDBalance);
         checkingDepositAmount = bank.getAccount(CHECKING_ID).getMaxDepositAmount();
         savingsDepositAmount = bank.getAccount(SAVINGS_ID).getMaxDepositAmount();
 

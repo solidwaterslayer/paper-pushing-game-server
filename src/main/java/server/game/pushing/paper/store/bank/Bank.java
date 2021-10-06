@@ -15,8 +15,6 @@ public class Bank {
     private final Map<String, Account> ACCOUNTS;
 
     private final String VALID_ID;
-    private final double MIN_APR;
-    private final double MAX_APR;
     private final double MIN_INITIAL_CD_BALANCE;
     private final double MAX_INITIAL_CD_BALANCE;
     private final int MAX_MONTHS;
@@ -26,8 +24,6 @@ public class Bank {
         MIN_BALANCE_FEE = 25;
 
         VALID_ID = "[0-9]{8}";
-        MIN_APR = 0;
-        MAX_APR = 10;
         MIN_INITIAL_CD_BALANCE = 1000;
         MAX_INITIAL_CD_BALANCE = 10000;
         MAX_MONTHS = 60;
@@ -37,16 +33,16 @@ public class Bank {
         return MIN_BALANCE_FEE;
     }
 
-    public void createChecking(String id, double apr) {
-        ACCOUNTS.put(id, new Checking(id, apr));
+    public void createChecking(String id) {
+        ACCOUNTS.put(id, new Checking(id));
     }
 
-    public void createSavings(String id, double apr) {
-        ACCOUNTS.put(id, new Savings(id, apr));
+    public void createSavings(String id) {
+        ACCOUNTS.put(id, new Savings(id));
     }
 
-    public void createCD(String id, double apr, double balance) {
-        ACCOUNTS.put(id, new CD(id, apr, balance));
+    public void createCD(String id, double balance) {
+        ACCOUNTS.put(id, new CD(id, balance));
     }
 
     public Account getAccount(String id) {
@@ -112,14 +108,6 @@ public class Bank {
 
     public boolean isIDValid(String id) {
         return !containsAccount(id) && id.matches(VALID_ID);
-    }
-
-    public boolean isAPRValid(double apr) {
-        return MIN_APR <= apr && apr <= MAX_APR;
-    }
-
-    public double getMaxAPR() {
-        return MAX_APR;
     }
 
     public boolean isInitialCDBalanceValid(double initialCDBalance) {

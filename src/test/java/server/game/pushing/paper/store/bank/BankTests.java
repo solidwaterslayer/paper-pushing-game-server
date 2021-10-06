@@ -22,21 +22,19 @@ public class BankTests {
     private final String SAVINGS_ID_1 = "98340842";
     private final String CD_ID_0 = "54873935";
     private final String CD_ID_1 = "37599823";
-    private double apr;
     private double initialCDBalance;
 
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
 
-        bank.createChecking(CHECKING_ID_0, apr);
-        bank.createChecking(CHECKING_ID_1, apr);
-        bank.createSavings(SAVINGS_ID_1, apr);
-        bank.createSavings(SAVINGS_ID_0, apr);
-        bank.createCD(CD_ID_1, apr, initialCDBalance);
-        bank.createCD(CD_ID_0, apr, initialCDBalance);
+        bank.createChecking(CHECKING_ID_0);
+        bank.createChecking(CHECKING_ID_1);
+        bank.createSavings(SAVINGS_ID_1);
+        bank.createSavings(SAVINGS_ID_0);
+        bank.createCD(CD_ID_1, initialCDBalance);
+        bank.createCD(CD_ID_0, initialCDBalance);
 
         assertFalse(bank.isEmpty());
         assertEquals(6, bank.size());
@@ -58,7 +56,6 @@ public class BankTests {
         Account account = bank.getAccount(CHECKING_ID_0);
         assertEquals(AccountType.CHECKING, account.getAccountType());
         assertEquals(CHECKING_ID_0, account.getID());
-        assertEquals(apr, account.getAPR());
         assertEquals(0, account.getBalance());
     }
 
@@ -67,7 +64,6 @@ public class BankTests {
         Account account = bank.getAccount(SAVINGS_ID_0);
         assertEquals(AccountType.SAVINGS, account.getAccountType());
         assertEquals(SAVINGS_ID_0, account.getID());
-        assertEquals(apr, account.getAPR());
         assertEquals(0, account.getBalance());
     }
 
@@ -76,7 +72,6 @@ public class BankTests {
         Account account = bank.getAccount(CD_ID_0);
         assertEquals(AccountType.CD, account.getAccountType());
         assertEquals(CD_ID_0, account.getID());
-        assertEquals(apr, account.getAPR());
         assertEquals(initialCDBalance, account.getBalance());
     }
 
@@ -95,22 +90,6 @@ public class BankTests {
         assertFalse(bank.isIDValid("POWERFUL"));
         assertFalse(bank.isIDValid("$@^*#$*("));
         assertTrue(bank.isIDValid("78349722"));
-    }
-
-    @Test
-    protected void banks_should_use_an_apr_between_0_and_10_inclusive_during_account_creation() {
-        assertFalse(bank.isAPRValid(-10));
-        assertFalse(bank.isAPRValid(-1));
-        assertTrue(bank.isAPRValid(0));
-        assertTrue(bank.isAPRValid(1));
-        assertTrue(bank.isAPRValid(5));
-
-        assertTrue(bank.isAPRValid(6));
-        assertTrue(bank.isAPRValid(9));
-        assertTrue(bank.isAPRValid(10));
-        assertEquals(10, bank.getMaxAPR());
-        assertFalse(bank.isAPRValid(11));
-        assertFalse(bank.isAPRValid(20));
     }
 
     @Test
@@ -549,7 +528,6 @@ public class BankTests {
 
     @Test
     protected void bank_transfers_from_cd_to_savings_should_use_a_transfer_amount_between_the_paying_account_balance_and_2500_inclusive() {
-        double cdAPR = 0.6;
         initialCDBalance = 2200;
 
         List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxMonths());
@@ -559,7 +537,7 @@ public class BankTests {
         double upperBound = 2500;
 
         bank.removeAccount(payingID);
-        bank.createCD(payingID, cdAPR, initialCDBalance);
+        bank.createCD(payingID, initialCDBalance);
         bank.deposit(receivingID, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
         lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(0), initialCDBalance));
         lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));

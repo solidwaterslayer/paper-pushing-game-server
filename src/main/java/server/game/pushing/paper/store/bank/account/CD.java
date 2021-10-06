@@ -3,8 +3,8 @@ package server.game.pushing.paper.store.bank.account;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class CD extends Account {
-    public CD(String id, double apr, double balance) {
-        super(AccountType.CD, id, apr, balance);
+    public CD(String id, double balance) {
+        super(AccountType.CD, id, balance);
         maxWithdrawAmount = Double.POSITIVE_INFINITY;
     }
 

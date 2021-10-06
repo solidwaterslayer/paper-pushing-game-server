@@ -25,13 +25,13 @@ public class CreateProcessor extends ChainOfResponsibility {
 
         switch (accountType) {
             case CHECKING:
-                bank.createChecking(transactionArguments[2], parseDouble(transactionArguments[3]));
+                bank.createChecking(transactionArguments[2]);
                 break;
             case SAVINGS:
-                bank.createSavings(transactionArguments[2], parseDouble(transactionArguments[3]));
+                bank.createSavings(transactionArguments[2]);
                 break;
             default:
-                bank.createCD(transactionArguments[2], parseDouble(transactionArguments[3]), parseDouble(transactionArguments[4]));
+                bank.createCD(transactionArguments[2], parseDouble(transactionArguments[3]));
                 break;
         }
 

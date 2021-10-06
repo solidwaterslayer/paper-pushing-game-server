@@ -19,9 +19,6 @@ public class AccountTests {
     private final String CHECKING_ID = "34785729";
     private final String SAVINGS_ID = "47012479";
     private final String CD_ID = "34782479";
-    private final double CHECKING_APR = 0.2;
-    private final double SAVINGS_APR = 1;
-    private final double CD_APR = 10;
     private final double INITIAL_CD_BALANCE = 5835;
 
     private double checkingDepositAmount;
@@ -32,54 +29,48 @@ public class AccountTests {
 
     @BeforeEach
     protected void setUp() {
-        checking = new Checking(CHECKING_ID, CHECKING_APR);
-        savings = new Savings(SAVINGS_ID, SAVINGS_APR);
-        cd = new CD(CD_ID, CD_APR, INITIAL_CD_BALANCE);
+        checking = new Checking(CHECKING_ID);
+        savings = new Savings(SAVINGS_ID);
+        cd = new CD(CD_ID, INITIAL_CD_BALANCE);
     }
 
     @Test
     protected void checking_accounts_should_start_with_0_balance() {
         AccountType accountType = AccountType.CHECKING;
         String id = CHECKING_ID;
-        double apr = CHECKING_APR;
         double balance = 0;
 
         assertEquals(accountType, checking.getAccountType());
         assertEquals(id, checking.getID());
-        assertEquals(apr, checking.getAPR());
         assertEquals(balance, checking.getBalance());
 
-        assertEquals(String.format("%s %s %.2f %.2f", accountType, id, apr, balance).toLowerCase(), String.format("%s", checking));
+        assertEquals(String.format("%s %s %.2f", accountType, id, balance).toLowerCase(), String.format("%s", checking));
     }
 
     @Test
     protected void savings_accounts_should_start_with_0_balance() {
         AccountType accountType = AccountType.SAVINGS;
         String id = SAVINGS_ID;
-        double apr = SAVINGS_APR;
         double balance = 0;
 
         assertEquals(accountType, savings.getAccountType());
         assertEquals(id, savings.getID());
-        assertEquals(apr, savings.getAPR());
         assertEquals(balance, savings.getBalance());
 
-        assertEquals(String.format("%s %s %.2f %.2f", accountType, id, apr, balance).toLowerCase(), String.format("%s", savings));
+        assertEquals(String.format("%s %s %.2f", accountType, id, balance).toLowerCase(), String.format("%s", savings));
     }
 
     @Test
     protected void cd_accounts_can_be_created() {
         AccountType accountType = AccountType.CD;
         String id = CD_ID;
-        double apr = CD_APR;
         double balance = INITIAL_CD_BALANCE;
 
         assertEquals(accountType, cd.getAccountType());
         assertEquals(id, cd.getID());
-        assertEquals(apr, cd.getAPR());
         assertEquals(balance, cd.getBalance());
 
-        assertEquals(String.format("%s %s %.2f %.2f", accountType, id, apr, balance).toLowerCase(), String.format("%s", cd));
+        assertEquals(String.format("%s %s %.2f", accountType, id, balance).toLowerCase(), String.format("%s", cd));
     }
 
     @Test

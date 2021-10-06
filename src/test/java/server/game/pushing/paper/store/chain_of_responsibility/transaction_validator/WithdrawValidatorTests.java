@@ -28,12 +28,11 @@ public class WithdrawValidatorTests {
         validator = new WithdrawValidator(bank);
 
         transactionType = validator.getTransactionType();
-        double apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
 
-        bank.createChecking(CHECKING_ID, apr);
-        bank.createSavings(SAVINGS_ID, apr);
-        bank.createCD(CD_ID, apr, initialCDBalance);
+        bank.createChecking(CHECKING_ID);
+        bank.createSavings(SAVINGS_ID);
+        bank.createCD(CD_ID, initialCDBalance);
         bank.deposit(CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount());
         bank.deposit(SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount());
     }

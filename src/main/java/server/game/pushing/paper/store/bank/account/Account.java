@@ -4,18 +4,16 @@ public abstract class Account {
     protected int age;
     protected AccountType accountType;
     protected final String ID;
-    protected final double APR;
     protected double balance;
     protected double minDepositAmount;
     protected double maxDepositAmount;
     protected double minWithdrawAmount;
     protected double maxWithdrawAmount;
 
-    protected Account(AccountType accountType, String id, double apr, double balance) {
+    protected Account(AccountType accountType, String id, double balance) {
         age = 0;
         this.accountType = accountType;
         this.ID = id;
-        this.APR = apr;
         this.balance = balance;
         minDepositAmount = 0;
         minWithdrawAmount = 0;
@@ -33,10 +31,6 @@ public abstract class Account {
         return ID;
     }
 
-    public double getAPR() {
-        return APR;
-    }
-
     public double getBalance() {
         return balance;
     }
@@ -51,7 +45,7 @@ public abstract class Account {
 
     @Override
     public String toString() {
-        return String.format("%s %s %.2f %.2f", accountType, ID, APR, balance).toLowerCase();
+        return String.format("%s %s %.2f", accountType, ID, balance).toLowerCase();
     }
 
     public void deposit(double depositAmount) {

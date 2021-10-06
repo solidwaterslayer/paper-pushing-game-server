@@ -28,7 +28,6 @@ public class TransferValidatorTests {
     private final String SAVINGS_ID_1 = "98430854";
     private final String CD_ID_0 = "24799348";
     private final String CD_ID_1 = "14799348";
-    private double apr;
     private double initialCDBalance;
 
     @BeforeEach
@@ -37,15 +36,14 @@ public class TransferValidatorTests {
         validator = new TransferValidator(bank);
 
         transactionType = validator.getTransactionType();
-        apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
 
-        bank.createChecking(CHECKING_ID_0, apr);
-        bank.createChecking(CHECKING_ID_1, apr);
-        bank.createSavings(SAVINGS_ID_0, apr);
-        bank.createSavings(SAVINGS_ID_1, apr);
-        bank.createCD(CD_ID_0, apr, initialCDBalance);
-        bank.createCD(CD_ID_1, apr, initialCDBalance);
+        bank.createChecking(CHECKING_ID_0);
+        bank.createChecking(CHECKING_ID_1);
+        bank.createSavings(SAVINGS_ID_0);
+        bank.createSavings(SAVINGS_ID_1);
+        bank.createCD(CD_ID_0, initialCDBalance);
+        bank.createCD(CD_ID_1, initialCDBalance);
         bank.deposit(CHECKING_ID_0, bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount());
         bank.deposit(CHECKING_ID_1, bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
         bank.deposit(SAVINGS_ID_0, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
@@ -212,7 +210,6 @@ public class TransferValidatorTests {
 
     @Test
     protected void transfer_amounts_from_cd_to_savings_should_be_between_the_paying_account_balance_and_2500_inclusive() {
-        double cdAPR = 0.6;
         initialCDBalance = 2200;
 
         List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxMonths());
@@ -222,7 +219,7 @@ public class TransferValidatorTests {
         double upperBound = 2500;
 
         bank.removeAccount(payingID);
-        bank.createCD(payingID, cdAPR, initialCDBalance);
+        bank.createCD(payingID, initialCDBalance);
         bank.deposit(receivingID, bank.getAccount(receivingID).getMaxDepositAmount());
         lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(0), initialCDBalance));
         lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));
@@ -274,6 +271,6 @@ public class TransferValidatorTests {
         validator.setNext(new TimeTravelValidator(bank));
 
         assertTrue(validator.handle(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
-        assertFalse(validator.handle(String.format("%s %s %s %s", TransactionType.Create, accountType, SAVINGS_ID_1, apr)));
+        assertFalse(validator.handle(String.format("%s %s %s", TransactionType.Create, accountType, SAVINGS_ID_1)));
     }
 }

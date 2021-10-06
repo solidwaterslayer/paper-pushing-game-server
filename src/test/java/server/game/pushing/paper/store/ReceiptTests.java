@@ -23,7 +23,6 @@ public class ReceiptTests {
     private final String CHECKING_ID = "00000000";
     private final String SAVINGS_ID = "00000001";
     private final String CD_ID = "00000010";
-    private double apr;
     private double initialCDBalance;
 
     @BeforeEach
@@ -31,12 +30,11 @@ public class ReceiptTests {
         initializeReceipt();
 
         TransactionType transactionType = TransactionType.Create;
-        apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
 
-        receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID, apr));
-        receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID, apr));
-        receipt.addTransaction(String.format("%s %s %s %s %s", transactionType, AccountType.CD, CD_ID, apr, initialCDBalance));
+        receipt.addTransaction(String.format("%s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID));
+        receipt.addTransaction(String.format("%s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID));
+        receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, initialCDBalance));
     }
 
     private void initializeReceipt() {
@@ -178,7 +176,7 @@ public class ReceiptTests {
     public static String output(Bank bank, String string) {
         if (bank.containsAccount(string)) {
             Account account = bank.getAccount(string);
-            return String.format("%s %s %.2f %.2f", account.getAccountType(), account.getID(), account.getAPR(), account.getBalance()).toLowerCase();
+            return String.format("%s %s %.2f", account.getAccountType(), account.getID(), account.getBalance()).toLowerCase();
         }
         String[] transactionArguments = string.toLowerCase().split(" ");
         if (transactionArguments[0].equalsIgnoreCase(TransactionType.Deposit.name()) || transactionArguments[0].equalsIgnoreCase(TransactionType.Withdraw.name())) {
@@ -198,7 +196,7 @@ public class ReceiptTests {
         TransactionType transactionType = TransactionType.Create;
         AccountType accountType = AccountType.CD;
         String id = "the power of friendship";
-        String transaction = String.format("%s %s %s %s %s", transactionType, accountType, id, apr, initialCDBalance);
+        String transaction = String.format("%s %s %s %s", transactionType, accountType, id, initialCDBalance);
 
         receipt.addTransaction(transaction);
 

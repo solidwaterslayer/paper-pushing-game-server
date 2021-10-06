@@ -23,7 +23,6 @@ public class TimeTravelProcessorTests {
     private final String CHECKING_ID = "98408842";
     private final String SAVINGS_ID = "89438042";
     private final String CD_ID = "98430842";
-    private double apr;
     private double initialCDBalance;
 
     @BeforeEach
@@ -34,12 +33,11 @@ public class TimeTravelProcessorTests {
         minBalanceFee = bank.getMinBalanceFee();
         months = getMonthsPerYear();
         transactionType = processor.getTransactionType();
-        apr = bank.getMaxAPR();
         initialCDBalance = bank.getMinInitialCDBalance();
 
-        bank.createChecking(CHECKING_ID, apr);
-        bank.createSavings(SAVINGS_ID, apr);
-        bank.createCD(CD_ID, apr, initialCDBalance);
+        bank.createChecking(CHECKING_ID);
+        bank.createSavings(SAVINGS_ID);
+        bank.createCD(CD_ID, initialCDBalance);
     }
 
     @Test
@@ -75,11 +73,10 @@ public class TimeTravelProcessorTests {
 
         processor.setNext(new CreateProcessor(bank));
 
-        assertTrue(processor.handle(String.format("%s %s %s %s %s", TransactionType.Create, AccountType.CD, id0, apr, initialCDBalance)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, id0, initialCDBalance)));
         Account account = bank.getAccount(id0);
         assertEquals(AccountType.CD, account.getAccountType());
         assertEquals(id0, account.getID());
-        assertEquals(apr, account.getAPR());
         assertEquals(initialCDBalance, account.getBalance());
         assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
     }
