@@ -26,15 +26,16 @@ public class CreateFactory extends TransactionFactory {
 
         String transaction = "";
         while (!validator.handle(transaction)) {
-            String id = getID();
-            double initialCDBalance = bank.getMaxInitialCDBalance() * random.nextDouble();
+            String id = getRandomID();
+            double initialCDBalance = getRandomAmount(bank.getMaxInitialCDBalance());
             transaction = String.format("%s %s %s %.2f", transactionType, accountType, id, initialCDBalance).toLowerCase();
         }
 
         return transaction;
     }
 
-    private String getID() {
+    @Override
+    protected String getRandomID() {
         String id = "0000000" + bank.size();
         return id.substring(id.length() - 8);
     }

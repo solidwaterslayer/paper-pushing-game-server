@@ -23,6 +23,14 @@ public abstract class TransactionFactory {
 
     public abstract String getTransaction();
 
+    protected String getRandomID() {
+        return bank.getIDs().get(random.nextInt(bank.getIDs().size()));
+    }
+
+    protected double getRandomAmount(double amount) {
+        return (int) (amount * random.nextDouble() / 100) * 100;
+    }
+
     protected void checkException() {
         if (bank.getIDs().stream().filter(id -> bank.getAccount(id).getAccountType() == AccountType.CHECKING).count() < 2 && transactionType != TransactionType.Create) {
             throw new IllegalArgumentException("the bank contains less than 2 checking accounts");

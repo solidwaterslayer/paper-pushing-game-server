@@ -17,8 +17,8 @@ public class DepositFactory extends TransactionFactory {
 
         String transaction = "";
         while (!validator.handle(transaction)) {
-            String id = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
-            double depositAmount = bank.getAccount(id).getMaxDepositAmount() * random.nextDouble();
+            String id = getRandomID();
+            double depositAmount = getRandomAmount(bank.getAccount(id).getMaxDepositAmount());
             transaction = String.format("%s %s %.2f", transactionType, id, depositAmount).toLowerCase();
         }
 

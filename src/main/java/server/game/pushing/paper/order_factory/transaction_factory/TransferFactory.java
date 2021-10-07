@@ -19,10 +19,10 @@ public class TransferFactory extends TransactionFactory {
 
         String transaction = "";
         while (!validator.handle(transaction)) {
-            String fromID = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
-            String toID = bank.getIDs().get(random.nextInt(bank.getIDs().size()));
-            double withdrawAmount = min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount()) * random.nextDouble();
-            transaction = String.format("%s %s %s %.2f", transactionType, fromID, toID, withdrawAmount).toLowerCase();
+            String fromID = getRandomID();
+            String toID = getRandomID();
+            double transferAmount = getRandomAmount(min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount()));
+            transaction = String.format("%s %s %s %.2f", transactionType, fromID, toID, transferAmount).toLowerCase();
         }
 
         return transaction;
