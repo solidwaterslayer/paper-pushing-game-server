@@ -17,7 +17,7 @@ public class CreateValidatorTests {
     private TransactionType transactionType;
     private final String id0 = "34783874";
     private final String id1 = "44783874";
-    private double initialCDBalance;
+    private double startingCDBalance;
 
     @BeforeEach
     protected void setUp() {
@@ -25,7 +25,7 @@ public class CreateValidatorTests {
         validator = new CreateValidator(bank);
 
         transactionType = validator.getTransactionType();
-        initialCDBalance = bank.getMinInitialCDBalance();
+        startingCDBalance = bank.getMinStartingCDBalance();
     }
 
     @Test
@@ -46,7 +46,7 @@ public class CreateValidatorTests {
         assertFalse(validator.handle(String.format("%s %s %s", transactionType, "the power of friendship", id1)));
         assertTrue(validator.handle(String.format("%s %s %s", transactionType, AccountType.CHECKING, id1)));
         assertTrue(validator.handle(String.format("%s %s %s", transactionType, AccountType.SAVINGS, id1)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.CD, id1, initialCDBalance)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.CD, id1, startingCDBalance)));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class CreateValidatorTests {
     }
 
     @Test
-    protected void the_fourth_argument_in_create_cd_transactions_is_an_initial_balance_between_1000_and_10000_inclusive() {
+    protected void the_fourth_argument_in_create_cd_transactions_is_an_starting_balance_between_1000_and_10000_inclusive() {
         AccountType accountType = AccountType.CD;
 
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, accountType, id0, "")));
@@ -97,14 +97,14 @@ public class CreateValidatorTests {
     protected void create_validators_can_ignore_additional_arguments() {
         assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, id0, "the")));
         assertTrue(validator.handle(String.format("%s %s %s %s %s %s  %s", transactionType, AccountType.SAVINGS, id0, "power", "of", "friendship", id0)));
-        assertTrue(validator.handle(String.format("%s %s %s %s  $s    $s     %s %s    ", transactionType, AccountType.CD, id0, initialCDBalance, AccountType.CD, id0)));
+        assertTrue(validator.handle(String.format("%s %s %s %s  $s    $s     %s %s    ", transactionType, AccountType.CD, id0, startingCDBalance, AccountType.CD, id0)));
     }
 
     @Test
     protected void create_validators_are_case_insensitive() {
         assertTrue(validator.handle(String.format("%s %s %s", "crEaTe", "checking", id0)));
         assertTrue(validator.handle(String.format("%s %s %s", "create", "saVINgs", id0)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", "creATe", "Cd", id0, initialCDBalance)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", "creATe", "Cd", id0, startingCDBalance)));
     }
 
     @Test

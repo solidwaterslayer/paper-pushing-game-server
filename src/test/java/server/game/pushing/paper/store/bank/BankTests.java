@@ -22,19 +22,19 @@ public class BankTests {
     private final String SAVINGS_ID_1 = "98340842";
     private final String CD_ID_0 = "54873935";
     private final String CD_ID_1 = "37599823";
-    private double initialCDBalance;
+    private double startingCDBalance;
 
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        initialCDBalance = bank.getMinInitialCDBalance();
+        startingCDBalance = bank.getMinStartingCDBalance();
 
         bank.createChecking(CHECKING_ID_0);
         bank.createChecking(CHECKING_ID_1);
         bank.createSavings(SAVINGS_ID_1);
         bank.createSavings(SAVINGS_ID_0);
-        bank.createCD(CD_ID_1, initialCDBalance);
-        bank.createCD(CD_ID_0, initialCDBalance);
+        bank.createCD(CD_ID_1, startingCDBalance);
+        bank.createCD(CD_ID_0, startingCDBalance);
 
         assertFalse(bank.isEmpty());
         assertEquals(6, bank.size());
@@ -72,7 +72,7 @@ public class BankTests {
         Account account = bank.getAccount(CD_ID_0);
         assertEquals(AccountType.CD, account.getAccountType());
         assertEquals(CD_ID_0, account.getID());
-        assertEquals(initialCDBalance, account.getBalance());
+        assertEquals(startingCDBalance, account.getBalance());
     }
 
     @Test
@@ -94,22 +94,22 @@ public class BankTests {
 
     @Test
     protected void banks_should_use_a_starting_cd_balance_between_1000_and_10000_inclusive_during_account_creation() {
-        assertFalse(bank.isInitialCDBalanceValid(500));
-        assertFalse(bank.isInitialCDBalanceValid(900));
-        assertEquals(1000, bank.getMinInitialCDBalance());
-        assertTrue(bank.isInitialCDBalanceValid(1000));
-        assertTrue(bank.isInitialCDBalanceValid(1100));
-        assertTrue(bank.isInitialCDBalanceValid(5000));
+        assertFalse(bank.isStartingCDBalanceValid(500));
+        assertFalse(bank.isStartingCDBalanceValid(900));
+        assertEquals(1000, bank.getMinStartingCDBalance());
+        assertTrue(bank.isStartingCDBalanceValid(1000));
+        assertTrue(bank.isStartingCDBalanceValid(1100));
+        assertTrue(bank.isStartingCDBalanceValid(5000));
 
-        assertTrue(bank.isInitialCDBalanceValid(6000));
-        assertTrue(bank.isInitialCDBalanceValid(9000));
-        assertTrue(bank.isInitialCDBalanceValid(10000));
-        assertEquals(10000, bank.getMaxInitialCDBalance());
-        assertFalse(bank.isInitialCDBalanceValid(11000));
-        assertFalse(bank.isInitialCDBalanceValid(20000));
+        assertTrue(bank.isStartingCDBalanceValid(6000));
+        assertTrue(bank.isStartingCDBalanceValid(9000));
+        assertTrue(bank.isStartingCDBalanceValid(10000));
+        assertEquals(10000, bank.getMaxStartingCDBalance());
+        assertFalse(bank.isStartingCDBalanceValid(11000));
+        assertFalse(bank.isStartingCDBalanceValid(20000));
 
-        assertFalse(bank.isInitialCDBalanceValid(-1000));
-        assertFalse(bank.isInitialCDBalanceValid(0));
+        assertFalse(bank.isStartingCDBalanceValid(-1000));
+        assertFalse(bank.isStartingCDBalanceValid(0));
     }
 
     @Test
@@ -274,7 +274,7 @@ public class BankTests {
     protected void bank_withdraws_from_cd_accounts_should_use_a_withdraw_amount_greater_than_or_equal_to_balance() {
         int months = getMonthsPerYear();
         String id = CD_ID_0;
-        double cdWithdrawAmount = timeTravel(bank.getMinBalanceFee(), months, initialCDBalance);
+        double cdWithdrawAmount = timeTravel(bank.getMinBalanceFee(), months, startingCDBalance);
 
         bank.timeTravel(months);
 
@@ -362,7 +362,7 @@ public class BankTests {
         assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(
                 timeTravel(minBalanceFee, months, savingsDepositAmount)
-                        + timeTravel(minBalanceFee, months, initialCDBalance),
+                        + timeTravel(minBalanceFee, months, startingCDBalance),
                 bank.getAccount(receivingID).getBalance()
         );
     }
@@ -528,7 +528,7 @@ public class BankTests {
 
     @Test
     protected void bank_transfers_from_cd_to_savings_should_use_a_transfer_amount_between_the_paying_account_balance_and_2500_inclusive() {
-        initialCDBalance = 2200;
+        startingCDBalance = 2200;
 
         List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxMonths());
         String payingID = CD_ID_1;
@@ -537,9 +537,9 @@ public class BankTests {
         double upperBound = 2500;
 
         bank.removeAccount(payingID);
-        bank.createCD(payingID, initialCDBalance);
+        bank.createCD(payingID, startingCDBalance);
         bank.deposit(receivingID, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
-        lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(0), initialCDBalance));
+        lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(0), startingCDBalance));
         lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));
 
         for (int i = 0; i < 2; i++) {
@@ -593,7 +593,7 @@ public class BankTests {
 
         assertEquals(timeTravel(minBalanceFee, months, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
         assertEquals(timeTravel(minBalanceFee, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(timeTravel(minBalanceFee, months, initialCDBalance), bank.getAccount(CD_ID_0).getBalance());
+        assertEquals(timeTravel(minBalanceFee, months, startingCDBalance), bank.getAccount(CD_ID_0).getBalance());
     }
 
     @Test
@@ -634,9 +634,11 @@ public class BankTests {
     @Test
     protected void banks_can_withdraw_from_cd_accounts_after_time_traveling_12_months() {
         int monthsPerYear = getMonthsPerYear();
+        String id = CD_ID_1;
+        double depositAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(month >= getMonthsPerYear(), bank.isWithdrawAmountValid(CD_ID_0, bank.getAccount(CD_ID_1).getMaxWithdrawAmount()));
+            assertEquals(bank.getAccount(id).getLifetime() >= getMonthsPerYear(), bank.isWithdrawAmountValid(id, depositAmount));
 
             bank.timeTravel(1);
         }
@@ -645,41 +647,43 @@ public class BankTests {
     @Test
     protected void banks_can_transfer_from_cd_accounts_after_time_traveling_12_months() {
         int monthsPerYear = getMonthsPerYear();
-        double transferAmount = min(bank.getAccount(CD_ID_1).getMaxWithdrawAmount(), bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
-        bank.deposit(SAVINGS_ID_0, transferAmount);
+        String payingID = CD_ID_1;
+        String receivingID = SAVINGS_ID_1;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
+        bank.deposit(receivingID, bank.getAccount(receivingID).getMaxDepositAmount());
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(month >= monthsPerYear, bank.isTransferAmountValid(CD_ID_0, SAVINGS_ID_0, transferAmount));
+            assertEquals(bank.getAccount(payingID).getLifetime() >= monthsPerYear, bank.isTransferAmountValid(payingID, receivingID, transferAmount));
 
             bank.timeTravel(1);
         }
     }
 
-    public static double timeTravel(double minBalanceFee, int months, double initialBalance) {
-        double finalBalance = initialBalance;
+    public static double timeTravel(double minBalanceFee, int months, double startingBalance) {
+        double endingBalance = startingBalance;
 
         for (int i = 0; i < months; i++) {
-            if (finalBalance <= 100) {
-                finalBalance -= minBalanceFee;
+            if (endingBalance <= 100) {
+                endingBalance -= minBalanceFee;
             }
         }
 
-        return finalBalance;
+        return endingBalance;
     }
 
     @Test
     protected void bank_time_travels_should_use_months_between_1_and_60_inclusive() {
-        assertFalse(bank.isPassTimeValid(-10));
-        assertFalse(bank.isPassTimeValid(0));
-        assertTrue(bank.isPassTimeValid(1));
-        assertTrue(bank.isPassTimeValid(2));
-        assertTrue(bank.isPassTimeValid(30));
+        assertFalse(bank.isTimeTravelValid(-10));
+        assertFalse(bank.isTimeTravelValid(0));
+        assertTrue(bank.isTimeTravelValid(1));
+        assertTrue(bank.isTimeTravelValid(2));
+        assertTrue(bank.isTimeTravelValid(30));
 
-        assertTrue(bank.isPassTimeValid(40));
-        assertTrue(bank.isPassTimeValid(50));
-        assertTrue(bank.isPassTimeValid(60));
+        assertTrue(bank.isTimeTravelValid(40));
+        assertTrue(bank.isTimeTravelValid(50));
+        assertTrue(bank.isTimeTravelValid(60));
         assertEquals(60, bank.getMaxMonths());
-        assertFalse(bank.isPassTimeValid(70));
-        assertFalse(bank.isPassTimeValid(100));
+        assertFalse(bank.isTimeTravelValid(70));
+        assertFalse(bank.isTimeTravelValid(100));
     }
 }

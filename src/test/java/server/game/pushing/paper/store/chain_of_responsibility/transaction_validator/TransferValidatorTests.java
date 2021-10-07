@@ -28,7 +28,7 @@ public class TransferValidatorTests {
     private final String SAVINGS_ID_1 = "98430854";
     private final String CD_ID_0 = "24799348";
     private final String CD_ID_1 = "14799348";
-    private double initialCDBalance;
+    private double startingCDBalance;
 
     @BeforeEach
     protected void setUp() {
@@ -36,14 +36,14 @@ public class TransferValidatorTests {
         validator = new TransferValidator(bank);
 
         transactionType = validator.getTransactionType();
-        initialCDBalance = bank.getMinInitialCDBalance();
+        startingCDBalance = bank.getMinStartingCDBalance();
 
         bank.createChecking(CHECKING_ID_0);
         bank.createChecking(CHECKING_ID_1);
         bank.createSavings(SAVINGS_ID_0);
         bank.createSavings(SAVINGS_ID_1);
-        bank.createCD(CD_ID_0, initialCDBalance);
-        bank.createCD(CD_ID_1, initialCDBalance);
+        bank.createCD(CD_ID_0, startingCDBalance);
+        bank.createCD(CD_ID_1, startingCDBalance);
         bank.deposit(CHECKING_ID_0, bank.getAccount(CHECKING_ID_1).getMaxWithdrawAmount());
         bank.deposit(CHECKING_ID_1, bank.getAccount(CHECKING_ID_1).getMaxDepositAmount());
         bank.deposit(SAVINGS_ID_0, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
@@ -210,7 +210,7 @@ public class TransferValidatorTests {
 
     @Test
     protected void transfer_amounts_from_cd_to_savings_should_be_between_the_paying_account_balance_and_2500_inclusive() {
-        initialCDBalance = 2200;
+        startingCDBalance = 2200;
 
         List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxMonths());
         String payingID = CD_ID_1;
@@ -219,9 +219,9 @@ public class TransferValidatorTests {
         double upperBound = 2500;
 
         bank.removeAccount(payingID);
-        bank.createCD(payingID, initialCDBalance);
+        bank.createCD(payingID, startingCDBalance);
         bank.deposit(receivingID, bank.getAccount(receivingID).getMaxDepositAmount());
-        lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(0), initialCDBalance));
+        lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(0), startingCDBalance));
         lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));
 
         for (int i = 0; i < 2; i++) {

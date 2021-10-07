@@ -19,11 +19,10 @@ public class TimeTravelProcessorTests {
     private double minBalanceFee;
     private int months;
     private TransactionType transactionType;
-
     private final String CHECKING_ID = "98408842";
     private final String SAVINGS_ID = "89438042";
     private final String CD_ID = "98430842";
-    private double initialCDBalance;
+    private double startingCDBalance;
 
     @BeforeEach
     protected void setUp() {
@@ -33,11 +32,11 @@ public class TimeTravelProcessorTests {
         minBalanceFee = bank.getMinBalanceFee();
         months = getMonthsPerYear();
         transactionType = processor.getTransactionType();
-        initialCDBalance = bank.getMinInitialCDBalance();
+        startingCDBalance = bank.getMinStartingCDBalance();
 
         bank.createChecking(CHECKING_ID);
         bank.createSavings(SAVINGS_ID);
-        bank.createCD(CD_ID, initialCDBalance);
+        bank.createCD(CD_ID, startingCDBalance);
     }
 
     @Test
@@ -52,7 +51,7 @@ public class TimeTravelProcessorTests {
         assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
         assertEquals(timeTravel(minBalanceFee, months, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
         assertEquals(timeTravel(minBalanceFee, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
-        assertEquals(timeTravel(minBalanceFee, months, initialCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertEquals(timeTravel(minBalanceFee, months, startingCDBalance), bank.getAccount(CD_ID).getBalance());
     }
 
     @Test
@@ -73,11 +72,11 @@ public class TimeTravelProcessorTests {
 
         processor.setNext(new CreateProcessor(bank));
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, id0, initialCDBalance)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, id0, startingCDBalance)));
         Account account = bank.getAccount(id0);
         assertEquals(AccountType.CD, account.getAccountType());
         assertEquals(id0, account.getID());
-        assertEquals(initialCDBalance, account.getBalance());
+        assertEquals(startingCDBalance, account.getBalance());
         assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
     }
 }

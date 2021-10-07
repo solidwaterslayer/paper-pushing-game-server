@@ -19,7 +19,7 @@ public class AccountTests {
     private final String CHECKING_ID = "34785729";
     private final String SAVINGS_ID = "47012479";
     private final String CD_ID = "34782479";
-    private final double INITIAL_CD_BALANCE = 5835;
+    private final double STARTING_CD_BALANCE = 5835;
 
     private double checkingDepositAmount;
     private double checkingWithdrawAmount;
@@ -31,7 +31,7 @@ public class AccountTests {
     protected void setUp() {
         checking = new Checking(CHECKING_ID);
         savings = new Savings(SAVINGS_ID);
-        cd = new CD(CD_ID, INITIAL_CD_BALANCE);
+        cd = new CD(CD_ID, STARTING_CD_BALANCE);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class AccountTests {
     protected void cd_accounts_can_be_created() {
         AccountType accountType = AccountType.CD;
         String id = CD_ID;
-        double balance = INITIAL_CD_BALANCE;
+        double balance = STARTING_CD_BALANCE;
 
         assertEquals(accountType, cd.getAccountType());
         assertEquals(id, cd.getID());
@@ -120,7 +120,7 @@ public class AccountTests {
         savingsDepositAmount = 400;
         checkingWithdrawAmount = checkingDepositAmount;
         savingsWithdrawAmount = savingsDepositAmount;
-        cdWithdrawAmount = timeTravel(0, months, INITIAL_CD_BALANCE);
+        cdWithdrawAmount = timeTravel(0, months, STARTING_CD_BALANCE);
 
         cd.timeTravel(12);
         transfer();
@@ -155,21 +155,6 @@ public class AccountTests {
     }
 
     @Test
-    protected void accounts_can_time_travel() {
-        int checkingMonths = 13;
-        int savingsMonths = 15;
-        int cdMonths = 398;
-
-        checking.timeTravel(checkingMonths);
-        savings.timeTravel(savingsMonths);
-        cd.timeTravel(cdMonths);
-
-        assertEquals(checkingMonths, checking.getAge());
-        assertEquals(savingsMonths, savings.getAge());
-        assertEquals(cdMonths, cd.getAge());
-    }
-
-    @Test
     protected void savings_accounts_can_withdraw_once_per_time_travel_event() {
         double withdrawAmount = savings.getMaxWithdrawAmount();
 
@@ -188,7 +173,7 @@ public class AccountTests {
         double withdrawAmount = cd.getMaxWithdrawAmount();
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(month >= getMonthsPerYear(), cd.isWithdrawAmountValid(withdrawAmount));
+            assertEquals(cd.getLifetime() >= getMonthsPerYear(), cd.isWithdrawAmountValid(withdrawAmount));
 
             cd.timeTravel(1);
         }
@@ -299,7 +284,7 @@ public class AccountTests {
     @Test
     protected void cd_accounts_should_withdraw_amounts_greater_than_or_equal_to_the_account_balance() {
         int months = getMonthsPerYear();
-        cdWithdrawAmount = timeTravel(0, months, INITIAL_CD_BALANCE);
+        cdWithdrawAmount = timeTravel(0, months, STARTING_CD_BALANCE);
 
         cd.timeTravel(12);
 

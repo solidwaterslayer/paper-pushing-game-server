@@ -27,8 +27,8 @@ public class CreateFactory extends TransactionFactory {
         String transaction = "";
         while (!validator.handle(transaction)) {
             String id = getRandomID();
-            double initialCDBalance = getRandomAmount(bank.getMaxInitialCDBalance());
-            transaction = String.format("%s %s %s %.2f", transactionType, accountType, id, initialCDBalance).toLowerCase();
+            double startingCDBalance = getRandomAmount(bank.getMaxStartingCDBalance());
+            transaction = String.format("%s %s %s %.2f", transactionType, accountType, id, startingCDBalance).toLowerCase();
         }
 
         return transaction;

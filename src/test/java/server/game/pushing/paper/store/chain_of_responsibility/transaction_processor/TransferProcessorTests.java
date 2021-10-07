@@ -16,15 +16,15 @@ public class TransferProcessorTests {
     private Bank bank;
     private ChainOfResponsibility processor;
 
-    private final int MONTHS = getMonthsPerYear();
     private double minBalanceFee;
+    private final int MONTHS = getMonthsPerYear();
     private TransactionType transactionType;
     private final String CHECKING_ID_0 = "98830842";
     private final String CHECKING_ID_1 = "09309843";
     private final String SAVINGS_ID_0 = "90328934";
     private final String SAVINGS_ID_1 = "11117823";
     private final String CD_ID = "08429834";
-    private double initialCDBalance;
+    private double startingCDBalance;
     private double checkingDepositAmount;
     private double savingsDepositAmount;
 
@@ -35,12 +35,12 @@ public class TransferProcessorTests {
 
         minBalanceFee = bank.getMinBalanceFee();
         transactionType = processor.getTransactionType();
-        initialCDBalance = bank.getMinInitialCDBalance();
+        startingCDBalance = bank.getMinStartingCDBalance();
         bank.createChecking(CHECKING_ID_0);
         bank.createChecking(CHECKING_ID_1);
         bank.createSavings(SAVINGS_ID_0);
         bank.createSavings(SAVINGS_ID_1);
-        bank.createCD(CD_ID, initialCDBalance);
+        bank.createCD(CD_ID, startingCDBalance);
         checkingDepositAmount = bank.getAccount(CHECKING_ID_1).getMaxDepositAmount();
         savingsDepositAmount = bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount();
 
@@ -106,7 +106,7 @@ public class TransferProcessorTests {
         assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(
                 timeTravel(minBalanceFee, MONTHS, savingsDepositAmount)
-                        + timeTravel(minBalanceFee, MONTHS, initialCDBalance)
+                        + timeTravel(minBalanceFee, MONTHS, startingCDBalance)
                 , bank.getAccount(receivingID).getBalance()
         );
     }
@@ -177,7 +177,7 @@ public class TransferProcessorTests {
         assertEquals(timeTravel(minBalanceFee, MONTHS, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
         assertEquals(timeTravel(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
         assertEquals(timeTravel(minBalanceFee, MONTHS, savingsDepositAmount), bank.getAccount(SAVINGS_ID_1).getBalance());
-        assertEquals(timeTravel(minBalanceFee, MONTHS, initialCDBalance), bank.getAccount(CD_ID).getBalance());
-        assertFalse(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", initialCDBalance)));
+        assertEquals(timeTravel(minBalanceFee, MONTHS, startingCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertFalse(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", startingCDBalance)));
     }
 }

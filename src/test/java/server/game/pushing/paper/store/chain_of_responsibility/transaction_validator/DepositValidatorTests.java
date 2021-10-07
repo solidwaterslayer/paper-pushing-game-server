@@ -28,11 +28,11 @@ public class DepositValidatorTests {
         validator = new DepositValidator(bank);
 
         transactionType = validator.getTransactionType();
-        double initialCDBalance = bank.getMinInitialCDBalance();
+        double startingCDBalance = bank.getMinStartingCDBalance();
 
         bank.createChecking(CHECKING_ID);
         bank.createSavings(SAVINGS_ID);
-        bank.createCD(CD_ID, initialCDBalance);
+        bank.createCD(CD_ID, startingCDBalance);
     }
 
     @Test

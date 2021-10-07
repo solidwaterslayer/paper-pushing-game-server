@@ -20,7 +20,7 @@ public class WithdrawValidatorTests {
     private final String CHECKING_ID = "34782479";
     private final String SAVINGS_ID = "98430842";
     private final String CD_ID = "43784268";
-    private double initialCDBalance;
+    private double startingCDBalance;
 
     @BeforeEach
     protected void setUp() {
@@ -28,11 +28,11 @@ public class WithdrawValidatorTests {
         validator = new WithdrawValidator(bank);
 
         transactionType = validator.getTransactionType();
-        initialCDBalance = bank.getMinInitialCDBalance();
+        startingCDBalance = bank.getMinStartingCDBalance();
 
         bank.createChecking(CHECKING_ID);
         bank.createSavings(SAVINGS_ID);
-        bank.createCD(CD_ID, initialCDBalance);
+        bank.createCD(CD_ID, startingCDBalance);
         bank.deposit(CHECKING_ID, bank.getAccount(CHECKING_ID).getMaxDepositAmount());
         bank.deposit(SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount());
     }
@@ -121,7 +121,7 @@ public class WithdrawValidatorTests {
     @Test
     protected void withdraw_amounts_to_cd_accounts_should_be_greater_than_or_equal_to_the_account_balance() {
         String id = CD_ID;
-        double withdrawAmount = timeTravel(bank.getMinBalanceFee(), MONTHS, initialCDBalance);
+        double withdrawAmount = timeTravel(bank.getMinBalanceFee(), MONTHS, startingCDBalance);
 
         bank.timeTravel(MONTHS);
 

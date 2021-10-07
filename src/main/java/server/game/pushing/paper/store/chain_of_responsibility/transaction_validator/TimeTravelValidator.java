@@ -16,7 +16,7 @@ public class TimeTravelValidator extends ChainOfResponsibility {
     public boolean handle(String[] transactionArguments) {
         try {
             if ((transactionArguments[0] + transactionArguments[1]).equalsIgnoreCase(transactionType.name())
-                    && bank.isPassTimeValid(parseInt(transactionArguments[2]))) {
+                    && bank.isTimeTravelValid(parseInt(transactionArguments[2]))) {
                 return true;
             } else {
                 return next != null && next.handle(transactionArguments);

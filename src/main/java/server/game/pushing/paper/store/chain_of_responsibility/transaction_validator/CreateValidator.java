@@ -39,6 +39,6 @@ public class CreateValidator extends ChainOfResponsibility {
     private boolean handleCreateCDTransaction(String[] transactionArguments) {
         return transactionArguments[1].equalsIgnoreCase("cd")
                 && bank.isIDValid(transactionArguments[2])
-                && bank.isInitialCDBalanceValid(parseDouble(transactionArguments[3]));
+                && bank.isStartingCDBalanceValid(parseDouble(transactionArguments[3]));
     }
 }

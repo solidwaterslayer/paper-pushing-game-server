@@ -27,11 +27,11 @@ public class TimeTravelValidatorTests {
         validator = new TimeTravelValidator(bank);
 
         transactionType = validator.getTransactionType();
-        double initialCDBalance = bank.getMinInitialCDBalance();
+        double startingCDBalance = bank.getMinStartingCDBalance();
 
         bank.createChecking(CHECKING_ID);
         bank.createSavings(SAVINGS_ID);
-        bank.createCD(CD_ID, initialCDBalance);
+        bank.createCD(CD_ID, startingCDBalance);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class TimeTravelValidatorTests {
     }
 
     @Test
-    protected void rename_me_0() {
+    protected void withdraw_transactions_from_savings_accounts_are_valid_once_per_time_travel_event() {
         String id = SAVINGS_ID;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
         String transaction = String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount);
@@ -105,7 +105,7 @@ public class TimeTravelValidatorTests {
     }
 
     @Test
-    protected void rename_me_1() {
+    protected void transfer_transactions_from_savings_accounts_are_valid_once_per_time_travel_event() {
         String payingID = SAVINGS_ID;
         String receivingID = CHECKING_ID;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
@@ -122,22 +122,31 @@ public class TimeTravelValidatorTests {
     }
 
     @Test
-    protected void rename_me_2() {
+    protected void withdraw_transactions_from_cd_accounts_are_valid_after_time_traveling_12_months() {
+        TransactionType transactionType = TransactionType.Withdraw;
+        String id = CD_ID;
+        double withdrawAmount = bank.getAccount(CD_ID).getMaxWithdrawAmount();
+
         validator.setNext(new WithdrawValidator(bank));
 
         for (int month = 0; month < MONTHS_PER_YEAR * 2; month++) {
-            assertEquals(month >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s", TransactionType.Withdraw, CD_ID, bank.getAccount(CD_ID).getMaxWithdrawAmount())));
+            assertEquals(bank.getAccount(id).getLifetime() >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
 
             bank.timeTravel(1);
         }
     }
 
     @Test
-    protected void rename_me_3() {
+    protected void transfer_transactions_from_cd_accounts_are_valid_after_time_traveling_12_months() {
+        TransactionType transactionType = TransactionType.Transfer;
+        String payingID = CD_ID;
+        String receivingID = SAVINGS_ID;
+        double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
+
         validator.setNext(new TransferValidator(bank));
 
         for (int month = 0; month < MONTHS_PER_YEAR * 2; month++) {
-            assertEquals(month >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s %s", TransactionType.Transfer, CD_ID, SAVINGS_ID, bank.getAccount(SAVINGS_ID).getMaxDepositAmount())));
+            assertEquals(bank.getAccount(payingID).getLifetime() >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
 
             bank.timeTravel(1);
         }

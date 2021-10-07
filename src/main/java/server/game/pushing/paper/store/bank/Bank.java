@@ -15,8 +15,8 @@ public class Bank {
     private final Map<String, Account> ACCOUNTS;
 
     private final String VALID_ID;
-    private final double MIN_INITIAL_CD_BALANCE;
-    private final double MAX_INITIAL_CD_BALANCE;
+    private final double MIN_STARTING_CD_BALANCE;
+    private final double MAX_STARTING_CD_BALANCE;
     private final int MAX_MONTHS;
 
     public Bank() {
@@ -24,8 +24,8 @@ public class Bank {
         MIN_BALANCE_FEE = 25;
 
         VALID_ID = "[0-9]{8}";
-        MIN_INITIAL_CD_BALANCE = 1000;
-        MAX_INITIAL_CD_BALANCE = 10000;
+        MIN_STARTING_CD_BALANCE = 1000;
+        MAX_STARTING_CD_BALANCE = 10000;
         MAX_MONTHS = 60;
     }
 
@@ -110,16 +110,16 @@ public class Bank {
         return !containsAccount(id) && id.matches(VALID_ID);
     }
 
-    public boolean isInitialCDBalanceValid(double initialCDBalance) {
-        return MIN_INITIAL_CD_BALANCE <= initialCDBalance && initialCDBalance <= MAX_INITIAL_CD_BALANCE;
+    public boolean isStartingCDBalanceValid(double startingCDBalance) {
+        return MIN_STARTING_CD_BALANCE <= startingCDBalance && startingCDBalance <= MAX_STARTING_CD_BALANCE;
     }
 
-    public double getMinInitialCDBalance() {
-        return MIN_INITIAL_CD_BALANCE;
+    public double getMinStartingCDBalance() {
+        return MIN_STARTING_CD_BALANCE;
     }
 
-    public double getMaxInitialCDBalance() {
-        return MAX_INITIAL_CD_BALANCE;
+    public double getMaxStartingCDBalance() {
+        return MAX_STARTING_CD_BALANCE;
     }
 
     public boolean isDepositAmountValid(String id, double depositAmount) {
@@ -134,7 +134,7 @@ public class Bank {
         return !fromID.equals(toID) && isWithdrawAmountValid(fromID, transferAmount) && isDepositAmountValid(toID, transferAmount);
     }
 
-    public boolean isPassTimeValid(int months) {
+    public boolean isTimeTravelValid(int months) {
         return 1 <= months && months <= MAX_MONTHS;
     }
 

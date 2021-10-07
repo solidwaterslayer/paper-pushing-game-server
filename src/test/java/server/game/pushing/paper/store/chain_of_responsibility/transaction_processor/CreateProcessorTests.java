@@ -18,7 +18,7 @@ public class CreateProcessorTests {
     private final String CHECKING_ID = "17349724";
     private final String SAVINGS_ID = "27349724";
     private final String CD_ID = "87349724";
-    private double initialCDBalance;
+    private double startingCDBalance;
 
     @BeforeEach
     protected void setUp() {
@@ -26,7 +26,7 @@ public class CreateProcessorTests {
         processor = new CreateProcessor(bank);
 
         transactionType = processor.getTransactionType();
-        initialCDBalance = bank.getMinInitialCDBalance();
+        startingCDBalance = bank.getMinStartingCDBalance();
     }
 
     @Test
@@ -60,26 +60,26 @@ public class CreateProcessorTests {
         AccountType accountType = AccountType.CD;
         String id = CD_ID;
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, initialCDBalance)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, startingCDBalance)));
 
         Account account = bank.getAccount(id);
         assertEquals(accountType, account.getAccountType());
         assertEquals(id, account.getID());
-        assertEquals(initialCDBalance, account.getBalance());
+        assertEquals(startingCDBalance, account.getBalance());
     }
 
     @Test
     protected void create_processors_can_ignore_additional_arguments() {
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID, "0")));
         assertTrue(processor.handle(String.format("%s %s %s %s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID, "nuke", AccountType.CD, "38ur", 34)));
-        assertTrue(processor.handle(String.format("%s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, CD_ID, initialCDBalance, "8", 8, "eight", 4 + 4)));
+        assertTrue(processor.handle(String.format("%s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, CD_ID, startingCDBalance, "8", 8, "eight", 4 + 4)));
     }
 
     @Test
     protected void create_processors_are_case_insensitive() {
         assertTrue(processor.handle(String.format("%s %s %s", "crEaTe", "checking", CHECKING_ID)));
         assertTrue(processor.handle(String.format("%s %s %s", "create", "saVINgs", SAVINGS_ID)));
-        assertTrue(processor.handle(String.format("%s %s %s %s", "creATe", "Cd", CD_ID, initialCDBalance)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", "creATe", "Cd", CD_ID, startingCDBalance)));
     }
 
     @Test
