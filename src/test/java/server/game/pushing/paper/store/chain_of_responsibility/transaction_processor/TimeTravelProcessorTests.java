@@ -47,9 +47,9 @@ public class TimeTravelProcessorTests {
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
         assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
-        assertEquals(timeTravel(bank, months, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(timeTravel(bank, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
-        assertEquals(timeTravel(bank, months, startingCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertEquals(timeTravel(checkingDepositAmount, bank, months), bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(timeTravel(savingsDepositAmount, bank, months), bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(timeTravel(startingCDBalance, bank, months), bank.getAccount(CD_ID).getBalance());
     }
 
     @Test

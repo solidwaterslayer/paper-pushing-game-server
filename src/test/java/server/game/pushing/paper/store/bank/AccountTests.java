@@ -176,7 +176,7 @@ public class AccountTests {
         savingsDepositAmount = 400;
         checkingWithdrawAmount = checkingDepositAmount;
         savingsWithdrawAmount = savingsDepositAmount;
-        cdWithdrawAmount = timeTravel(new Bank(), months, STARTING_CD_BALANCE);
+        cdWithdrawAmount = timeTravel(STARTING_CD_BALANCE, new Bank(), months);
 
         cd.timeTravel(months);
         transfer();
@@ -251,7 +251,7 @@ public class AccountTests {
     @Test
     protected void cd_accounts_should_withdraw_amounts_greater_than_or_equal_to_the_account_balance() {
         int months = getMonthsPerYear();
-        cdWithdrawAmount = timeTravel(new Bank(), months, STARTING_CD_BALANCE);
+        cdWithdrawAmount = timeTravel(STARTING_CD_BALANCE, new Bank(), months);
 
         cd.timeTravel(months);
 

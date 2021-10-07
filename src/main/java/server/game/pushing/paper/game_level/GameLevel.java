@@ -21,7 +21,6 @@ public class GameLevel {
         transformedReceipt = receipt;
         receiptTransformation = receipt;
 
-        // typo
         // change transaction type
         // change account type
         // increment id

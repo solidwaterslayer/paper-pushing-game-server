@@ -275,7 +275,7 @@ public class BankTests {
     protected void bank_withdraws_from_cd_accounts_should_use_a_withdraw_amount_greater_than_or_equal_to_balance() {
         int months = getMonthsPerYear();
         String id = CD_ID_0;
-        double cdWithdrawAmount = timeTravel(bank, months, startingCDBalance);
+        double cdWithdrawAmount = timeTravel(startingCDBalance, bank, months);
 
         bank.timeTravel(months);
 
@@ -361,8 +361,8 @@ public class BankTests {
 
         assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(
-                timeTravel(bank, months, savingsDepositAmount)
-                        + timeTravel(bank, months, startingCDBalance),
+                timeTravel(savingsDepositAmount, bank, months)
+                        + timeTravel(startingCDBalance, bank, months),
                 bank.getAccount(receivingID).getBalance()
         );
     }
@@ -539,8 +539,8 @@ public class BankTests {
         bank.removeAccount(payingID);
         bank.createCD(payingID, startingCDBalance);
         bank.deposit(receivingID, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
-        lowerBound.add(timeTravel(bank, months.get(0), startingCDBalance));
-        lowerBound.add(timeTravel(bank, months.get(1), lowerBound.get(0)));
+        lowerBound.add(timeTravel(startingCDBalance, bank, months.get(0)));
+        lowerBound.add(timeTravel(lowerBound.get(0), bank, months.get(1)));
 
         for (int i = 0; i < 2; i++) {
             bank.timeTravel(months.get(i));
@@ -584,9 +584,9 @@ public class BankTests {
 
         bank.timeTravel(months);
 
-        assertEquals(timeTravel(bank, months, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(timeTravel(bank, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(timeTravel(bank, months, startingCDBalance), bank.getAccount(CD_ID_0).getBalance());
+        assertEquals(timeTravel(checkingDepositAmount, bank, months), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(timeTravel(savingsDepositAmount, bank, months), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(timeTravel(startingCDBalance, bank, months), bank.getAccount(CD_ID_0).getBalance());
     }
 
     @Test
@@ -652,7 +652,7 @@ public class BankTests {
         }
     }
 
-    public static double timeTravel(Bank bank, int months, double balance) {
+    public static double timeTravel(double balance, Bank bank, int months) {
         if (bank.isLowBalance(balance)) {
             return max(0, balance - bank.getMinBalanceFee() * months);
         }

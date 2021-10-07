@@ -63,9 +63,9 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void withdraw_processors_can_withdraw_when_the_withdraw_amount_is_equal_to_the_account_balance() {
-        double checkingWithdrawAmount = timeTravel(bank, MONTHS, checkingDepositAmount);
-        double savingsWithdrawAmount = timeTravel(bank, MONTHS, savingsDepositAmount);
-        double cdWithdrawAmount = timeTravel(bank, MONTHS, startingCDBalance);
+        double checkingWithdrawAmount = timeTravel(checkingDepositAmount, bank, MONTHS);
+        double savingsWithdrawAmount = timeTravel(savingsDepositAmount, bank, MONTHS);
+        double cdWithdrawAmount = timeTravel(startingCDBalance, bank, MONTHS);
         bank.timeTravel(MONTHS);
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());

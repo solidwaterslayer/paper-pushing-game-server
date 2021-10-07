@@ -121,7 +121,7 @@ public class WithdrawValidatorTests {
     @Test
     protected void withdraw_amounts_to_cd_accounts_should_be_greater_than_or_equal_to_the_account_balance() {
         String id = CD_ID;
-        double withdrawAmount = timeTravel(bank, MONTHS, startingCDBalance);
+        double withdrawAmount = timeTravel(startingCDBalance, bank, MONTHS);
 
         bank.timeTravel(MONTHS);
 
