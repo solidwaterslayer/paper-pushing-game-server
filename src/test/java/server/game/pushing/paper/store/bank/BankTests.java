@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
@@ -274,7 +275,7 @@ public class BankTests {
     protected void bank_withdraws_from_cd_accounts_should_use_a_withdraw_amount_greater_than_or_equal_to_balance() {
         int months = getMonthsPerYear();
         String id = CD_ID_0;
-        double cdWithdrawAmount = timeTravel(bank.getMinBalanceFee(), months, startingCDBalance);
+        double cdWithdrawAmount = timeTravel(bank, months, startingCDBalance);
 
         bank.timeTravel(months);
 
@@ -348,7 +349,6 @@ public class BankTests {
 
     @Test
     protected void banks_can_transfer_from_cd_to_savings() {
-        double minBalanceFee = bank.getMinBalanceFee();
         int months = getMonthsPerYear();
         String payingID = CD_ID_0;
         String receivingID = SAVINGS_ID_0;
@@ -361,8 +361,8 @@ public class BankTests {
 
         assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(
-                timeTravel(minBalanceFee, months, savingsDepositAmount)
-                        + timeTravel(minBalanceFee, months, startingCDBalance),
+                timeTravel(bank, months, savingsDepositAmount)
+                        + timeTravel(bank, months, startingCDBalance),
                 bank.getAccount(receivingID).getBalance()
         );
     }
@@ -539,8 +539,8 @@ public class BankTests {
         bank.removeAccount(payingID);
         bank.createCD(payingID, startingCDBalance);
         bank.deposit(receivingID, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
-        lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(0), startingCDBalance));
-        lowerBound.add(timeTravel(bank.getMinBalanceFee(), months.get(1), lowerBound.get(0)));
+        lowerBound.add(timeTravel(bank, months.get(0), startingCDBalance));
+        lowerBound.add(timeTravel(bank, months.get(1), lowerBound.get(0)));
 
         for (int i = 0; i < 2; i++) {
             bank.timeTravel(months.get(i));
@@ -559,30 +559,23 @@ public class BankTests {
     }
 
     @Test
-    protected void the_min_balance_fee_is_25() {
-        assertEquals(25, bank.getMinBalanceFee());
+    protected void the_min_balance_fee_is_100() {
+        assertEquals(100, bank.getMinBalanceFee());
     }
 
     @Test
-    protected void low_balance_accounts_are_accounts_with_less_than_or_equal_to_900_balance() {
-        double depositAmount = 900;
+    protected void a_low_balance_is_less_than_or_equal_to_900() {
+        double balance = 900;
 
-        bank.deposit(CHECKING_ID_1, depositAmount - 500);
-        bank.deposit(CHECKING_ID_0, depositAmount - 100);
-        bank.deposit(SAVINGS_ID_1, depositAmount);
-        bank.deposit(SAVINGS_ID_0, depositAmount + 500);
-
-        assertTrue(bank.isLowBalanceAccount(bank.getAccount(CHECKING_ID_1)));
-        assertTrue(bank.isLowBalanceAccount(bank.getAccount(CHECKING_ID_0)));
-        assertTrue(bank.isLowBalanceAccount(bank.getAccount(SAVINGS_ID_1)));
-        assertFalse(bank.isLowBalanceAccount(bank.getAccount(CD_ID_1)));
-        assertFalse(bank.isLowBalanceAccount(bank.getAccount(CD_ID_0)));
-        assertFalse(bank.isLowBalanceAccount(bank.getAccount(SAVINGS_ID_0)));
+        assertTrue(bank.isLowBalance(balance - 500));
+        assertTrue(bank.isLowBalance(balance - 100));
+        assertTrue(bank.isLowBalance(balance));
+        assertFalse(bank.isLowBalance(balance + 100));
+        assertFalse(bank.isLowBalance(balance + 500));
     }
 
     @Test
-    protected void banks_should_withdraw_the_min_balance_fee_from_low_balance_accounts_during_time_travel() {
-        double minBalanceFee = bank.getMinBalanceFee();
+    protected void banks_should_withdraw_the_min_balance_fee_from_accounts_with_a_low_balance_during_time_travel() {
         int months = 2;
         double checkingDepositAmount = 90;
         double savingsDepositAmount = 100;
@@ -591,9 +584,9 @@ public class BankTests {
 
         bank.timeTravel(months);
 
-        assertEquals(timeTravel(minBalanceFee, months, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(timeTravel(minBalanceFee, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(timeTravel(minBalanceFee, months, startingCDBalance), bank.getAccount(CD_ID_0).getBalance());
+        assertEquals(timeTravel(bank, months, checkingDepositAmount), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(timeTravel(bank, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(timeTravel(bank, months, startingCDBalance), bank.getAccount(CD_ID_0).getBalance());
     }
 
     @Test
@@ -659,16 +652,12 @@ public class BankTests {
         }
     }
 
-    public static double timeTravel(double minBalanceFee, int months, double startingBalance) {
-        double endingBalance = startingBalance;
-
-        for (int i = 0; i < months; i++) {
-            if (endingBalance <= 100) {
-                endingBalance -= minBalanceFee;
-            }
+    public static double timeTravel(Bank bank, int months, double balance) {
+        if (bank.isLowBalance(balance)) {
+            return max(0, balance - bank.getMinBalanceFee() * months);
         }
 
-        return endingBalance;
+        return balance;
     }
 
     @Test

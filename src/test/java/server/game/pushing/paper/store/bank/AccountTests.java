@@ -92,94 +92,6 @@ public class AccountTests {
     }
 
     @Test
-    protected void checking_accounts_can_withdraw_when_the_withdraw_amount_is_less_than_the_account_balance() {
-        checkingDepositAmount = checking.getMaxWithdrawAmount();
-        checkingWithdrawAmount = checkingDepositAmount - 100;
-        checking.deposit(checkingDepositAmount);
-
-        assertTrue(checkingWithdrawAmount < checking.getBalance());
-        checking.withdraw(checkingWithdrawAmount);
-        assertEquals(checkingDepositAmount - checkingWithdrawAmount, checking.getBalance());
-    }
-
-    @Test
-    protected void savings_accounts_can_withdraw_when_the_withdraw_amount_is_less_than_the_account_balance() {
-        savingsDepositAmount = savings.getMaxWithdrawAmount();
-        savingsWithdrawAmount = savingsDepositAmount - 50;
-        savings.deposit(savingsDepositAmount);
-
-        assertTrue(savingsWithdrawAmount < savings.getBalance());
-        savings.withdraw(savingsWithdrawAmount);
-        assertEquals(savingsDepositAmount - savingsWithdrawAmount, savings.getBalance());
-    }
-
-    @Test
-    protected void accounts_can_withdraw_when_the_withdraw_amount_is_equal_to_the_account_balance() {
-        int months = getMonthsPerYear();
-        checkingDepositAmount = 300;
-        savingsDepositAmount = 400;
-        checkingWithdrawAmount = checkingDepositAmount;
-        savingsWithdrawAmount = savingsDepositAmount;
-        cdWithdrawAmount = timeTravel(0, months, STARTING_CD_BALANCE);
-
-        cd.timeTravel(12);
-        transfer();
-
-        assertEquals(0, checking.getBalance());
-        assertEquals(0, savings.getBalance());
-        assertEquals(0, cd.getBalance());
-    }
-
-    @Test
-    protected void accounts_should_withdraw_the_account_balance_when_the_withdraw_amount_is_greater_than_the_account_balance() {
-        checkingDepositAmount = 300;
-        savingsDepositAmount = 400;
-        checkingWithdrawAmount = checking.getMaxWithdrawAmount();
-        savingsWithdrawAmount = savings.getMaxWithdrawAmount();
-        cdWithdrawAmount = cd.getMaxWithdrawAmount();
-
-        cd.timeTravel(12);
-        transfer();
-
-        assertEquals(0, checking.getBalance());
-        assertEquals(0, savings.getBalance());
-        assertEquals(0, cd.getBalance());
-    }
-
-    private void transfer() {
-        checking.deposit(checkingDepositAmount);
-        savings.deposit(savingsDepositAmount);
-        checking.withdraw(checkingWithdrawAmount);
-        savings.withdraw(savingsWithdrawAmount);
-        cd.withdraw(cdWithdrawAmount);
-    }
-
-    @Test
-    protected void savings_accounts_can_withdraw_once_per_time_travel_event() {
-        double withdrawAmount = savings.getMaxWithdrawAmount();
-
-        assertTrue(savings.isWithdrawAmountValid(withdrawAmount));
-
-        savings.withdraw(withdrawAmount);
-        assertFalse(savings.isWithdrawAmountValid(withdrawAmount));
-
-        savings.timeTravel(1);
-        assertTrue(savings.isWithdrawAmountValid(withdrawAmount));
-    }
-
-    @Test
-    protected void cd_accounts_can_withdraw_after_time_traveling_12_months() {
-        int monthsPerYear = getMonthsPerYear();
-        double withdrawAmount = cd.getMaxWithdrawAmount();
-
-        for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(cd.getLifetime() >= getMonthsPerYear(), cd.isWithdrawAmountValid(withdrawAmount));
-
-            cd.timeTravel(1);
-        }
-    }
-
-    @Test
     protected void checking_accounts_should_deposit_amounts_greater_than_0() {
         checkingDepositAmount = 0;
 
@@ -236,6 +148,61 @@ public class AccountTests {
     }
 
     @Test
+    protected void checking_accounts_can_withdraw_when_the_withdraw_amount_is_less_than_the_account_balance() {
+        checkingDepositAmount = checking.getMaxWithdrawAmount();
+        checkingWithdrawAmount = checkingDepositAmount - 100;
+        checking.deposit(checkingDepositAmount);
+
+        assertTrue(checkingWithdrawAmount < checking.getBalance());
+        checking.withdraw(checkingWithdrawAmount);
+        assertEquals(checkingDepositAmount - checkingWithdrawAmount, checking.getBalance());
+    }
+
+    @Test
+    protected void savings_accounts_can_withdraw_when_the_withdraw_amount_is_less_than_the_account_balance() {
+        savingsDepositAmount = savings.getMaxWithdrawAmount();
+        savingsWithdrawAmount = savingsDepositAmount - 50;
+        savings.deposit(savingsDepositAmount);
+
+        assertTrue(savingsWithdrawAmount < savings.getBalance());
+        savings.withdraw(savingsWithdrawAmount);
+        assertEquals(savingsDepositAmount - savingsWithdrawAmount, savings.getBalance());
+    }
+
+    @Test
+    protected void accounts_can_withdraw_when_the_withdraw_amount_is_equal_to_the_account_balance() {
+        int months = getMonthsPerYear();
+        checkingDepositAmount = 300;
+        savingsDepositAmount = 400;
+        checkingWithdrawAmount = checkingDepositAmount;
+        savingsWithdrawAmount = savingsDepositAmount;
+        cdWithdrawAmount = timeTravel(new Bank(), months, STARTING_CD_BALANCE);
+
+        cd.timeTravel(months);
+        transfer();
+
+        assertEquals(0, checking.getBalance());
+        assertEquals(0, savings.getBalance());
+        assertEquals(0, cd.getBalance());
+    }
+
+    @Test
+    protected void accounts_should_withdraw_the_account_balance_when_the_withdraw_amount_is_greater_than_the_account_balance() {
+        checkingDepositAmount = 300;
+        savingsDepositAmount = 400;
+        checkingWithdrawAmount = checking.getMaxWithdrawAmount();
+        savingsWithdrawAmount = savings.getMaxWithdrawAmount();
+        cdWithdrawAmount = cd.getMaxWithdrawAmount();
+
+        cd.timeTravel(12);
+        transfer();
+
+        assertEquals(0, checking.getBalance());
+        assertEquals(0, savings.getBalance());
+        assertEquals(0, cd.getBalance());
+    }
+
+    @Test
     protected void checking_accounts_should_withdraw_amounts_greater_than_0() {
         checkingWithdrawAmount = 0;
 
@@ -284,9 +251,9 @@ public class AccountTests {
     @Test
     protected void cd_accounts_should_withdraw_amounts_greater_than_or_equal_to_the_account_balance() {
         int months = getMonthsPerYear();
-        cdWithdrawAmount = timeTravel(0, months, STARTING_CD_BALANCE);
+        cdWithdrawAmount = timeTravel(new Bank(), months, STARTING_CD_BALANCE);
 
-        cd.timeTravel(12);
+        cd.timeTravel(months);
 
         assertEquals(cdWithdrawAmount, cd.getBalance());
         assertFalse(cd.isWithdrawAmountValid(cdWithdrawAmount - 500));
@@ -299,5 +266,38 @@ public class AccountTests {
         assertFalse(cd.isWithdrawAmountValid(-1000));
         assertFalse(cd.isWithdrawAmountValid(0));
         assertTrue(cd.isWithdrawAmountValid(Double.POSITIVE_INFINITY));
+    }
+
+    private void transfer() {
+        checking.deposit(checkingDepositAmount);
+        savings.deposit(savingsDepositAmount);
+        checking.withdraw(checkingWithdrawAmount);
+        savings.withdraw(savingsWithdrawAmount);
+        cd.withdraw(cdWithdrawAmount);
+    }
+
+    @Test
+    protected void savings_accounts_can_withdraw_once_per_time_travel_event() {
+        double withdrawAmount = savings.getMaxWithdrawAmount();
+
+        assertTrue(savings.isWithdrawAmountValid(withdrawAmount));
+
+        savings.withdraw(withdrawAmount);
+        assertFalse(savings.isWithdrawAmountValid(withdrawAmount));
+
+        savings.timeTravel(1);
+        assertTrue(savings.isWithdrawAmountValid(withdrawAmount));
+    }
+
+    @Test
+    protected void cd_accounts_can_withdraw_after_time_traveling_12_months() {
+        int monthsPerYear = getMonthsPerYear();
+        double withdrawAmount = cd.getMaxWithdrawAmount();
+
+        for (int month = 0; month < monthsPerYear * 2; month++) {
+            assertEquals(cd.getLifetime() >= getMonthsPerYear(), cd.isWithdrawAmountValid(withdrawAmount));
+
+            cd.timeTravel(1);
+        }
     }
 }

@@ -20,5 +20,19 @@ public class GameLevel {
         List<String> receipt = store.getReceipt();
         transformedReceipt = receipt;
         receiptTransformation = receipt;
+
+        // typo
+        // change transaction type
+        // change account type
+        // increment id
+        // increment amount
+        // missing transaction [not is empty]
+        // switch 2 transactions
+        // move transaction to invalid
+
+        // amount underload [create and time travel]
+        // amount overload
+        // withdraw from savings twice
+        // withdraw from cd before time traveling 12 months
     }
 }

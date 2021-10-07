@@ -16,7 +16,6 @@ public class TimeTravelProcessorTests {
     private Bank bank;
     private ChainOfResponsibility processor;
 
-    private double minBalanceFee;
     private int months;
     private TransactionType transactionType;
     private final String CHECKING_ID = "98408842";
@@ -29,7 +28,6 @@ public class TimeTravelProcessorTests {
         bank = new Bank();
         processor = new TimeTravelProcessor(bank);
 
-        minBalanceFee = bank.getMinBalanceFee();
         months = getMonthsPerYear();
         transactionType = processor.getTransactionType();
         startingCDBalance = bank.getMinStartingCDBalance();
@@ -49,9 +47,9 @@ public class TimeTravelProcessorTests {
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
         assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
-        assertEquals(timeTravel(minBalanceFee, months, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(timeTravel(minBalanceFee, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
-        assertEquals(timeTravel(minBalanceFee, months, startingCDBalance), bank.getAccount(CD_ID).getBalance());
+        assertEquals(timeTravel(bank, months, checkingDepositAmount), bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(timeTravel(bank, months, savingsDepositAmount), bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(timeTravel(bank, months, startingCDBalance), bank.getAccount(CD_ID).getBalance());
     }
 
     @Test

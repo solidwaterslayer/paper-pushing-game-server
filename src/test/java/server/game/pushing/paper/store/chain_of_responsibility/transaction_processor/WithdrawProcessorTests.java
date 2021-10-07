@@ -15,7 +15,6 @@ public class WithdrawProcessorTests {
     private Bank bank;
     private ChainOfResponsibility processor;
 
-    private double minBalanceFee;
     private final int MONTHS = getMonthsPerYear();
     private TransactionType transactionType;
     private final String CHECKING_ID = "87439752";
@@ -30,7 +29,6 @@ public class WithdrawProcessorTests {
         bank = new Bank();
         processor = new WithdrawProcessor(bank);
 
-        minBalanceFee = bank.getMinBalanceFee();
         transactionType = processor.getTransactionType();
         startingCDBalance = bank.getMinStartingCDBalance();
         bank.createChecking(CHECKING_ID);
@@ -65,9 +63,9 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void withdraw_processors_can_withdraw_when_the_withdraw_amount_is_equal_to_the_account_balance() {
-        double checkingWithdrawAmount = timeTravel(minBalanceFee, MONTHS, checkingDepositAmount);
-        double savingsWithdrawAmount = timeTravel(minBalanceFee, MONTHS, savingsDepositAmount);
-        double cdWithdrawAmount = timeTravel(minBalanceFee, MONTHS, startingCDBalance);
+        double checkingWithdrawAmount = timeTravel(bank, MONTHS, checkingDepositAmount);
+        double savingsWithdrawAmount = timeTravel(bank, MONTHS, savingsDepositAmount);
+        double cdWithdrawAmount = timeTravel(bank, MONTHS, startingCDBalance);
         bank.timeTravel(MONTHS);
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());

@@ -10,6 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Math.min;
+
 public class Bank {
     private final double MIN_BALANCE_FEE;
     private final Map<String, Account> ACCOUNTS;
@@ -21,7 +23,7 @@ public class Bank {
 
     public Bank() {
         this.ACCOUNTS = new LinkedHashMap<>();
-        MIN_BALANCE_FEE = 25;
+        MIN_BALANCE_FEE = 100;
 
         VALID_ID = "[0-9]{8}";
         MIN_STARTING_CD_BALANCE = 1000;
@@ -77,33 +79,27 @@ public class Bank {
         getAccount(id).withdraw(withdrawAmount);
     }
 
-    public void transfer(String fromID, String toID, double transferAmount) {
-        Account fromAccount = getAccount(fromID);
-        Account toAccount = getAccount(toID);
+    public void transfer(String payingID, String receivingID, double transferAmount) {
+        Account payingAccount = getAccount(payingID);
+        Account receivingAccount = getAccount(receivingID);
+        transferAmount = min(transferAmount, payingAccount.getBalance());
 
-        if (transferAmount > fromAccount.getBalance()) {
-            transfer(fromID, toID, fromAccount.getBalance());
-            return;
-        }
-
-        fromAccount.withdraw(transferAmount);
-        toAccount.deposit(transferAmount);
+        payingAccount.withdraw(transferAmount);
+        receivingAccount.deposit(transferAmount);
     }
 
     public void timeTravel(int months) {
         for (Account account : new ArrayList<>(ACCOUNTS.values())) {
-            for (int i = 0; i < months; i++) {
-                if (isLowBalanceAccount(account)) {
-                    account.withdraw(MIN_BALANCE_FEE);
-                }
-
-                account.timeTravel(1);
+            if (isLowBalance(account.getBalance())) {
+                account.withdraw(MIN_BALANCE_FEE * months);
             }
+
+            account.timeTravel(months);
         }
     }
 
-    public boolean isLowBalanceAccount(Account account) {
-        return account.getBalance() <= 900;
+    public boolean isLowBalance(double balance) {
+        return balance <= 900;
     }
 
     public boolean isIDValid(String id) {

@@ -1,5 +1,7 @@
 package server.game.pushing.paper.store.bank.account;
 
+import static java.lang.Math.max;
+
 public abstract class Account {
     protected int lifetime;
     protected AccountType accountType;
@@ -53,12 +55,13 @@ public abstract class Account {
     }
 
     public void withdraw(double withdrawAmount) {
-        if (withdrawAmount > this.balance) {
-            withdraw(this.balance);
-            return;
-        }
-
-        this.balance -= withdrawAmount;
+        this.balance = max(0, this.balance - withdrawAmount);
+//        if (withdrawAmount > this.balance) {
+//            withdraw(this.balance);
+//            return;
+//        }
+//
+//        this.balance -= withdrawAmount;
     }
 
     public void timeTravel(int months) {
