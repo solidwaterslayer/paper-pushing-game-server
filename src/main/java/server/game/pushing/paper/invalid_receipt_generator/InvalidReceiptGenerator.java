@@ -1,10 +1,10 @@
-package server.game.pushing.paper.invalid_receipt_factory;
+package server.game.pushing.paper.invalid_receipt_generator;
 
 import server.game.pushing.paper.store.Store;
 
 import java.util.List;
 
-public class InvalidReceiptFactory {
+public class InvalidReceiptGenerator {
     public List<String> getInvalidReceipt(List<String> order) {
         Store store = new Store();
         store.getOrder().addAll(order);

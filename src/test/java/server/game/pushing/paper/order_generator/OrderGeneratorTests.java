@@ -1,4 +1,4 @@
-package server.game.pushing.paper.order_factory;
+package server.game.pushing.paper.order_generator;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -11,10 +11,10 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class OrderFactoryTests {
+public class OrderGeneratorTests {
     @Test
     protected void order_factories_should_return_a_valid_order() {
-        OrderFactory orderFactory = new OrderFactory();
+        OrderGenerator orderGenerator = new OrderGenerator();
         int size = 9;
         List<String> order;
         List<String> receipt;
@@ -23,7 +23,7 @@ public class OrderFactoryTests {
         String transaction;
 
         for (int i = 0; i < 99; i++) {
-            order = orderFactory.getOrder(size, new Random(i));
+            order = orderGenerator.getOrder(size, new Random(i));
             assertTrue(order.get(0).contains(AccountType.CHECKING.name().toLowerCase()));
             assertTrue(order.get(1).contains(AccountType.CHECKING.name().toLowerCase()));
             assertEquals(size, order.size());

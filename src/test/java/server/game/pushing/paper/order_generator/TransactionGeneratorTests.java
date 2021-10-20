@@ -1,10 +1,10 @@
-package server.game.pushing.paper.order_factory;
+package server.game.pushing.paper.order_generator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import server.game.pushing.paper.order_factory.transaction_factory.*;
+import server.game.pushing.paper.order_generator.transaction_generator.*;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
@@ -18,9 +18,9 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TransactionFactoryTests {
+public class TransactionGeneratorTests {
     private Bank bank;
-    private List<TransactionFactory> transactionFactories;
+    private List<TransactionGenerator> transactionFactories;
     private ChainOfResponsibility validator;
     private ChainOfResponsibility processor;
 
@@ -37,19 +37,19 @@ public class TransactionFactoryTests {
 
         logger = LoggerFactory.getLogger(this.getClass());
 
-        transactionFactories.addAll(Arrays.asList(new CreateFactory(bank, random), new DepositFactory(bank, random), new WithdrawFactory(bank, random), new TransferFactory(bank, random), new TimeTravelFactory(bank, random)));
+        transactionFactories.addAll(Arrays.asList(new CreateGenerator(bank, random), new DepositGenerator(bank, random), new WithdrawGenerator(bank, random), new TransferGenerator(bank, random), new TimeTravelGenerator(bank, random)));
     }
 
     @Test
     protected void transaction_factories_should_return_a_valid_transaction() {
-        for (TransactionFactory transactionFactory : transactionFactories) {
-            getTransaction(transactionFactory);
+        for (TransactionGenerator transactionGenerator : transactionFactories) {
+            getTransaction(transactionGenerator);
         }
     }
 
-    private void getTransaction(TransactionFactory transactionFactory) {
+    private void getTransaction(TransactionGenerator transactionGenerator) {
         for (int i = 0; i < 999; i++) {
-            String transaction = transactionFactory.getTransaction();
+            String transaction = transactionGenerator.getTransaction();
 
             logger.info(String.format("[%s] %s", i, transaction));
             assertTrue(validator.handle(transaction) && processor.handle(transaction));
@@ -59,7 +59,7 @@ public class TransactionFactoryTests {
     private void create_factories_can_return_a_valid_but_loaded_transaction() {
         for (AccountType accountType : AccountType.values()) {
             for (int i = 0; i < 333; i++) {
-                String transaction = ((CreateFactory) transactionFactories.get(0)).getLoadedTransaction(accountType);
+                String transaction = ((CreateGenerator) transactionFactories.get(0)).getLoadedTransaction(accountType);
 
                 logger.info(String.format("[%s] %s", i, transaction));
                 assertTrue(validator.handle(transaction) && processor.handle(transaction));

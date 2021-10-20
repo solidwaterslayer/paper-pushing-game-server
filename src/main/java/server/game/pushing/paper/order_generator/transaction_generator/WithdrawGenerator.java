@@ -1,12 +1,12 @@
-package server.game.pushing.paper.order_factory.transaction_factory;
+package server.game.pushing.paper.order_generator.transaction_generator;
 
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.Random;
 
-public class WithdrawFactory extends TransactionFactory {
-    public WithdrawFactory(Bank bank, Random random) {
+public class WithdrawGenerator extends TransactionGenerator {
+    public WithdrawGenerator(Bank bank, Random random) {
         super(bank, random);
 
         transactionType = TransactionType.Withdraw;
