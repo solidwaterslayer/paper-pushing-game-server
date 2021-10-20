@@ -9,36 +9,31 @@ import java.util.Random;
 
 public class GameLevel {
     public List<String> order;
-    private List<String> receipt;
-    protected List<String> transformation;
+    public List<String> receipt;
+    public List<String> transformation;
 
     public GameLevel() {
         OrderGenerator orderGenerator = new OrderGenerator();
-        order = orderGenerator.getOrder(9, new Random());
-
+        Random random = new Random();
+        order = orderGenerator.getOrder(9, random);
         Store store = new Store();
         store.getOrder().addAll(order);
         receipt = store.getReceipt();
-
         transformation = new ArrayList<>();
+
         // typo
-        // change transaction type
-        // change account type
-        // increment id
-        // increment amount
+            // change transaction type
+            // change account type
+            // increment id
+            // increment amount
         // move
-        // switch
-            // deposit
-            // withdraw
-            // transfer
+        // switch valid
         // remove
-            // deposit
-            // withdraw
-            // transfer
 
         // overload
         // paradox
             // withdraw from savings twice
             // withdraw from cd before time traveling 12 months
+//        List<String> errors = new ArrayList<>(Arrays.asList("typo", "move", "switch", "remove", "exceedBalance", "exceedTime"));
     }
 }
