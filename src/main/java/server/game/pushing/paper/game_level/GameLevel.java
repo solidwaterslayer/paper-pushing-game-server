@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Random;
 
 public class GameLevel {
-    private List<String> order;
+    public List<String> order;
     private List<String> receipt;
-    private List<String> transformation;
+    protected List<String> transformation;
 
     public GameLevel() {
         OrderGenerator orderGenerator = new OrderGenerator();
