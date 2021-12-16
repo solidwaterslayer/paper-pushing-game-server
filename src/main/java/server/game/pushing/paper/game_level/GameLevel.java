@@ -15,25 +15,10 @@ public class GameLevel {
     public GameLevel() {
         OrderGenerator orderGenerator = new OrderGenerator();
         Random random = new Random();
-        order = orderGenerator.getOrder(9, random);
+        order = orderGenerator.getOrder(6, random);
         Store store = new Store();
         store.getOrder().addAll(order);
         receipt = store.getReceipt();
         transformation = new ArrayList<>();
-
-        // typo
-            // change transaction type
-            // change account type
-            // increment id
-            // increment amount
-        // move
-        // switch valid
-        // remove
-
-        // overload
-        // paradox
-            // withdraw from savings twice
-            // withdraw from cd before time traveling 12 months
-//        List<String> errors = new ArrayList<>(Arrays.asList("typo", "move", "switch", "remove", "exceedBalance", "exceedTime"));
     }
 }
