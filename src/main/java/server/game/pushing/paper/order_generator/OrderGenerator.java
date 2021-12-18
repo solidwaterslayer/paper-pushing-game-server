@@ -13,27 +13,29 @@ import java.util.Random;
 
 public class OrderGenerator {
     private List<String> order;
+    private Random random;
     private List<TransactionGenerator> transactionFactories;
     private ChainOfResponsibility processor;
 
     public List<String> getOrder(int size, Random random) {
         order = new ArrayList<>();
         Bank bank = new Bank();
+        this.random = random;
         transactionFactories = Arrays.asList(new CreateGenerator(bank, random), new DepositGenerator(bank, random), new WithdrawGenerator(bank, random), new TransferGenerator(bank, random), new TimeTravelGenerator(bank, random));
         processor = (new ChainOfResponsibilityFactory(bank)).getChainOfResponsibility(false);
 
-        addAllTransactions(size, random, 2);
+        addAllTransactions(size, 2);
 
         return order;
     }
 
-    private void addAllTransactions(int size, Random random, int weight) {
-        if (weight != 0) {
+    private void addAllTransactions(int size, int createWeight) {
+        if (createWeight != 0) {
             addTransaction(((CreateGenerator) transactionFactories.get(0)).getLoadedTransaction(AccountType.CHECKING));
-            addAllTransactions(size - 1, random, weight - 1);
+            addAllTransactions(size - 1, createWeight - 1);
         } else if (size > 0) {
             addTransaction(transactionFactories.get(random.nextInt(transactionFactories.size())).getTransaction());
-            addAllTransactions(size - 1, random, 0);
+            addAllTransactions(size - 1, 0);
         }
     }
 
