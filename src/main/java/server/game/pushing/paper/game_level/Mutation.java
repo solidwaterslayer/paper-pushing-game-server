@@ -1,5 +1,5 @@
 package server.game.pushing.paper.game_level;
 
 public enum Mutation {
-    TYPO, MOVE
+    TYPO, DISPLACED
 }
