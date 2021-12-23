@@ -3,7 +3,6 @@ package server.game.pushing.paper.store.bank.account;
 import static java.lang.Math.max;
 
 public abstract class Account {
-    protected int lifetime;
     protected AccountType accountType;
     protected final String ID;
     protected double balance;
@@ -14,7 +13,6 @@ public abstract class Account {
     protected double maxWithdrawAmount;
 
     protected Account(AccountType accountType, String id, double balance) {
-        lifetime = 0;
         this.accountType = accountType;
         this.ID = id;
         this.balance = balance;
@@ -26,10 +24,6 @@ public abstract class Account {
     @Override
     public String toString() {
         return String.format("%s %s %.2f", accountType, ID, balance).toLowerCase();
-    }
-
-    public int getLifetime() {
-        return lifetime;
     }
 
     public AccountType getAccountType() {
@@ -52,9 +46,7 @@ public abstract class Account {
         this.balance = max(0, this.balance - withdrawAmount);
     }
 
-    public void timeTravel(int months) {
-        this.lifetime += months;
-    }
+    public void timeTravel(int months) {}
 
     public double getMaxDepositAmount() {
         return maxDepositAmount;

@@ -631,7 +631,7 @@ public class BankTests {
         double depositAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(bank.getAccount(id).getLifetime() >= getMonthsPerYear(), bank.isWithdrawAmountValid(id, depositAmount));
+            assertEquals(month >= getMonthsPerYear(), bank.isWithdrawAmountValid(id, depositAmount));
 
             bank.timeTravel(1);
         }
@@ -646,7 +646,7 @@ public class BankTests {
         bank.deposit(receivingID, bank.getAccount(receivingID).getMaxDepositAmount());
 
         for (int month = 0; month < monthsPerYear * 2; month++) {
-            assertEquals(bank.getAccount(payingID).getLifetime() >= monthsPerYear, bank.isTransferAmountValid(payingID, receivingID, transferAmount));
+            assertEquals(month >= monthsPerYear, bank.isTransferAmountValid(payingID, receivingID, transferAmount));
 
             bank.timeTravel(1);
         }

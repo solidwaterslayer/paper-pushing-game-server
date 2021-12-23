@@ -19,7 +19,6 @@ public class SavingsAccount extends Account {
 
     @Override
     public void timeTravel(int months) {
-        super.timeTravel(months);
         monthlyWithdrawLimit = false;
     }
 

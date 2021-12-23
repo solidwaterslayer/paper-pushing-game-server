@@ -130,7 +130,7 @@ public class TimeTravelValidatorTests {
         validator.setNext(new WithdrawValidator(bank));
 
         for (int month = 0; month < MONTHS_PER_YEAR * 2; month++) {
-            assertEquals(bank.getAccount(id).getLifetime() >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+            assertEquals(month >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
 
             bank.timeTravel(1);
         }
@@ -146,7 +146,7 @@ public class TimeTravelValidatorTests {
         validator.setNext(new TransferValidator(bank));
 
         for (int month = 0; month < MONTHS_PER_YEAR * 2; month++) {
-            assertEquals(bank.getAccount(payingID).getLifetime() >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+            assertEquals(month >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
 
             bank.timeTravel(1);
         }
