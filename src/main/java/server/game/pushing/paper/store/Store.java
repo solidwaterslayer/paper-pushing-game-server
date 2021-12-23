@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Store {
-    private final List<String> ORDER;
     private final Bank BANK;
+    private final List<String> ORDER;
     private final Receipt RECEIPT;
     private int receiptInputSize;
 
     public Store() {
-        ORDER = new ArrayList<>();
         BANK = new Bank();
+        ORDER = new ArrayList<>();
         RECEIPT = new Receipt(BANK);
         receiptInputSize = 0;
     }

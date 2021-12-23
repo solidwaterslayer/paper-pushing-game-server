@@ -2,9 +2,10 @@ package server.game.pushing.paper.store.bank.account;
 
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
-public class CD extends Account {
-    public CD(String id, double balance) {
+public class CDAccount extends Account {
+    public CDAccount(String id, double balance) {
         super(AccountType.CD, id, balance);
+
         maxWithdrawAmount = Double.POSITIVE_INFINITY;
     }
 
@@ -15,6 +16,6 @@ public class CD extends Account {
 
     @Override
     public boolean isWithdrawAmountValid(double withdrawAmount) {
-        return lifetime >= getMonthsPerYear() && withdrawAmount >= this.balance;
+        return withdrawAmount >= this.balance && lifetime >= getMonthsPerYear();
     }
 }

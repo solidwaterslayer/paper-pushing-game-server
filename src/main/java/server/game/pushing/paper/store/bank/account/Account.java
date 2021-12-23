@@ -7,6 +7,7 @@ public abstract class Account {
     protected AccountType accountType;
     protected final String ID;
     protected double balance;
+
     protected double minDepositAmount;
     protected double maxDepositAmount;
     protected double minWithdrawAmount;
@@ -17,8 +18,14 @@ public abstract class Account {
         this.accountType = accountType;
         this.ID = id;
         this.balance = balance;
+
         minDepositAmount = 0;
         minWithdrawAmount = 0;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s %.2f", accountType, ID, balance).toLowerCase();
     }
 
     public int getLifetime() {
@@ -37,35 +44,24 @@ public abstract class Account {
         return balance;
     }
 
-    public double getMaxDepositAmount() {
-        return maxDepositAmount;
-    }
-
-    public double getMaxWithdrawAmount() {
-        return maxWithdrawAmount;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s %s %.2f", accountType, ID, balance).toLowerCase();
-    }
-
     public void deposit(double depositAmount) {
         this.balance += depositAmount;
     }
 
     public void withdraw(double withdrawAmount) {
         this.balance = max(0, this.balance - withdrawAmount);
-//        if (withdrawAmount > this.balance) {
-//            withdraw(this.balance);
-//            return;
-//        }
-//
-//        this.balance -= withdrawAmount;
     }
 
     public void timeTravel(int months) {
         this.lifetime += months;
+    }
+
+    public double getMaxDepositAmount() {
+        return maxDepositAmount;
+    }
+
+    public double getMaxWithdrawAmount() {
+        return maxWithdrawAmount;
     }
 
     public abstract boolean isDepositAmountValid(double depositAmount);

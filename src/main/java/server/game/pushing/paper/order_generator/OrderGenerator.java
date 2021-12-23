@@ -12,17 +12,17 @@ import java.util.List;
 import java.util.Random;
 
 public class OrderGenerator {
-    private List<String> order;
     private Random random;
     private List<TransactionGenerator> transactionFactories;
     private ChainOfResponsibility processor;
+    private List<String> order;
 
     public List<String> getOrder(int size, Random random) {
-        order = new ArrayList<>();
         Bank bank = new Bank();
         this.random = random;
         transactionFactories = Arrays.asList(new CreateGenerator(bank, random), new DepositGenerator(bank, random), new WithdrawGenerator(bank, random), new TransferGenerator(bank, random), new TimeTravelGenerator(bank, random));
         processor = (new ChainOfResponsibilityFactory(bank)).getChainOfResponsibility(false);
+        order = new ArrayList<>();
 
         addAllTransactions(size, 2);
 

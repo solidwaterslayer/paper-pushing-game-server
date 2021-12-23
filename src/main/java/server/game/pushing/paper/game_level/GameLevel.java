@@ -11,15 +11,17 @@ import java.util.Random;
 import static java.util.Collections.swap;
 
 public class GameLevel {
+    private final Random RANDOM;
     public List<String> order;
     public List<String> receipt;
+
     public List<String> transformation;
     private final int NUMBER_OF_MUTATIONS = 2;
 
     public GameLevel() {
         OrderGenerator orderGenerator = new OrderGenerator();
-        Random random = new Random();
-        order = orderGenerator.getOrder(6, random);
+        RANDOM = new Random();
+        order = orderGenerator.getOrder(6, RANDOM);
         Store store = new Store();
         store.getOrder().addAll(order);
         receipt = store.getReceipt();
@@ -31,13 +33,13 @@ public class GameLevel {
         List<Mutation> possibleMutations = new ArrayList<>(Arrays.asList(Mutation.TYPO, Mutation.TYPO, Mutation.DISPLACED));
         List<Mutation> mutations = new ArrayList<>();
         while (mutations.size() < NUMBER_OF_MUTATIONS) {
-            int mutationIndex = random.nextInt((possibleMutations.size()));
+            int mutationIndex = RANDOM.nextInt((possibleMutations.size()));
             mutations.add(possibleMutations.get(mutationIndex));
             possibleMutations.remove(mutationIndex);
         }
         List<Integer> mutationLocations = new ArrayList<>();
         while (mutationLocations.size() < NUMBER_OF_MUTATIONS) {
-            int mutationLocation = random.nextInt(receipt.size());
+            int mutationLocation = RANDOM.nextInt(receipt.size());
             if (!receipt.get(mutationLocation).equals("") & !mutationLocations.contains(mutationLocation)) {
                 mutationLocations.add(mutationLocation);
             }
@@ -50,7 +52,17 @@ public class GameLevel {
             Mutation mutation = mutations.get(i);
             int mutationLocation = mutationLocations.get(i);
             if (mutation == Mutation.TYPO) {
+                String[] transactionArguments = receipt.get(mutationLocation).split(" ");
+                int argumentNumber = RANDOM.nextInt(transactionArguments.length);
+                String argument = transactionArguments[argumentNumber].toLowerCase();
 
+                if (argument.matches("[a-zA-Z]*")) {
+
+                } else if (argument.matches("[0-9]{8}")) {
+
+                } else {
+
+                }
             } else {
                 swap(receipt, mutationLocation, mutationLocation + 1);
                 transformation.set(mutationLocation + 1, String.format("This transaction is %s.", mutation.toString().toLowerCase()));

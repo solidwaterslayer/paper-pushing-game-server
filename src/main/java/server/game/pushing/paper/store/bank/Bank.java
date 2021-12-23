@@ -1,9 +1,9 @@
 package server.game.pushing.paper.store.bank;
 
 import server.game.pushing.paper.store.bank.account.Account;
-import server.game.pushing.paper.store.bank.account.CD;
-import server.game.pushing.paper.store.bank.account.Checking;
-import server.game.pushing.paper.store.bank.account.Savings;
+import server.game.pushing.paper.store.bank.account.CDAccount;
+import server.game.pushing.paper.store.bank.account.CheckingAccount;
+import server.game.pushing.paper.store.bank.account.SavingsAccount;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,16 +16,14 @@ public class Bank {
     private final double MIN_BALANCE_FEE;
     private final Map<String, Account> ACCOUNTS;
 
-    private final String VALID_ID;
     private final double MIN_STARTING_CD_BALANCE;
     private final double MAX_STARTING_CD_BALANCE;
     private final int MAX_MONTHS;
 
     public Bank() {
-        this.ACCOUNTS = new LinkedHashMap<>();
         MIN_BALANCE_FEE = 100;
+        this.ACCOUNTS = new LinkedHashMap<>();
 
-        VALID_ID = "[0-9]{8}";
         MIN_STARTING_CD_BALANCE = 1000;
         MAX_STARTING_CD_BALANCE = 10000;
         MAX_MONTHS = 60;
@@ -36,15 +34,15 @@ public class Bank {
     }
 
     public void createChecking(String id) {
-        ACCOUNTS.put(id, new Checking(id));
+        ACCOUNTS.put(id, new CheckingAccount(id));
     }
 
     public void createSavings(String id) {
-        ACCOUNTS.put(id, new Savings(id));
+        ACCOUNTS.put(id, new SavingsAccount(id));
     }
 
     public void createCD(String id, double balance) {
-        ACCOUNTS.put(id, new CD(id, balance));
+        ACCOUNTS.put(id, new CDAccount(id, balance));
     }
 
     public Account getAccount(String id) {
@@ -103,7 +101,7 @@ public class Bank {
     }
 
     public boolean isIDValid(String id) {
-        return !containsAccount(id) && id.matches(VALID_ID);
+        return !containsAccount(id) && id.matches("[0-9]{8}");
     }
 
     public boolean isStartingCDBalanceValid(double startingCDBalance) {

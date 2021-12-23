@@ -1,8 +1,9 @@
 package server.game.pushing.paper.store.bank.account;
 
-public class Checking extends Account {
-    public Checking(String id) {
+public class CheckingAccount extends Account {
+    public CheckingAccount(String id) {
         super(AccountType.CHECKING, id, 0);
+
         maxDepositAmount = 1000;
         maxWithdrawAmount = 400;
     }
