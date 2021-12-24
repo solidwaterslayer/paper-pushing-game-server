@@ -8,8 +8,8 @@ public class CDAccount extends Account {
     public CDAccount(String id, double balance) {
         super(AccountType.CD, id, balance);
 
-        maxWithdrawAmount = Double.POSITIVE_INFINITY;
         lifetime = 0;
+        maxWithdrawAmount = Double.POSITIVE_INFINITY;
     }
 
     @Override
@@ -24,6 +24,6 @@ public class CDAccount extends Account {
 
     @Override
     public boolean isWithdrawAmountValid(double withdrawAmount) {
-        return withdrawAmount >= this.balance && lifetime >= getMonthsPerYear();
+        return lifetime >= getMonthsPerYear() && withdrawAmount >= this.balance;
     }
 }

@@ -80,7 +80,7 @@ public class TransactionGeneratorTests {
     @Test
     protected void deposit_withdraw_and_transfer_factories_should_throw_an_illegal_argument_exception_when_the_bank_contains_less_than_2_checking_accounts() {
         TransactionType transactionType = TransactionType.Create;
-        double minStartingCDBalance = bank.getMinStartingCDBalance();
+        double minCDBalance = bank.getMinCDBalance();
 
         processor.handle(String.format("%s %s %s", transactionType, AccountType.CHECKING, "11111111"));
         for (int i = 0; i < 9; i++) {
@@ -89,7 +89,7 @@ public class TransactionGeneratorTests {
             }
 
             processor.handle(String.format("%s %s %s", transactionType, AccountType.SAVINGS, "0000000" + i));
-            processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CD, "0000000" + i, minStartingCDBalance));
+            processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CD, "0000000" + i, minCDBalance));
         }
 
         processor.handle(String.format("%s %s %s", transactionType, AccountType.CHECKING, "11111110"));

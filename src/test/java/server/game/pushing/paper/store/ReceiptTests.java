@@ -23,18 +23,18 @@ public class ReceiptTests {
     private final String CHECKING_ID = "00000000";
     private final String SAVINGS_ID = "00000001";
     private final String CD_ID = "00000010";
-    private double startingCDBalance;
+    private double cdBalance;
 
     @BeforeEach
     protected void setUp() {
         initializeReceipt();
 
         TransactionType transactionType = TransactionType.Create;
-        startingCDBalance = bank.getMinStartingCDBalance();
+        cdBalance = bank.getMinCDBalance();
 
         receipt.addTransaction(String.format("%s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID));
         receipt.addTransaction(String.format("%s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID));
-        receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, startingCDBalance));
+        receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, cdBalance));
     }
 
     private void initializeReceipt() {
@@ -196,7 +196,7 @@ public class ReceiptTests {
         TransactionType transactionType = TransactionType.Create;
         AccountType accountType = AccountType.CD;
         String id = "the power of friendship";
-        String transaction = String.format("%s %s %s %s", transactionType, accountType, id, startingCDBalance);
+        String transaction = String.format("%s %s %s %s", transactionType, accountType, id, cdBalance);
 
         receipt.addTransaction(transaction);
 

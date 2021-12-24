@@ -24,8 +24,8 @@ public class DepositProcessorTests {
 
         transactionType = processor.getTransactionType();
 
-        bank.createChecking(CHECKING_ID);
-        bank.createSavings(SAVINGS_ID);
+        bank.createCheckingAccount(CHECKING_ID);
+        bank.createSavingsAccount(SAVINGS_ID);
     }
 
     @Test

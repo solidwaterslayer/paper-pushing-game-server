@@ -20,7 +20,7 @@ public class WithdrawProcessorTests {
     private final String CHECKING_ID = "87439752";
     private final String SAVINGS_ID = "09329843";
     private final String CD_ID = "43894280";
-    private double startingCDBalance;
+    private double cdBalance;
     private double checkingDepositAmount;
     private double savingsDepositAmount;
 
@@ -30,10 +30,10 @@ public class WithdrawProcessorTests {
         processor = new WithdrawProcessor(bank);
 
         transactionType = processor.getTransactionType();
-        startingCDBalance = bank.getMinStartingCDBalance();
-        bank.createChecking(CHECKING_ID);
-        bank.createSavings(SAVINGS_ID);
-        bank.createCD(CD_ID, startingCDBalance);
+        cdBalance = bank.getMinCDBalance();
+        bank.createCheckingAccount(CHECKING_ID);
+        bank.createSavingsAccount(SAVINGS_ID);
+        bank.createCDAccount(CD_ID, cdBalance);
         checkingDepositAmount = bank.getAccount(CHECKING_ID).getMaxDepositAmount();
         savingsDepositAmount = bank.getAccount(SAVINGS_ID).getMaxDepositAmount();
 
@@ -65,7 +65,7 @@ public class WithdrawProcessorTests {
     protected void withdraw_processors_can_withdraw_when_the_withdraw_amount_is_equal_to_the_account_balance() {
         double checkingWithdrawAmount = timeTravel(checkingDepositAmount, bank, MONTHS);
         double savingsWithdrawAmount = timeTravel(savingsDepositAmount, bank, MONTHS);
-        double cdWithdrawAmount = timeTravel(startingCDBalance, bank, MONTHS);
+        double cdWithdrawAmount = timeTravel(cdBalance, bank, MONTHS);
         bank.timeTravel(MONTHS);
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());

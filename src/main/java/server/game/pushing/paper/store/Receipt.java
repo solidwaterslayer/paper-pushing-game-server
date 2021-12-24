@@ -32,7 +32,7 @@ public class Receipt {
     public List<String> output() {
         List<String> transactions = new ArrayList<>();
 
-        for (String id : BANK.getIDs()) {
+        for (String id : BANK.getAccounts()) {
             transactions.add(BANK.getAccount(id).toString());
             transactions.addAll(TRANSACTIONS.get(id));
             transactions.add("");

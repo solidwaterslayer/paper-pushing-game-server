@@ -2,8 +2,6 @@ package server.game.pushing.paper.store.bank;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.game.pushing.paper.store.bank.account.Account;
-import server.game.pushing.paper.store.bank.account.AccountType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,25 +21,18 @@ public class BankTests {
     private final String SAVINGS_ID_1 = "98340842";
     private final String CD_ID_0 = "54873935";
     private final String CD_ID_1 = "37599823";
-    private double startingCDBalance;
+    private double cdBalance = 1475;
 
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
-        startingCDBalance = bank.getMinStartingCDBalance();
 
-        bank.createChecking(CHECKING_ID_0);
-        bank.createChecking(CHECKING_ID_1);
-        bank.createSavings(SAVINGS_ID_1);
-        bank.createSavings(SAVINGS_ID_0);
-        bank.createCD(CD_ID_1, startingCDBalance);
-        bank.createCD(CD_ID_0, startingCDBalance);
-
-        assertFalse(bank.isEmpty());
-        assertEquals(6, bank.size());
-        for (String id : bank.getIDs()) {
-            assertTrue(bank.containsAccount(id));
-        }
+        bank.createCheckingAccount(CHECKING_ID_0);
+        bank.createCheckingAccount(CHECKING_ID_1);
+        bank.createSavingsAccount(SAVINGS_ID_1);
+        bank.createSavingsAccount(SAVINGS_ID_0);
+        bank.createCDAccount(CD_ID_1, cdBalance);
+        bank.createCDAccount(CD_ID_0, cdBalance);
     }
 
     @Test
@@ -53,27 +44,12 @@ public class BankTests {
     }
 
     @Test
-    protected void banks_can_create_checking_accounts() {
-        Account account = bank.getAccount(CHECKING_ID_0);
-        assertEquals(AccountType.CHECKING, account.getAccountType());
-        assertEquals(CHECKING_ID_0, account.getID());
-        assertEquals(0, account.getBalance());
-    }
-
-    @Test
-    protected void banks_can_create_savings_accounts() {
-        Account account = bank.getAccount(SAVINGS_ID_0);
-        assertEquals(AccountType.SAVINGS, account.getAccountType());
-        assertEquals(SAVINGS_ID_0, account.getID());
-        assertEquals(0, account.getBalance());
-    }
-
-    @Test
-    protected void banks_can_create_cd_accounts() {
-        Account account = bank.getAccount(CD_ID_0);
-        assertEquals(AccountType.CD, account.getAccountType());
-        assertEquals(CD_ID_0, account.getID());
-        assertEquals(startingCDBalance, account.getBalance());
+    protected void banks_can_create_accounts() {
+        assertFalse(bank.isEmpty());
+        assertEquals(6, bank.size());
+        for (String id : bank.getAccounts()) {
+            assertTrue(bank.containsAccount(id));
+        }
     }
 
     @Test
@@ -94,23 +70,23 @@ public class BankTests {
     }
 
     @Test
-    protected void banks_should_use_a_starting_cd_balance_between_1000_and_10000_inclusive_during_account_creation() {
-        assertFalse(bank.isStartingCDBalanceValid(500));
-        assertFalse(bank.isStartingCDBalanceValid(900));
-        assertEquals(1000, bank.getMinStartingCDBalance());
-        assertTrue(bank.isStartingCDBalanceValid(1000));
-        assertTrue(bank.isStartingCDBalanceValid(1100));
-        assertTrue(bank.isStartingCDBalanceValid(5000));
+    protected void banks_should_use_a_cd_balance_between_1000_and_10000_inclusive_during_account_creation() {
+        assertFalse(bank.isCDBalanceValid(500));
+        assertFalse(bank.isCDBalanceValid(900));
+        assertEquals(1000, bank.getMinCDBalance());
+        assertTrue(bank.isCDBalanceValid(1000));
+        assertTrue(bank.isCDBalanceValid(1100));
+        assertTrue(bank.isCDBalanceValid(5000));
 
-        assertTrue(bank.isStartingCDBalanceValid(6000));
-        assertTrue(bank.isStartingCDBalanceValid(9000));
-        assertTrue(bank.isStartingCDBalanceValid(10000));
-        assertEquals(10000, bank.getMaxStartingCDBalance());
-        assertFalse(bank.isStartingCDBalanceValid(11000));
-        assertFalse(bank.isStartingCDBalanceValid(20000));
+        assertTrue(bank.isCDBalanceValid(6000));
+        assertTrue(bank.isCDBalanceValid(9000));
+        assertTrue(bank.isCDBalanceValid(10000));
+        assertEquals(10000, bank.getMaxCDBalance());
+        assertFalse(bank.isCDBalanceValid(11000));
+        assertFalse(bank.isCDBalanceValid(20000));
 
-        assertFalse(bank.isStartingCDBalanceValid(-1000));
-        assertFalse(bank.isStartingCDBalanceValid(0));
+        assertFalse(bank.isCDBalanceValid(-1000));
+        assertFalse(bank.isCDBalanceValid(0));
     }
 
     @Test
@@ -275,7 +251,7 @@ public class BankTests {
     protected void bank_withdraws_from_cd_accounts_should_use_a_withdraw_amount_greater_than_or_equal_to_balance() {
         int months = getMonthsPerYear();
         String id = CD_ID_0;
-        double cdWithdrawAmount = timeTravel(startingCDBalance, bank, months);
+        double cdWithdrawAmount = timeTravel(cdBalance, bank, months);
 
         bank.timeTravel(months);
 
@@ -362,7 +338,7 @@ public class BankTests {
         assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(
                 timeTravel(savingsDepositAmount, bank, months)
-                        + timeTravel(startingCDBalance, bank, months),
+                        + timeTravel(cdBalance, bank, months),
                 bank.getAccount(receivingID).getBalance()
         );
     }
@@ -528,18 +504,18 @@ public class BankTests {
 
     @Test
     protected void bank_transfers_from_cd_to_savings_should_use_a_transfer_amount_between_the_paying_account_balance_and_2500_inclusive() {
-        startingCDBalance = 2200;
+        cdBalance = 2200;
 
-        List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxMonths());
+        List<Integer> months = Arrays.asList(getMonthsPerYear(), bank.getMaxTimeTravel());
         String payingID = CD_ID_1;
         String receivingID = SAVINGS_ID_1;
         List<Double> lowerBound = new ArrayList<>();
         double upperBound = 2500;
 
         bank.removeAccount(payingID);
-        bank.createCD(payingID, startingCDBalance);
+        bank.createCDAccount(payingID, cdBalance);
         bank.deposit(receivingID, bank.getAccount(SAVINGS_ID_1).getMaxDepositAmount());
-        lowerBound.add(timeTravel(startingCDBalance, bank, months.get(0)));
+        lowerBound.add(timeTravel(cdBalance, bank, months.get(0)));
         lowerBound.add(timeTravel(lowerBound.get(0), bank, months.get(1)));
 
         for (int i = 0; i < 2; i++) {
@@ -565,13 +541,15 @@ public class BankTests {
 
     @Test
     protected void a_low_balance_is_less_than_or_equal_to_900() {
+/*
         double balance = 900;
 
-        assertTrue(bank.isLowBalance(balance - 500));
-        assertTrue(bank.isLowBalance(balance - 100));
-        assertTrue(bank.isLowBalance(balance));
-        assertFalse(bank.isLowBalance(balance + 100));
-        assertFalse(bank.isLowBalance(balance + 500));
+        assertTrue(bank.isLowBalanceAccount(balance - 500));
+        assertTrue(bank.isLowBalanceAccount(balance - 100));
+        assertTrue(bank.isLowBalanceAccount(balance));
+        assertFalse(bank.isLowBalanceAccount(balance + 100));
+        assertFalse(bank.isLowBalanceAccount(balance + 500));
+*/
     }
 
     @Test
@@ -586,7 +564,7 @@ public class BankTests {
 
         assertEquals(timeTravel(checkingDepositAmount, bank, months), bank.getAccount(CHECKING_ID_1).getBalance());
         assertEquals(timeTravel(savingsDepositAmount, bank, months), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(timeTravel(startingCDBalance, bank, months), bank.getAccount(CD_ID_0).getBalance());
+        assertEquals(timeTravel(cdBalance, bank, months), bank.getAccount(CD_ID_0).getBalance());
     }
 
     @Test
@@ -653,7 +631,7 @@ public class BankTests {
     }
 
     public static double timeTravel(double balance, Bank bank, int months) {
-        if (bank.isLowBalance(balance)) {
+        if (balance <= 900) {
             return max(0, balance - bank.getMinBalanceFee() * months);
         }
 
@@ -671,7 +649,7 @@ public class BankTests {
         assertTrue(bank.isTimeTravelValid(40));
         assertTrue(bank.isTimeTravelValid(50));
         assertTrue(bank.isTimeTravelValid(60));
-        assertEquals(60, bank.getMaxMonths());
+        assertEquals(60, bank.getMaxTimeTravel());
         assertFalse(bank.isTimeTravelValid(70));
         assertFalse(bank.isTimeTravelValid(100));
     }

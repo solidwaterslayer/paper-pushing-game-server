@@ -17,7 +17,7 @@ public class CreateValidatorTests {
     private TransactionType transactionType;
     private final String id0 = "34783874";
     private final String id1 = "44783874";
-    private double startingCDBalance;
+    private double cdBalance;
 
     @BeforeEach
     protected void setUp() {
@@ -25,7 +25,7 @@ public class CreateValidatorTests {
         validator = new CreateValidator(bank);
 
         transactionType = validator.getTransactionType();
-        startingCDBalance = bank.getMinStartingCDBalance();
+        cdBalance = bank.getMinCDBalance();
     }
 
     @Test
@@ -46,13 +46,13 @@ public class CreateValidatorTests {
         assertFalse(validator.handle(String.format("%s %s %s", transactionType, "the power of friendship", id1)));
         assertTrue(validator.handle(String.format("%s %s %s", transactionType, AccountType.CHECKING, id1)));
         assertTrue(validator.handle(String.format("%s %s %s", transactionType, AccountType.SAVINGS, id1)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.CD, id1, startingCDBalance)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.CD, id1, cdBalance)));
     }
 
     @Test
     protected void the_third_argument_in_create_transactions_is_a_unique_8_digit_id() {
         AccountType accountType = AccountType.SAVINGS;
-        bank.createSavings(id0);
+        bank.createSavingsAccount(id0);
 
         assertFalse(validator.handle(String.format("%s %s %s", transactionType, accountType, id0)));
 
@@ -71,7 +71,7 @@ public class CreateValidatorTests {
     }
 
     @Test
-    protected void the_fourth_argument_in_create_cd_transactions_is_an_starting_balance_between_1000_and_10000_inclusive() {
+    protected void the_fourth_argument_in_create_cd_transactions_is_an_balance_between_1000_and_10000_inclusive() {
         AccountType accountType = AccountType.CD;
 
         assertFalse(validator.handle(String.format("%s %s %s %s", transactionType, accountType, id0, "")));
@@ -97,19 +97,19 @@ public class CreateValidatorTests {
     protected void create_validators_can_ignore_additional_arguments() {
         assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, id0, "the")));
         assertTrue(validator.handle(String.format("%s %s %s %s %s %s  %s", transactionType, AccountType.SAVINGS, id0, "power", "of", "friendship", id0)));
-        assertTrue(validator.handle(String.format("%s %s %s %s  $s    $s     %s %s    ", transactionType, AccountType.CD, id0, startingCDBalance, AccountType.CD, id0)));
+        assertTrue(validator.handle(String.format("%s %s %s %s  $s    $s     %s %s    ", transactionType, AccountType.CD, id0, cdBalance, AccountType.CD, id0)));
     }
 
     @Test
     protected void create_validators_are_case_insensitive() {
         assertTrue(validator.handle(String.format("%s %s %s", "crEaTe", "checking", id0)));
         assertTrue(validator.handle(String.format("%s %s %s", "create", "saVINgs", id0)));
-        assertTrue(validator.handle(String.format("%s %s %s %s", "creATe", "Cd", id0, startingCDBalance)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", "creATe", "Cd", id0, cdBalance)));
     }
 
     @Test
     protected void create_validators_can_be_in_a_chain_of_responsibility() {
-        bank.createChecking(id1);
+        bank.createCheckingAccount(id1);
         double depositAmount = bank.getAccount(id1).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id1).getMaxWithdrawAmount();
 

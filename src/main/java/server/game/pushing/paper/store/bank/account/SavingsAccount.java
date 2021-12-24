@@ -1,25 +1,25 @@
 package server.game.pushing.paper.store.bank.account;
 
 public class SavingsAccount extends Account {
-    private boolean monthlyWithdrawLimit;
+    private boolean isMonthlyWithdrawLimit;
 
     public SavingsAccount(String id) {
         super(AccountType.SAVINGS, id, 0);
 
+        isMonthlyWithdrawLimit = false;
         maxDepositAmount = 2500;
         maxWithdrawAmount = 1000;
-        monthlyWithdrawLimit = false;
+    }
+
+    @Override
+    public void timeTravel(int months) {
+        isMonthlyWithdrawLimit = false;
     }
 
     @Override
     public void withdraw(double withdrawAmount) {
         super.withdraw(withdrawAmount);
-        monthlyWithdrawLimit = true;
-    }
-
-    @Override
-    public void timeTravel(int months) {
-        monthlyWithdrawLimit = false;
+        isMonthlyWithdrawLimit = true;
     }
 
     @Override
@@ -29,6 +29,6 @@ public class SavingsAccount extends Account {
 
     @Override
     public boolean isWithdrawAmountValid(double withdrawAmount) {
-        return minWithdrawAmount < withdrawAmount && withdrawAmount <= maxWithdrawAmount && !monthlyWithdrawLimit;
+        return !isMonthlyWithdrawLimit && minWithdrawAmount < withdrawAmount && withdrawAmount <= maxWithdrawAmount;
     }
 }

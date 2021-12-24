@@ -24,7 +24,7 @@ public abstract class TransactionGenerator {
     public abstract String getTransaction();
 
     protected String getRandomID() {
-        return bank.getIDs().get(random.nextInt(bank.getIDs().size()));
+        return bank.getAccounts().get(random.nextInt(bank.getAccounts().size()));
     }
 
     protected double getRandomAmount(double amount) {
@@ -32,7 +32,7 @@ public abstract class TransactionGenerator {
     }
 
     protected void checkException() {
-        if (bank.getIDs().stream().filter(id -> bank.getAccount(id).getAccountType() == AccountType.CHECKING).count() < 2 && transactionType != TransactionType.Create) {
+        if (bank.getAccounts().stream().filter(id -> bank.getAccount(id).getAccountType() == AccountType.CHECKING).count() < 2 && transactionType != TransactionType.Create) {
             throw new IllegalArgumentException("the bank contains less than 2 checking accounts");
         }
         if (bank.size() >= 1000) {

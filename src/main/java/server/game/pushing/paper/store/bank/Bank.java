@@ -13,60 +13,72 @@ import java.util.Map;
 import static java.lang.Math.min;
 
 public class Bank {
-    private final double MIN_BALANCE_FEE;
-    private final Map<String, Account> ACCOUNTS;
+    private final Map<String, Account> accounts;
 
-    private final double MIN_STARTING_CD_BALANCE;
-    private final double MAX_STARTING_CD_BALANCE;
-    private final int MAX_MONTHS;
+    private final double minCDBalance;
+    private final double maxCDBalance;
+    private final int maxTimeTravel;
 
     public Bank() {
-        MIN_BALANCE_FEE = 100;
-        this.ACCOUNTS = new LinkedHashMap<>();
+        accounts = new LinkedHashMap<>();
 
-        MIN_STARTING_CD_BALANCE = 1000;
-        MAX_STARTING_CD_BALANCE = 10000;
-        MAX_MONTHS = 60;
+        minCDBalance = 1000;
+        maxCDBalance = 10000;
+        maxTimeTravel = 60;
     }
 
-    public double getMinBalanceFee() {
-        return MIN_BALANCE_FEE;
+    public void createCheckingAccount(String id) {
+        accounts.put(id, new CheckingAccount(id));
     }
 
-    public void createChecking(String id) {
-        ACCOUNTS.put(id, new CheckingAccount(id));
+    public void createSavingsAccount(String id) {
+        accounts.put(id, new SavingsAccount(id));
     }
 
-    public void createSavings(String id) {
-        ACCOUNTS.put(id, new SavingsAccount(id));
+    public void createCDAccount(String id, double balance) {
+        accounts.put(id, new CDAccount(id, balance));
     }
 
-    public void createCD(String id, double balance) {
-        ACCOUNTS.put(id, new CDAccount(id, balance));
+    public List<String> getAccounts() {
+        return new ArrayList<>(accounts.keySet());
     }
 
     public Account getAccount(String id) {
-        return ACCOUNTS.get(id);
+        return accounts.get(id);
     }
 
     public void removeAccount(String id) {
-        ACCOUNTS.remove(id);
+        accounts.remove(id);
     }
 
     public boolean isEmpty() {
-        return ACCOUNTS.isEmpty();
+        return accounts.isEmpty();
     }
 
     public int size() {
-        return ACCOUNTS.size();
+        return accounts.size();
     }
 
     public boolean containsAccount(String id) {
-        return ACCOUNTS.containsKey(id);
+        return accounts.containsKey(id);
     }
 
-    public List<String> getIDs() {
-        return new ArrayList<>(ACCOUNTS.keySet());
+    public double getMinBalanceFee() {
+        return 100;
+    }
+
+    public boolean isLowBalanceAccount(Account account) {
+        return account.getBalance() <= 900;
+    }
+
+    public void timeTravel(int months) {
+        for (Account account : new ArrayList<>(accounts.values())) {
+            if (isLowBalanceAccount(account)) {
+                account.withdraw(getMinBalanceFee() * months);
+            }
+
+            account.timeTravel(months);
+        }
     }
 
     public void deposit(String id, double depositAmount) {
@@ -86,34 +98,16 @@ public class Bank {
         receivingAccount.deposit(transferAmount);
     }
 
-    public void timeTravel(int months) {
-        for (Account account : new ArrayList<>(ACCOUNTS.values())) {
-            if (isLowBalance(account.getBalance())) {
-                account.withdraw(MIN_BALANCE_FEE * months);
-            }
-
-            account.timeTravel(months);
-        }
-    }
-
-    public boolean isLowBalance(double balance) {
-        return balance <= 900;
-    }
-
     public boolean isIDValid(String id) {
         return !containsAccount(id) && id.matches("[0-9]{8}");
     }
 
-    public boolean isStartingCDBalanceValid(double startingCDBalance) {
-        return MIN_STARTING_CD_BALANCE <= startingCDBalance && startingCDBalance <= MAX_STARTING_CD_BALANCE;
+    public boolean isCDBalanceValid(double cdBalance) {
+        return minCDBalance <= cdBalance && cdBalance <= maxCDBalance;
     }
 
-    public double getMinStartingCDBalance() {
-        return MIN_STARTING_CD_BALANCE;
-    }
-
-    public double getMaxStartingCDBalance() {
-        return MAX_STARTING_CD_BALANCE;
+    public boolean isTimeTravelValid(int months) {
+        return 0 < months && months <= maxTimeTravel;
     }
 
     public boolean isDepositAmountValid(String id, double depositAmount) {
@@ -128,15 +122,19 @@ public class Bank {
         return !fromID.equals(toID) && isWithdrawAmountValid(fromID, transferAmount) && isDepositAmountValid(toID, transferAmount);
     }
 
-    public boolean isTimeTravelValid(int months) {
-        return 1 <= months && months <= MAX_MONTHS;
+    public double getMinCDBalance() {
+        return minCDBalance;
+    }
+
+    public double getMaxCDBalance() {
+        return maxCDBalance;
     }
 
     public static int getMonthsPerYear() {
         return 12;
     }
 
-    public int getMaxMonths() {
-        return MAX_MONTHS;
+    public int getMaxTimeTravel() {
+        return maxTimeTravel;
     }
 }

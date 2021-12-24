@@ -21,13 +21,13 @@ public class AccountTests {
     private final String CHECKING_ID = "34785729";
     private final String SAVINGS_ID = "47012479";
     private final String CD_ID = "34782479";
-    private final double STARTING_CD_BALANCE = 5835;
+    private final double CD_BALANCE = 5835;
 
     @BeforeEach
     protected void setUp() {
         checkingAccount = new CheckingAccount(CHECKING_ID);
         savingsAccount = new SavingsAccount(SAVINGS_ID);
-        cdAccount = new CDAccount(CD_ID, STARTING_CD_BALANCE);
+        cdAccount = new CDAccount(CD_ID, CD_BALANCE);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class AccountTests {
         Account account = cdAccount;
         AccountType accountType = CD;
         String id = CD_ID;
-        double balance = STARTING_CD_BALANCE;
+        double balance = CD_BALANCE;
 
         assertEquals(accountType, account.getAccountType());
         assertEquals(id, account.getID());
@@ -167,8 +167,8 @@ public class AccountTests {
 
     @Test
     protected void accounts_can_withdraw_when_the_withdraw_amount_is_equal_to_the_account_balance() {
-        int months = getMonthsPerYear();
         List<Account> accounts = new ArrayList<>(Arrays.asList(checkingAccount, savingsAccount, cdAccount));
+        int months = getMonthsPerYear();
         for (Account account : accounts) {
             double transferAmount = max(account.getMaxWithdrawAmount(), account.getBalance());
 
@@ -185,8 +185,8 @@ public class AccountTests {
 
     @Test
     protected void accounts_should_withdraw_the_account_balance_when_the_withdraw_amount_is_greater_than_the_account_balance() {
-        int months = getMonthsPerYear();
         List<Account> accounts = new ArrayList<>(Arrays.asList(checkingAccount, savingsAccount, cdAccount));
+        int months = getMonthsPerYear();
         for (Account account : accounts) {
             double withdrawAmount = account.getMaxWithdrawAmount();
             double depositAmount = withdrawAmount / 2;
@@ -255,9 +255,9 @@ public class AccountTests {
 
     @Test
     protected void cd_accounts_should_withdraw_amounts_greater_than_or_equal_to_the_account_balance() {
-        int months = getMonthsPerYear();
         Account account = cdAccount;
-        double withdrawAmount = STARTING_CD_BALANCE;
+        int months = getMonthsPerYear();
+        double withdrawAmount = CD_BALANCE;
 
         account.timeTravel(months);
 
@@ -275,8 +275,8 @@ public class AccountTests {
 
     @Test
     protected void savings_accounts_can_withdraw_once_per_time_travel_event() {
-        int months = 1;
         Account account = savingsAccount;
+        int months = 1;
         double withdrawAmount = account.getMaxWithdrawAmount();
 
         account.withdraw(withdrawAmount);

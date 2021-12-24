@@ -16,7 +16,7 @@ public class TimeTravelGenerator extends TransactionGenerator {
         String transaction = "";
 
         while (!validator.handle(transaction)) {
-            int months = random.nextInt(bank.getMaxMonths());
+            int months = random.nextInt(bank.getMaxTimeTravel());
             transaction = String.format("%s %s", transactionType, months).toLowerCase();
         }
 

@@ -4,7 +4,7 @@ import static java.lang.Math.max;
 
 public abstract class Account {
     protected AccountType accountType;
-    protected final String ID;
+    protected final String id;
     protected double balance;
 
     protected double minDepositAmount;
@@ -14,7 +14,7 @@ public abstract class Account {
 
     protected Account(AccountType accountType, String id, double balance) {
         this.accountType = accountType;
-        this.ID = id;
+        this.id = id;
         this.balance = balance;
 
         minDepositAmount = 0;
@@ -23,7 +23,7 @@ public abstract class Account {
 
     @Override
     public String toString() {
-        return String.format("%s %s %.2f", accountType, ID, balance).toLowerCase();
+        return String.format("%s %s %.2f", accountType, id, balance).toLowerCase();
     }
 
     public AccountType getAccountType() {
@@ -31,12 +31,14 @@ public abstract class Account {
     }
 
     public String getID() {
-        return ID;
+        return id;
     }
 
     public double getBalance() {
         return balance;
     }
+
+    public void timeTravel(int months) {}
 
     public void deposit(double depositAmount) {
         this.balance += depositAmount;
@@ -46,7 +48,9 @@ public abstract class Account {
         this.balance = max(0, this.balance - withdrawAmount);
     }
 
-    public void timeTravel(int months) {}
+    public abstract boolean isDepositAmountValid(double depositAmount);
+
+    public abstract boolean isWithdrawAmountValid(double withdrawAmount);
 
     public double getMaxDepositAmount() {
         return maxDepositAmount;
@@ -55,8 +59,4 @@ public abstract class Account {
     public double getMaxWithdrawAmount() {
         return maxWithdrawAmount;
     }
-
-    public abstract boolean isDepositAmountValid(double depositAmount);
-
-    public abstract boolean isWithdrawAmountValid(double withdrawAmount);
 }

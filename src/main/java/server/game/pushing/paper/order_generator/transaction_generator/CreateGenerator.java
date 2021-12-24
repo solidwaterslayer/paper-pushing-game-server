@@ -27,8 +27,8 @@ public class CreateGenerator extends TransactionGenerator {
         String transaction = "";
         while (!validator.handle(transaction)) {
             String id = getRandomID();
-            double startingCDBalance = getRandomAmount(bank.getMaxStartingCDBalance());
-            transaction = String.format("%s %s %s %.2f", transactionType, accountType, id, startingCDBalance).toLowerCase();
+            double cdBalance = getRandomAmount(bank.getMaxCDBalance());
+            transaction = String.format("%s %s %s %.2f", transactionType, accountType, id, cdBalance).toLowerCase();
         }
 
         return transaction;
