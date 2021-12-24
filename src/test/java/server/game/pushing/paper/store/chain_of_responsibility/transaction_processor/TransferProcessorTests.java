@@ -3,14 +3,14 @@ package server.game.pushing.paper.store.chain_of_responsibility.transaction_proc
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-import static server.game.pushing.paper.store.bank.BankTests.timeTravel;
+import static server.game.pushing.paper.store.BankTests.timeTravel;
 
 public class TransferProcessorTests {
     private Bank bank;
@@ -103,8 +103,8 @@ public class TransferProcessorTests {
         assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
         assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(
-                timeTravel(savingsDepositAmount, bank, MONTHS)
-                        + timeTravel(cdBalance, bank, MONTHS)
+                timeTravel(savingsDepositAmount, MONTHS)
+                        + timeTravel(cdBalance, MONTHS)
                 , bank.getAccount(receivingID).getBalance()
         );
     }
@@ -171,11 +171,11 @@ public class TransferProcessorTests {
         processor.setNext(new TimeTravelProcessor(bank));
 
         assertTrue(processor.handle(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
-        assertEquals(timeTravel(checkingDepositAmount, bank, MONTHS), bank.getAccount(CHECKING_ID_0).getBalance());
-        assertEquals(timeTravel(checkingDepositAmount, bank, MONTHS), bank.getAccount(CHECKING_ID_1).getBalance());
-        assertEquals(timeTravel(savingsDepositAmount, bank, MONTHS), bank.getAccount(SAVINGS_ID_0).getBalance());
-        assertEquals(timeTravel(savingsDepositAmount, bank, MONTHS), bank.getAccount(SAVINGS_ID_1).getBalance());
-        assertEquals(timeTravel(cdBalance, bank, MONTHS), bank.getAccount(CD_ID).getBalance());
+        assertEquals(timeTravel(checkingDepositAmount, MONTHS), bank.getAccount(CHECKING_ID_0).getBalance());
+        assertEquals(timeTravel(checkingDepositAmount, MONTHS), bank.getAccount(CHECKING_ID_1).getBalance());
+        assertEquals(timeTravel(savingsDepositAmount, MONTHS), bank.getAccount(SAVINGS_ID_0).getBalance());
+        assertEquals(timeTravel(savingsDepositAmount, MONTHS), bank.getAccount(SAVINGS_ID_1).getBalance());
+        assertEquals(timeTravel(cdBalance, MONTHS), bank.getAccount(CD_ID).getBalance());
         assertFalse(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", cdBalance)));
     }
 }

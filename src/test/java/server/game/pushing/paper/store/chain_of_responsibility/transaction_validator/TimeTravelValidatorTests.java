@@ -3,7 +3,7 @@ package server.game.pushing.paper.store.chain_of_responsibility.transaction_vali
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
@@ -78,7 +78,7 @@ public class TimeTravelValidatorTests {
 
     @Test
     protected void time_travel_validators_can_be_in_a_chain_of_responsibility() {
-        AccountType accountType = AccountType.SAVINGS;
+        AccountType accountType = AccountType.Savings;
         String id = "17439742";
         double depositAmount = bank.getAccount(SAVINGS_ID).getMaxDepositAmount();
 

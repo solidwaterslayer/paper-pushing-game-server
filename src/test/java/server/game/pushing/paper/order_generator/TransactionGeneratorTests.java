@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.game.pushing.paper.order_generator.transaction_generator.*;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
@@ -82,17 +82,17 @@ public class TransactionGeneratorTests {
         TransactionType transactionType = TransactionType.Create;
         double minCDBalance = bank.getMinCDBalance();
 
-        processor.handle(String.format("%s %s %s", transactionType, AccountType.CHECKING, "11111111"));
+        processor.handle(String.format("%s %s %s", transactionType, AccountType.Checking, "11111111"));
         for (int i = 0; i < 9; i++) {
             for (int j = 1; j < 4; j++) {
                 assertEquals("the bank contains less than 2 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactories.get(j) :: getTransaction).getMessage());
             }
 
-            processor.handle(String.format("%s %s %s", transactionType, AccountType.SAVINGS, "0000000" + i));
+            processor.handle(String.format("%s %s %s", transactionType, AccountType.Savings, "0000000" + i));
             processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CD, "0000000" + i, minCDBalance));
         }
 
-        processor.handle(String.format("%s %s %s", transactionType, AccountType.CHECKING, "11111110"));
+        processor.handle(String.format("%s %s %s", transactionType, AccountType.Checking, "11111110"));
         for (int i = 1; i < 4; i++) {
             String transaction = transactionFactories.get(i).getTransaction();
             assertTrue(validator.handle(transaction) && processor.handle(transaction));

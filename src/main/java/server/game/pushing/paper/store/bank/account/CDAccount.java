@@ -1,5 +1,7 @@
 package server.game.pushing.paper.store.bank.account;
 
+import server.game.pushing.paper.store.bank.AccountType;
+
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class CDAccount extends Account {

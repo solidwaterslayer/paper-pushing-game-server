@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.Account;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
@@ -31,7 +31,7 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processors_can_create_checking_accounts() {
-        AccountType accountType = AccountType.CHECKING;
+        AccountType accountType = AccountType.Checking;
         String id = CHECKING_ID;
 
         assertTrue(processor.handle(String.format("%s %s %s", transactionType, accountType, id)));
@@ -44,7 +44,7 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processors_can_create_savings_accounts() {
-        AccountType accountType = AccountType.SAVINGS;
+        AccountType accountType = AccountType.Savings;
         String id = SAVINGS_ID;
 
         assertTrue(processor.handle(String.format("%s %s %s", transactionType, accountType, id)));
@@ -70,8 +70,8 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processors_can_ignore_additional_arguments() {
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID, "0")));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID, "nuke", AccountType.CD, "38ur", 34)));
+        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, AccountType.Checking, CHECKING_ID, "0")));
+        assertTrue(processor.handle(String.format("%s %s %s %s %s %s %s", transactionType, AccountType.Savings, SAVINGS_ID, "nuke", AccountType.CD, "38ur", 34)));
         assertTrue(processor.handle(String.format("%s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, CD_ID, cdBalance, "8", 8, "eight", 4 + 4)));
     }
 
@@ -84,7 +84,7 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processors_can_be_in_a_chain_of_responsibility() {
-        AccountType accountType = AccountType.SAVINGS;
+        AccountType accountType = AccountType.Savings;
         String id = SAVINGS_ID;
         assertTrue(processor.handle(String.format("%s %s %s", transactionType, accountType, id)));
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();

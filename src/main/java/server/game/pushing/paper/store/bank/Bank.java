@@ -47,10 +47,6 @@ public class Bank {
         return accounts.get(id);
     }
 
-    public void removeAccount(String id) {
-        accounts.remove(id);
-    }
-
     public boolean isEmpty() {
         return accounts.isEmpty();
     }
@@ -67,13 +63,13 @@ public class Bank {
         return 100;
     }
 
-    public boolean isLowBalanceAccount(Account account) {
-        return account.getBalance() <= 900;
+    public boolean isLowBalanceAccount(String id) {
+        return getAccount(id).getBalance() <= 900;
     }
 
     public void timeTravel(int months) {
         for (Account account : new ArrayList<>(accounts.values())) {
-            if (isLowBalanceAccount(account)) {
+            if (isLowBalanceAccount(account.getID())) {
                 account.withdraw(getMinBalanceFee() * months);
             }
 
@@ -118,8 +114,8 @@ public class Bank {
         return containsAccount(id) && getAccount(id).isWithdrawAmountValid(withdrawAmount);
     }
 
-    public boolean isTransferAmountValid(String fromID, String toID, double transferAmount) {
-        return !fromID.equals(toID) && isWithdrawAmountValid(fromID, transferAmount) && isDepositAmountValid(toID, transferAmount);
+    public boolean isTransferAmountValid(String payingID, String receivingID, double transferAmount) {
+        return !payingID.equals(receivingID) && isWithdrawAmountValid(payingID, transferAmount) && isDepositAmountValid(receivingID, transferAmount);
     }
 
     public double getMinCDBalance() {

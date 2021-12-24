@@ -3,7 +3,7 @@ package server.game.pushing.paper.store.chain_of_responsibility.transaction_vali
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
@@ -30,7 +30,7 @@ public class CreateValidatorTests {
 
     @Test
     protected void the_first_argument_in_create_transactions_is_the_transaction_type_create() {
-        AccountType accountType = AccountType.CHECKING;
+        AccountType accountType = AccountType.Checking;
 
         assertFalse(validator.handle(""));
         assertFalse(validator.handle(String.format("%s %s %s", "", "", "")));
@@ -44,14 +44,14 @@ public class CreateValidatorTests {
         assertFalse(validator.handle(String.format("%s %s %s", transactionType, "", "")));
         assertFalse(validator.handle(String.format("%s %s %s", transactionType, "", id1)));
         assertFalse(validator.handle(String.format("%s %s %s", transactionType, "the power of friendship", id1)));
-        assertTrue(validator.handle(String.format("%s %s %s", transactionType, AccountType.CHECKING, id1)));
-        assertTrue(validator.handle(String.format("%s %s %s", transactionType, AccountType.SAVINGS, id1)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, AccountType.Checking, id1)));
+        assertTrue(validator.handle(String.format("%s %s %s", transactionType, AccountType.Savings, id1)));
         assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.CD, id1, cdBalance)));
     }
 
     @Test
     protected void the_third_argument_in_create_transactions_is_a_unique_8_digit_id() {
-        AccountType accountType = AccountType.SAVINGS;
+        AccountType accountType = AccountType.Savings;
         bank.createSavingsAccount(id0);
 
         assertFalse(validator.handle(String.format("%s %s %s", transactionType, accountType, id0)));
@@ -95,8 +95,8 @@ public class CreateValidatorTests {
 
     @Test
     protected void create_validators_can_ignore_additional_arguments() {
-        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.CHECKING, id0, "the")));
-        assertTrue(validator.handle(String.format("%s %s %s %s %s %s  %s", transactionType, AccountType.SAVINGS, id0, "power", "of", "friendship", id0)));
+        assertTrue(validator.handle(String.format("%s %s %s %s", transactionType, AccountType.Checking, id0, "the")));
+        assertTrue(validator.handle(String.format("%s %s %s %s %s %s  %s", transactionType, AccountType.Savings, id0, "power", "of", "friendship", id0)));
         assertTrue(validator.handle(String.format("%s %s %s %s  $s    $s     %s %s    ", transactionType, AccountType.CD, id0, cdBalance, AccountType.CD, id0)));
     }
 

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.Account;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.List;
@@ -32,8 +32,8 @@ public class ReceiptTests {
         TransactionType transactionType = TransactionType.Create;
         cdBalance = bank.getMinCDBalance();
 
-        receipt.addTransaction(String.format("%s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID));
-        receipt.addTransaction(String.format("%s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID));
+        receipt.addTransaction(String.format("%s %s %s", transactionType, AccountType.Checking, CHECKING_ID));
+        receipt.addTransaction(String.format("%s %s %s", transactionType, AccountType.Savings, SAVINGS_ID));
         receipt.addTransaction(String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, cdBalance));
     }
 

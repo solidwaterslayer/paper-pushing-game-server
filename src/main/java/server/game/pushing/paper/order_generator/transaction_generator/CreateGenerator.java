@@ -1,7 +1,7 @@
 package server.game.pushing.paper.order_generator.transaction_generator;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.Random;

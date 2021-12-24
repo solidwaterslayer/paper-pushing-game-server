@@ -1,5 +1,7 @@
 package server.game.pushing.paper.store.bank.account;
 
+import server.game.pushing.paper.store.bank.AccountType;
+
 import static java.lang.Math.max;
 
 public abstract class Account {

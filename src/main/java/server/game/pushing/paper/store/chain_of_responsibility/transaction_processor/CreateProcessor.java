@@ -1,9 +1,12 @@
 package server.game.pushing.paper.store.chain_of_responsibility.transaction_processor;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+
+import static server.game.pushing.paper.store.bank.AccountType.Checking;
+import static server.game.pushing.paper.store.bank.AccountType.Savings;
 
 public class CreateProcessor extends ChainOfResponsibility {
     public CreateProcessor(Bank bank) {
@@ -21,18 +24,12 @@ public class CreateProcessor extends ChainOfResponsibility {
     }
 
     private boolean handleSecondArgument(String[] transactionArguments) {
-        AccountType accountType = AccountType.valueOf(transactionArguments[1].toUpperCase());
-
-        switch (accountType) {
-            case CHECKING:
-                bank.createCheckingAccount(transactionArguments[2]);
-                break;
-            case SAVINGS:
-                bank.createSavingsAccount(transactionArguments[2]);
-                break;
-            default:
-                bank.createCDAccount(transactionArguments[2], parseDouble(transactionArguments[3]));
-                break;
+        if (transactionArguments[1].equalsIgnoreCase(Checking.toString())) {
+            bank.createCheckingAccount(transactionArguments[2]);
+        } else if (transactionArguments[1].equalsIgnoreCase(Savings.toString())) {
+            bank.createSavingsAccount(transactionArguments[2]);
+        } else {
+            bank.createCDAccount(transactionArguments[2], parseDouble(transactionArguments[3]));
         }
 
         return true;

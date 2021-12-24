@@ -9,7 +9,7 @@ import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-import static server.game.pushing.paper.store.bank.BankTests.timeTravel;
+import static server.game.pushing.paper.store.BankTests.timeTravel;
 
 public class WithdrawValidatorTests {
     private Bank bank;
@@ -121,7 +121,7 @@ public class WithdrawValidatorTests {
     @Test
     protected void withdraw_amounts_to_cd_accounts_should_be_greater_than_or_equal_to_the_account_balance() {
         String id = CD_ID;
-        double withdrawAmount = timeTravel(cdBalance, bank, MONTHS);
+        double withdrawAmount = timeTravel(cdBalance, MONTHS);
 
         bank.timeTravel(MONTHS);
 

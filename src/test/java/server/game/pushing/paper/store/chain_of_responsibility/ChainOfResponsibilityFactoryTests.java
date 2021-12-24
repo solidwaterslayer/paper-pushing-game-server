@@ -2,7 +2,7 @@ package server.game.pushing.paper.store.chain_of_responsibility;
 
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,10 +23,10 @@ public class ChainOfResponsibilityFactoryTests {
         int months = getMonthsPerYear();
         String payingID = "98340842";
         String receivingID = "08429843";
-        String transaction0 = String.format("%s %s %s", TransactionType.Create, AccountType.CHECKING, payingID);
+        String transaction0 = String.format("%s %s %s", TransactionType.Create, AccountType.Checking, payingID);
         assertTrue(validator.handle(transaction0));
         assertTrue(processor.handle(transaction0));
-        assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Create, AccountType.SAVINGS, receivingID)));
+        assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Create, AccountType.Savings, receivingID)));
         double depositAmount = bank.getAccount(payingID).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(payingID).getMaxWithdrawAmount();
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());

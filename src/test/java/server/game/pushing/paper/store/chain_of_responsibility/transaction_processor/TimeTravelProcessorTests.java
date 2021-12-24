@@ -4,13 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.Account;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-import static server.game.pushing.paper.store.bank.BankTests.timeTravel;
+import static server.game.pushing.paper.store.BankTests.timeTravel;
 
 public class TimeTravelProcessorTests {
     private Bank bank;
@@ -47,9 +47,9 @@ public class TimeTravelProcessorTests {
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
         assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
-        assertEquals(timeTravel(checkingDepositAmount, bank, months), bank.getAccount(CHECKING_ID).getBalance());
-        assertEquals(timeTravel(savingsDepositAmount, bank, months), bank.getAccount(SAVINGS_ID).getBalance());
-        assertEquals(timeTravel(cdBalance, bank, months), bank.getAccount(CD_ID).getBalance());
+        assertEquals(timeTravel(checkingDepositAmount, months), bank.getAccount(CHECKING_ID).getBalance());
+        assertEquals(timeTravel(savingsDepositAmount, months), bank.getAccount(SAVINGS_ID).getBalance());
+        assertEquals(timeTravel(cdBalance, months), bank.getAccount(CD_ID).getBalance());
     }
 
     @Test

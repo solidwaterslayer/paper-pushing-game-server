@@ -1,10 +1,12 @@
 package server.game.pushing.paper.store.bank.account;
 
+import server.game.pushing.paper.store.bank.AccountType;
+
 public class SavingsAccount extends Account {
     private boolean isMonthlyWithdrawLimit;
 
     public SavingsAccount(String id) {
-        super(AccountType.SAVINGS, id, 0);
+        super(AccountType.Savings, id, 0);
 
         isMonthlyWithdrawLimit = false;
         maxDepositAmount = 2500;

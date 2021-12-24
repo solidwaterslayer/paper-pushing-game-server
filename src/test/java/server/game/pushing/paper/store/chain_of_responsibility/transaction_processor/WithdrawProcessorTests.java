@@ -9,7 +9,7 @@ import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-import static server.game.pushing.paper.store.bank.BankTests.timeTravel;
+import static server.game.pushing.paper.store.BankTests.timeTravel;
 
 public class WithdrawProcessorTests {
     private Bank bank;
@@ -63,9 +63,9 @@ public class WithdrawProcessorTests {
 
     @Test
     protected void withdraw_processors_can_withdraw_when_the_withdraw_amount_is_equal_to_the_account_balance() {
-        double checkingWithdrawAmount = timeTravel(checkingDepositAmount, bank, MONTHS);
-        double savingsWithdrawAmount = timeTravel(savingsDepositAmount, bank, MONTHS);
-        double cdWithdrawAmount = timeTravel(cdBalance, bank, MONTHS);
+        double checkingWithdrawAmount = timeTravel(checkingDepositAmount, MONTHS);
+        double savingsWithdrawAmount = timeTravel(savingsDepositAmount, MONTHS);
+        double cdWithdrawAmount = timeTravel(cdBalance, MONTHS);
         bank.timeTravel(MONTHS);
 
         assertEquals(checkingWithdrawAmount, bank.getAccount(CHECKING_ID).getBalance());

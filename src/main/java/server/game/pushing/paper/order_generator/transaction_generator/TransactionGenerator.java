@@ -1,7 +1,7 @@
 package server.game.pushing.paper.order_generator.transaction_generator;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
 import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
@@ -32,7 +32,7 @@ public abstract class TransactionGenerator {
     }
 
     protected void checkException() {
-        if (bank.getAccounts().stream().filter(id -> bank.getAccount(id).getAccountType() == AccountType.CHECKING).count() < 2 && transactionType != TransactionType.Create) {
+        if (bank.getAccounts().stream().filter(id -> bank.getAccount(id).getAccountType() == AccountType.Checking).count() < 2 && transactionType != TransactionType.Create) {
             throw new IllegalArgumentException("the bank contains less than 2 checking accounts");
         }
         if (bank.size() >= 1000) {

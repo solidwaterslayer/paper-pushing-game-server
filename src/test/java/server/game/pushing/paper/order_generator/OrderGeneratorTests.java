@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.game.pushing.paper.store.Store;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 
 import java.util.List;
 import java.util.Random;
@@ -24,8 +24,8 @@ public class OrderGeneratorTests {
 
         for (int i = 0; i < 99; i++) {
             order = orderGenerator.getOrder(size, new Random(i));
-            assertTrue(order.get(0).contains(AccountType.CHECKING.name().toLowerCase()));
-            assertTrue(order.get(1).contains(AccountType.CHECKING.name().toLowerCase()));
+            assertTrue(order.get(0).contains(AccountType.Checking.name().toLowerCase()));
+            assertTrue(order.get(1).contains(AccountType.Checking.name().toLowerCase()));
             assertEquals(size, order.size());
 
             Store store = new Store();

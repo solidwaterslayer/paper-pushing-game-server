@@ -3,7 +3,7 @@ package server.game.pushing.paper.store;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.bank.account.AccountType;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
 
 import java.util.List;
@@ -48,10 +48,10 @@ public class StoreTests {
         cdWithdrawAmount = bank.getAccount(CD_ID).getMaxWithdrawAmount();
 
         initializeStore();
-        store.getOrder().add(0, String.format("%s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_1));
-        store.getOrder().add(1, String.format("%s %s %s", transactionType, AccountType.CHECKING, CHECKING_ID_0));
-        store.getOrder().add(2, String.format("%s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_1));
-        store.getOrder().add(3, String.format("%s %s %s", transactionType, AccountType.SAVINGS, SAVINGS_ID_0));
+        store.getOrder().add(0, String.format("%s %s %s", transactionType, AccountType.Checking, CHECKING_ID_1));
+        store.getOrder().add(1, String.format("%s %s %s", transactionType, AccountType.Checking, CHECKING_ID_0));
+        store.getOrder().add(2, String.format("%s %s %s", transactionType, AccountType.Savings, SAVINGS_ID_1));
+        store.getOrder().add(3, String.format("%s %s %s", transactionType, AccountType.Savings, SAVINGS_ID_0));
         store.getOrder().add(4, String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, cdBalance));
     }
 
@@ -270,11 +270,11 @@ public class StoreTests {
         initializeStore();
         TransactionType transactionType = TransactionType.Create;
 
-        store.getOrder().add(0, String.format("%s %s %s", "", AccountType.CHECKING, CHECKING_ID_1));
-        store.getOrder().add(1, String.format("%s %s %s", "transactionType", AccountType.SAVINGS, SAVINGS_ID_1));
+        store.getOrder().add(0, String.format("%s %s %s", "", AccountType.Checking, CHECKING_ID_1));
+        store.getOrder().add(1, String.format("%s %s %s", "transactionType", AccountType.Savings, SAVINGS_ID_1));
         store.getOrder().add(2, String.format("%s %s %s %s", transactionType, "", CD_ID, cdBalance));
         store.getOrder().add(3, String.format("%s %s %s", transactionType, "AccountType.Savings", CHECKING_ID_1));
-        store.getOrder().add(4, String.format("%s %s %s", transactionType, AccountType.SAVINGS, ""));
+        store.getOrder().add(4, String.format("%s %s %s", transactionType, AccountType.Savings, ""));
         store.getOrder().add(5, String.format("%s %s %s %s", transactionType, AccountType.CD, "SAVINGS_ID_0", cdBalance));
         store.getOrder().add(6, String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, ""));
         store.getOrder().add(7, String.format("%s %s %s %s", transactionType, AccountType.CD, CD_ID, "initialCDBalance"));
@@ -440,12 +440,12 @@ public class StoreTests {
     protected void output_should_be_sorted_by_validity_first_id_second_and_time_third() {
         initializeStore();
 
-        store.getOrder().add(0, String.format("%s %s %s", TransactionType.Create, AccountType.SAVINGS, SAVINGS_ID_1));
+        store.getOrder().add(0, String.format("%s %s %s", TransactionType.Create, AccountType.Savings, SAVINGS_ID_1));
         store.getOrder().add(1, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, 700));
 
         store.getOrder().add(2, String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID_1, 5000));
 
-        store.getOrder().add(3, String.format("%s %s %s", TransactionType.Create, AccountType.CHECKING, CHECKING_ID_1));
+        store.getOrder().add(3, String.format("%s %s %s", TransactionType.Create, AccountType.Checking, CHECKING_ID_1));
         store.getOrder().add(4, String.format("%s %s %s", TransactionType.Deposit, CHECKING_ID_1, 300));
         store.getOrder().add(5, String.format("%s %s %s %s", TransactionType.Transfer, CHECKING_ID_1, SAVINGS_ID_1, 300));
         store.getOrder().add(6, String.format("%s %s", TransactionType.TimeTravel, 1));
