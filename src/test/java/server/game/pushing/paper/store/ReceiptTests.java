@@ -2,10 +2,10 @@ package server.game.pushing.paper.store;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.Account;
-import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
-import static server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility.parseDouble;
+import static server.game.pushing.paper.store.handler.Handler.parseDouble;
 
 public class ReceiptTests {
     private Bank bank;

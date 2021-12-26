@@ -1,11 +1,11 @@
-package server.game.pushing.paper.store.chain_of_responsibility.transaction_validator;
+package server.game.pushing.paper.store.handler.validator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.handler.Handler;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +13,7 @@ import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class TimeTravelValidatorTests {
     private Bank bank;
-    private ChainOfResponsibility validator;
+    private Handler validator;
 
     private final int MONTHS_PER_YEAR = getMonthsPerYear();
     private TransactionType transactionType;
@@ -36,44 +36,44 @@ public class TimeTravelValidatorTests {
 
     @Test
     protected void the_first_and_second_argument_of_time_travel_transaction_is_the_transaction_type_time_travel() {
-        assertFalse(validator.handle(""));
-        assertFalse(validator.handle(String.format("%s %s", "", "")));
-        assertFalse(validator.handle(String.format("%s %s", "", MONTHS_PER_YEAR)));
-        assertFalse(validator.handle(String.format("%s %s", "yes no", MONTHS_PER_YEAR)));
-        assertTrue(validator.handle(String.format("%s %s", transactionType, MONTHS_PER_YEAR)));
+        assertFalse(validator.handleTransaction(""));
+        assertFalse(validator.handleTransaction(String.format("%s %s", "", "")));
+        assertFalse(validator.handleTransaction(String.format("%s %s", "", MONTHS_PER_YEAR)));
+        assertFalse(validator.handleTransaction(String.format("%s %s", "yes no", MONTHS_PER_YEAR)));
+        assertTrue(validator.handleTransaction(String.format("%s %s", transactionType, MONTHS_PER_YEAR)));
     }
 
     @Test
     protected void the_third_argument_of_time_travel_transactions_are_months() {
-        assertFalse(validator.handle(String.format("%s %s", transactionType, "")));
-        assertFalse(validator.handle(String.format("%s %s", transactionType, "months")));
-        assertTrue(validator.handle(String.format("%s %s", transactionType, getMonthsPerYear())));
+        assertFalse(validator.handleTransaction(String.format("%s %s", transactionType, "")));
+        assertFalse(validator.handleTransaction(String.format("%s %s", transactionType, "months")));
+        assertTrue(validator.handleTransaction(String.format("%s %s", transactionType, getMonthsPerYear())));
     }
 
     @Test
     protected void months_should_be_between_1_and_60_inclusive() {
-        assertFalse(validator.handle(String.format("%s %s", transactionType, -60)));
-        assertFalse(validator.handle(String.format("%s %s", transactionType, -3)));
-        assertTrue(validator.handle(String.format("%s %s", transactionType, 1)));
-        assertTrue(validator.handle(String.format("%s %s", transactionType, 5)));
-        assertTrue(validator.handle(String.format("%s %s", transactionType, 30)));
+        assertFalse(validator.handleTransaction(String.format("%s %s", transactionType, -60)));
+        assertFalse(validator.handleTransaction(String.format("%s %s", transactionType, -3)));
+        assertTrue(validator.handleTransaction(String.format("%s %s", transactionType, 1)));
+        assertTrue(validator.handleTransaction(String.format("%s %s", transactionType, 5)));
+        assertTrue(validator.handleTransaction(String.format("%s %s", transactionType, 30)));
 
-        assertTrue(validator.handle(String.format("%s %s", transactionType, 40)));
-        assertTrue(validator.handle(String.format("%s %s", transactionType, 56)));
-        assertTrue(validator.handle(String.format("%s %s", transactionType, 60)));
-        assertFalse(validator.handle(String.format("%s %s", transactionType, 64)));
-        assertFalse(validator.handle(String.format("%s %s", transactionType, 120)));
+        assertTrue(validator.handleTransaction(String.format("%s %s", transactionType, 40)));
+        assertTrue(validator.handleTransaction(String.format("%s %s", transactionType, 56)));
+        assertTrue(validator.handleTransaction(String.format("%s %s", transactionType, 60)));
+        assertFalse(validator.handleTransaction(String.format("%s %s", transactionType, 64)));
+        assertFalse(validator.handleTransaction(String.format("%s %s", transactionType, 120)));
     }
 
     @Test
     protected void time_travel_validators_can_ignore_additional_arguments() {
-        assertTrue(validator.handle(String.format("%s %s %s", transactionType, MONTHS_PER_YEAR, "0")));
-        assertTrue(validator.handle(String.format("%s %s %s %s %s %s", transactionType, MONTHS_PER_YEAR, 89, 23892398, 92839233, 23)));
+        assertTrue(validator.handleTransaction(String.format("%s %s %s", transactionType, MONTHS_PER_YEAR, "0")));
+        assertTrue(validator.handleTransaction(String.format("%s %s %s %s %s %s", transactionType, MONTHS_PER_YEAR, 89, 23892398, 92839233, 23)));
     }
 
     @Test
     protected void time_travel_validators_can_case_insensitive() {
-        assertTrue(validator.handle(String.format("%s %s", "tImE tRaVel", MONTHS_PER_YEAR)));
+        assertTrue(validator.handleTransaction(String.format("%s %s", "tImE tRaVel", MONTHS_PER_YEAR)));
     }
 
     @Test
@@ -84,8 +84,8 @@ public class TimeTravelValidatorTests {
 
         validator.setNext(new CreateValidator(bank));
 
-        assertTrue(validator.handle(String.format("%s %s %s", TransactionType.Create, accountType, id)));
-        assertFalse(validator.handle(String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID, depositAmount)));
+        assertTrue(validator.handleTransaction(String.format("%s %s %s", TransactionType.Create, accountType, id)));
+        assertFalse(validator.handleTransaction(String.format("%s %s %s", TransactionType.Deposit, SAVINGS_ID, depositAmount)));
     }
 
     @Test
@@ -95,13 +95,13 @@ public class TimeTravelValidatorTests {
         String transaction = String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount);
         validator.setNext(new WithdrawValidator(bank));
 
-        assertTrue(validator.handle(transaction));
+        assertTrue(validator.handleTransaction(transaction));
 
         bank.withdraw(id, withdrawAmount);
-        assertFalse(validator.handle(transaction));
+        assertFalse(validator.handleTransaction(transaction));
 
         bank.timeTravel(1);
-        assertTrue(validator.handle(transaction));
+        assertTrue(validator.handleTransaction(transaction));
     }
 
     @Test
@@ -112,13 +112,13 @@ public class TimeTravelValidatorTests {
         String transaction = String.format("%s %s %s %s", TransactionType.Transfer, payingID, receivingID, transferAmount);
         validator.setNext(new TransferValidator(bank));
 
-        assertTrue(validator.handle(transaction));
+        assertTrue(validator.handleTransaction(transaction));
 
         bank.transfer(payingID, receivingID, transferAmount);
-        assertFalse(validator.handle(transaction));
+        assertFalse(validator.handleTransaction(transaction));
 
         bank.timeTravel(1);
-        assertTrue(validator.handle(transaction));
+        assertTrue(validator.handleTransaction(transaction));
     }
 
     @Test
@@ -130,7 +130,7 @@ public class TimeTravelValidatorTests {
         validator.setNext(new WithdrawValidator(bank));
 
         for (int month = 0; month < MONTHS_PER_YEAR * 2; month++) {
-            assertEquals(month >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s", transactionType, id, withdrawAmount)));
+            assertEquals(month >= MONTHS_PER_YEAR, validator.handleTransaction(String.format("%s %s %s", transactionType, id, withdrawAmount)));
 
             bank.timeTravel(1);
         }
@@ -146,7 +146,7 @@ public class TimeTravelValidatorTests {
         validator.setNext(new TransferValidator(bank));
 
         for (int month = 0; month < MONTHS_PER_YEAR * 2; month++) {
-            assertEquals(month >= MONTHS_PER_YEAR, validator.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+            assertEquals(month >= MONTHS_PER_YEAR, validator.handleTransaction(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
 
             bank.timeTravel(1);
         }

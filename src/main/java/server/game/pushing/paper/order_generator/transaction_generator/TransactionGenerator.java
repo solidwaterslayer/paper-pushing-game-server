@@ -1,24 +1,24 @@
 package server.game.pushing.paper.order_generator.transaction_generator;
 
-import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.handler.ChainOfResponsibilityFactory;
+import server.game.pushing.paper.store.handler.Handler;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import java.util.Random;
 
 public abstract class TransactionGenerator {
     protected Bank bank;
     protected Random random;
-    protected ChainOfResponsibility validator;
+    protected Handler validator;
 
     protected TransactionType transactionType;
 
     public TransactionGenerator(Bank bank, Random random) {
         this.bank = bank;
         this.random = random;
-        validator = (new ChainOfResponsibilityFactory(bank)).getChainOfResponsibility(true);
+        validator = (new ChainOfResponsibilityFactory(bank)).getValidator();
     }
 
     public abstract String getTransaction();

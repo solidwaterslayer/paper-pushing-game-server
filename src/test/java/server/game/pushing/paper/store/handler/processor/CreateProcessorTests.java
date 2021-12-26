@@ -1,18 +1,18 @@
-package server.game.pushing.paper.store.chain_of_responsibility.transaction_processor;
+package server.game.pushing.paper.store.handler.processor;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.Account;
-import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.handler.Handler;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateProcessorTests {
     private Bank bank;
-    private ChainOfResponsibility processor;
+    private Handler processor;
 
     private TransactionType transactionType;
     private final String CHECKING_ID = "17349724";
@@ -34,7 +34,7 @@ public class CreateProcessorTests {
         AccountType accountType = AccountType.Checking;
         String id = CHECKING_ID;
 
-        assertTrue(processor.handle(String.format("%s %s %s", transactionType, accountType, id)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s", transactionType, accountType, id)));
 
         Account account = bank.getAccount(id);
         assertEquals(accountType, account.getAccountType());
@@ -47,7 +47,7 @@ public class CreateProcessorTests {
         AccountType accountType = AccountType.Savings;
         String id = SAVINGS_ID;
 
-        assertTrue(processor.handle(String.format("%s %s %s", transactionType, accountType, id)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s", transactionType, accountType, id)));
 
         Account account = bank.getAccount(id);
         assertEquals(accountType, account.getAccountType());
@@ -60,7 +60,7 @@ public class CreateProcessorTests {
         AccountType accountType = AccountType.CD;
         String id = CD_ID;
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, accountType, id, cdBalance)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, accountType, id, cdBalance)));
 
         Account account = bank.getAccount(id);
         assertEquals(accountType, account.getAccountType());
@@ -70,30 +70,30 @@ public class CreateProcessorTests {
 
     @Test
     protected void create_processors_can_ignore_additional_arguments() {
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, AccountType.Checking, CHECKING_ID, "0")));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s %s %s", transactionType, AccountType.Savings, SAVINGS_ID, "nuke", AccountType.CD, "38ur", 34)));
-        assertTrue(processor.handle(String.format("%s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, CD_ID, cdBalance, "8", 8, "eight", 4 + 4)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, AccountType.Checking, CHECKING_ID, "0")));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s %s %s %s", transactionType, AccountType.Savings, SAVINGS_ID, "nuke", AccountType.CD, "38ur", 34)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s  %s %s     %s %s    ", transactionType, AccountType.CD, CD_ID, cdBalance, "8", 8, "eight", 4 + 4)));
     }
 
     @Test
     protected void create_processors_are_case_insensitive() {
-        assertTrue(processor.handle(String.format("%s %s %s", "crEaTe", "checking", CHECKING_ID)));
-        assertTrue(processor.handle(String.format("%s %s %s", "create", "saVINgs", SAVINGS_ID)));
-        assertTrue(processor.handle(String.format("%s %s %s %s", "creATe", "Cd", CD_ID, cdBalance)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s", "crEaTe", "checking", CHECKING_ID)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s", "create", "saVINgs", SAVINGS_ID)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", "creATe", "Cd", CD_ID, cdBalance)));
     }
 
     @Test
     protected void create_processors_can_be_in_a_chain_of_responsibility() {
         AccountType accountType = AccountType.Savings;
         String id = SAVINGS_ID;
-        assertTrue(processor.handle(String.format("%s %s %s", transactionType, accountType, id)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s", transactionType, accountType, id)));
         double depositAmount = bank.getAccount(id).getMaxDepositAmount();
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         processor.setNext(new DepositProcessor(bank));
 
-        assertTrue(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s", TransactionType.Deposit, id, depositAmount)));
         assertEquals(depositAmount, bank.getAccount(id).getBalance());
-        assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
+        assertFalse(processor.handleTransaction(String.format("%s %s %s", TransactionType.Withdraw, id, withdrawAmount)));
     }
 }

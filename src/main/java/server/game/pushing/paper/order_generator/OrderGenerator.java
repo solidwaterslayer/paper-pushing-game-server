@@ -1,10 +1,10 @@
 package server.game.pushing.paper.order_generator;
 
 import server.game.pushing.paper.order_generator.transaction_generator.*;
-import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
+import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.handler.ChainOfResponsibilityFactory;
+import server.game.pushing.paper.store.handler.Handler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,14 +14,14 @@ import java.util.Random;
 public class OrderGenerator {
     private Random random;
     private List<TransactionGenerator> transactionFactories;
-    private ChainOfResponsibility processor;
+    private Handler processor;
     private List<String> order;
 
     public List<String> getOrder(int size, Random random) {
         Bank bank = new Bank();
         this.random = random;
         transactionFactories = Arrays.asList(new CreateGenerator(bank, random), new DepositGenerator(bank, random), new WithdrawGenerator(bank, random), new TransferGenerator(bank, random), new TimeTravelGenerator(bank, random));
-        processor = (new ChainOfResponsibilityFactory(bank)).getChainOfResponsibility(false);
+        processor = (new ChainOfResponsibilityFactory(bank)).getProcessor();
         order = new ArrayList<>();
 
         addAllTransactions(size, 2);
@@ -40,7 +40,7 @@ public class OrderGenerator {
     }
 
     private void addTransaction(String transaction) {
-        processor.handle(transaction);
+        processor.handleTransaction(transaction);
         order.add(transaction);
     }
 }

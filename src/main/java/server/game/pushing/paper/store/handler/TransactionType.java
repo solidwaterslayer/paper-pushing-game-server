@@ -1,4 +1,4 @@
-package server.game.pushing.paper.store.chain_of_responsibility;
+package server.game.pushing.paper.store.handler;
 
 public enum TransactionType {
     Create, Deposit, Withdraw, Transfer, TimeTravel;

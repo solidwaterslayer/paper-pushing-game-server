@@ -1,7 +1,7 @@
 package server.game.pushing.paper.order_generator.transaction_generator;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import java.util.Random;
 
@@ -18,7 +18,7 @@ public class TransferGenerator extends TransactionGenerator {
         checkException();
 
         String transaction = "";
-        while (!validator.handle(transaction)) {
+        while (!validator.handleTransaction(transaction)) {
             String fromID = getRandomID();
             String toID = getRandomID();
             double transferAmount = getRandomAmount(min(bank.getAccount(fromID).getMaxWithdrawAmount(), bank.getAccount(toID).getMaxDepositAmount()));

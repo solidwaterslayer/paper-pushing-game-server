@@ -1,20 +1,20 @@
-package server.game.pushing.paper.store.chain_of_responsibility.transaction_processor;
+package server.game.pushing.paper.store.handler.processor;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.account.Account;
-import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.handler.Handler;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.BankTests.timeTravel;
+import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class TimeTravelProcessorTests {
     private Bank bank;
-    private ChainOfResponsibility processor;
+    private Handler processor;
 
     private int months;
     private TransactionType transactionType;
@@ -46,7 +46,7 @@ public class TimeTravelProcessorTests {
         bank.deposit(CHECKING_ID, checkingDepositAmount);
         bank.deposit(SAVINGS_ID, savingsDepositAmount);
 
-        assertTrue(processor.handle(String.format("%s %s", transactionType, months)));
+        assertTrue(processor.handleTransaction(String.format("%s %s", transactionType, months)));
         assertEquals(timeTravel(checkingDepositAmount, months), bank.getAccount(CHECKING_ID).getBalance());
         assertEquals(timeTravel(savingsDepositAmount, months), bank.getAccount(SAVINGS_ID).getBalance());
         assertEquals(timeTravel(cdBalance, months), bank.getAccount(CD_ID).getBalance());
@@ -54,13 +54,13 @@ public class TimeTravelProcessorTests {
 
     @Test
     protected void time_travel_processors_can_ignore_additional_arguments() {
-        assertTrue(processor.handle(String.format("%s %s %s", transactionType, months, "0")));
-        assertTrue(processor.handle(String.format("%s %s %s %s %s %s", transactionType, months, 89, 23892398, 92839233, 23)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s", transactionType, months, "0")));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s %s %s", transactionType, months, 89, 23892398, 92839233, 23)));
     }
 
     @Test
     protected void time_travel_processors_are_case_insensitive() {
-        assertTrue(processor.handle(String.format("%s %s", "tImE tRaVel", months)));
+        assertTrue(processor.handleTransaction(String.format("%s %s", "tImE tRaVel", months)));
     }
 
     @Test
@@ -70,11 +70,11 @@ public class TimeTravelProcessorTests {
 
         processor.setNext(new CreateProcessor(bank));
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, id0, cdBalance)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, id0, cdBalance)));
         Account account = bank.getAccount(id0);
         assertEquals(AccountType.CD, account.getAccountType());
         assertEquals(id0, account.getID());
         assertEquals(cdBalance, account.getBalance());
-        assertFalse(processor.handle(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
+        assertFalse(processor.handleTransaction(String.format("%s %s %s", TransactionType.Deposit, id1, bank.getAccount(id1).getMaxDepositAmount())));
     }
 }

@@ -1,7 +1,7 @@
 package server.game.pushing.paper.order_generator.transaction_generator;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import java.util.Random;
 
@@ -15,7 +15,7 @@ public class TimeTravelGenerator extends TransactionGenerator {
     public String getTransaction() {
         String transaction = "";
 
-        while (!validator.handle(transaction)) {
+        while (!validator.handleTransaction(transaction)) {
             int months = random.nextInt(bank.getMaxTimeTravel());
             transaction = String.format("%s %s", transactionType, months).toLowerCase();
         }

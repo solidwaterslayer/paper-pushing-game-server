@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.game.pushing.paper.order_generator.transaction_generator.*;
-import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.handler.ChainOfResponsibilityFactory;
+import server.game.pushing.paper.store.handler.Handler;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TransactionGeneratorTests {
     private Bank bank;
     private List<TransactionGenerator> transactionFactories;
-    private ChainOfResponsibility validator;
-    private ChainOfResponsibility processor;
+    private Handler validator;
+    private Handler processor;
 
     private Logger logger;
 
@@ -32,8 +32,8 @@ public class TransactionGeneratorTests {
         Random random = new Random(0);
         transactionFactories = new ArrayList<>();
         ChainOfResponsibilityFactory chainOfResponsibilityFactory = new ChainOfResponsibilityFactory(bank);
-        validator = chainOfResponsibilityFactory.getChainOfResponsibility(true);
-        processor = chainOfResponsibilityFactory.getChainOfResponsibility(false);
+        validator = chainOfResponsibilityFactory.getValidator();
+        processor = chainOfResponsibilityFactory.getProcessor();
 
         logger = LoggerFactory.getLogger(this.getClass());
 
@@ -52,7 +52,7 @@ public class TransactionGeneratorTests {
             String transaction = transactionGenerator.getTransaction();
 
             logger.info(String.format("[%s] %s", i, transaction));
-            assertTrue(validator.handle(transaction) && processor.handle(transaction));
+            assertTrue(validator.handleTransaction(transaction) && processor.handleTransaction(transaction));
         }
     }
 
@@ -62,7 +62,7 @@ public class TransactionGeneratorTests {
                 String transaction = ((CreateGenerator) transactionFactories.get(0)).getLoadedTransaction(accountType);
 
                 logger.info(String.format("[%s] %s", i, transaction));
-                assertTrue(validator.handle(transaction) && processor.handle(transaction));
+                assertTrue(validator.handleTransaction(transaction) && processor.handleTransaction(transaction));
                 assertTrue(transaction.contains(accountType.toString().toLowerCase()));
             }
         }
@@ -73,7 +73,7 @@ public class TransactionGeneratorTests {
         create_factories_can_return_a_valid_but_loaded_transaction();
 
         String transaction = transactionFactories.get(0).getTransaction();
-        assertTrue(validator.handle(transaction) && processor.handle(transaction));
+        assertTrue(validator.handleTransaction(transaction) && processor.handleTransaction(transaction));
         assertEquals("create factories can not support more than 1000 create transactions", assertThrows(IllegalArgumentException.class, transactionFactories.get(0) :: getTransaction).getMessage());
     }
 
@@ -82,20 +82,20 @@ public class TransactionGeneratorTests {
         TransactionType transactionType = TransactionType.Create;
         double minCDBalance = bank.getMinCDBalance();
 
-        processor.handle(String.format("%s %s %s", transactionType, AccountType.Checking, "11111111"));
+        processor.handleTransaction(String.format("%s %s %s", transactionType, AccountType.Checking, "11111111"));
         for (int i = 0; i < 9; i++) {
             for (int j = 1; j < 4; j++) {
                 assertEquals("the bank contains less than 2 checking accounts", assertThrows(IllegalArgumentException.class, transactionFactories.get(j) :: getTransaction).getMessage());
             }
 
-            processor.handle(String.format("%s %s %s", transactionType, AccountType.Savings, "0000000" + i));
-            processor.handle(String.format("%s %s %s %s", transactionType, AccountType.CD, "0000000" + i, minCDBalance));
+            processor.handleTransaction(String.format("%s %s %s", transactionType, AccountType.Savings, "0000000" + i));
+            processor.handleTransaction(String.format("%s %s %s %s", transactionType, AccountType.CD, "0000000" + i, minCDBalance));
         }
 
-        processor.handle(String.format("%s %s %s", transactionType, AccountType.Checking, "11111110"));
+        processor.handleTransaction(String.format("%s %s %s", transactionType, AccountType.Checking, "11111110"));
         for (int i = 1; i < 4; i++) {
             String transaction = transactionFactories.get(i).getTransaction();
-            assertTrue(validator.handle(transaction) && processor.handle(transaction));
+            assertTrue(validator.handleTransaction(transaction) && processor.handleTransaction(transaction));
         }
     }
 }

@@ -2,9 +2,9 @@ package server.game.pushing.paper.store;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import java.util.List;
 

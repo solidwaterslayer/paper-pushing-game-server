@@ -1,20 +1,20 @@
-package server.game.pushing.paper.store.chain_of_responsibility.transaction_processor;
+package server.game.pushing.paper.store.handler.processor;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.handler.Handler;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.*;
-import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 import static server.game.pushing.paper.store.BankTests.timeTravel;
+import static server.game.pushing.paper.store.bank.Bank.getMonthsPerYear;
 
 public class TransferProcessorTests {
     private Bank bank;
-    private ChainOfResponsibility processor;
+    private Handler processor;
 
     private final int MONTHS = getMonthsPerYear();
     private TransactionType transactionType;
@@ -54,7 +54,7 @@ public class TransferProcessorTests {
         String receivingID = CHECKING_ID_1;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
         assertEquals(checkingDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
         assertEquals(checkingDepositAmount + transferAmount, bank.getAccount(receivingID).getBalance());
     }
@@ -65,7 +65,7 @@ public class TransferProcessorTests {
         String receivingID = SAVINGS_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
         assertEquals(checkingDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
         assertEquals(savingsDepositAmount + transferAmount, bank.getAccount(receivingID).getBalance());
     }
@@ -76,7 +76,7 @@ public class TransferProcessorTests {
         String receivingID = CHECKING_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
         assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
         assertEquals(checkingDepositAmount + transferAmount, bank.getAccount(receivingID).getBalance());
     }
@@ -87,7 +87,7 @@ public class TransferProcessorTests {
         String receivingID = SAVINGS_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
         assertEquals(savingsDepositAmount - transferAmount, bank.getAccount(payingID).getBalance());
         assertEquals(savingsDepositAmount + transferAmount, bank.getAccount(receivingID).getBalance());
     }
@@ -100,7 +100,7 @@ public class TransferProcessorTests {
 
         bank.timeTravel(MONTHS);
 
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
         assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(
                 timeTravel(savingsDepositAmount, MONTHS)
@@ -120,10 +120,10 @@ public class TransferProcessorTests {
         }
 
         assertEquals(transferAmount, bank.getAccount(id0).getBalance());
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, id0, id1, transferAmount)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, id0, id1, transferAmount)));
 
         assertTrue(transferAmount < bank.getAccount(id1).getBalance());
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, id1, id0, transferAmount)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, id1, id0, transferAmount)));
 
         assertEquals(400, bank.getAccount(id0).getBalance());
         assertEquals(1000, bank.getAccount(id1).getBalance());
@@ -139,7 +139,7 @@ public class TransferProcessorTests {
         bank.withdraw(SAVINGS_ID_0, transferAmount);
 
         assertTrue(transferAmount > bank.getAccount(payingID).getBalance());
-        assertTrue(processor.handle(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s", transactionType, payingID, receivingID, transferAmount)));
 
         assertEquals(0, bank.getAccount(payingID).getBalance());
         assertEquals(3000, bank.getAccount(receivingID).getBalance());
@@ -153,8 +153,8 @@ public class TransferProcessorTests {
 
         bank.timeTravel(12);
 
-        assertTrue(processor.handle(String.format("%s %s %s %s %s", transactionType, payingID, receivingID, transferAmount, "nuke")));
-        assertTrue(processor.handle(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, payingID, receivingID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s %s", transactionType, payingID, receivingID, transferAmount, "nuke")));
+        assertTrue(processor.handleTransaction(String.format("%s %s %s %s  %s  %s %s  %s   %s", transactionType, payingID, receivingID, transferAmount, "DsDifJ", "paSJiOf", "ps3f&jf", "sp@&HR*&HDSoa", "psd)(Jo")));
     }
 
     @Test
@@ -163,19 +163,19 @@ public class TransferProcessorTests {
         String receivingID = CHECKING_ID_0;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());
 
-        assertTrue(processor.handle(String.format("traNSFer %s %s %s", payingID, receivingID, transferAmount)));
+        assertTrue(processor.handleTransaction(String.format("traNSFer %s %s %s", payingID, receivingID, transferAmount)));
     }
 
     @Test
     protected void transfer_processors_can_be_in_a_chain_of_responsibility() {
         processor.setNext(new TimeTravelProcessor(bank));
 
-        assertTrue(processor.handle(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
+        assertTrue(processor.handleTransaction(String.format("%s %s", TransactionType.TimeTravel, MONTHS)));
         assertEquals(timeTravel(checkingDepositAmount, MONTHS), bank.getAccount(CHECKING_ID_0).getBalance());
         assertEquals(timeTravel(checkingDepositAmount, MONTHS), bank.getAccount(CHECKING_ID_1).getBalance());
         assertEquals(timeTravel(savingsDepositAmount, MONTHS), bank.getAccount(SAVINGS_ID_0).getBalance());
         assertEquals(timeTravel(savingsDepositAmount, MONTHS), bank.getAccount(SAVINGS_ID_1).getBalance());
         assertEquals(timeTravel(cdBalance, MONTHS), bank.getAccount(CD_ID).getBalance());
-        assertFalse(processor.handle(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", cdBalance)));
+        assertFalse(processor.handleTransaction(String.format("%s %s %s %s", TransactionType.Create, AccountType.CD, "73842793", cdBalance)));
     }
 }

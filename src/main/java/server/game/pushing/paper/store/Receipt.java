@@ -1,29 +1,29 @@
 package server.game.pushing.paper.store;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility;
-import server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibilityFactory;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.handler.ChainOfResponsibilityFactory;
+import server.game.pushing.paper.store.handler.Handler;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static server.game.pushing.paper.store.chain_of_responsibility.ChainOfResponsibility.parseDouble;
+import static server.game.pushing.paper.store.handler.Handler.parseDouble;
 
 public class Receipt {
     private final Bank BANK;
-    private final ChainOfResponsibility VALIDATOR;
-    private final ChainOfResponsibility PROCESSOR;
+    private final Handler VALIDATOR;
+    private final Handler PROCESSOR;
 
     private final Map<String, List<String>> TRANSACTIONS;
 
     public Receipt(Bank bank) {
         this.BANK = bank;
         ChainOfResponsibilityFactory chainOfResponsibilityFactory = new ChainOfResponsibilityFactory(BANK);
-        VALIDATOR = chainOfResponsibilityFactory.getChainOfResponsibility(true);
-        PROCESSOR = chainOfResponsibilityFactory.getChainOfResponsibility(false);
+        VALIDATOR = chainOfResponsibilityFactory.getValidator();
+        PROCESSOR = chainOfResponsibilityFactory.getProcessor();
 
         TRANSACTIONS = new HashMap<>();
         TRANSACTIONS.put(null, new ArrayList<>());
@@ -43,7 +43,7 @@ public class Receipt {
     }
 
     public void addTransaction(String transaction) {
-        if (VALIDATOR.handle(transaction) && PROCESSOR.handle(transaction)) {
+        if (VALIDATOR.handleTransaction(transaction) && PROCESSOR.handleTransaction(transaction)) {
             addValidTransaction(transaction.toLowerCase().split(" "));
         } else {
             TRANSACTIONS.get(null).add("[invalid] " + transaction);

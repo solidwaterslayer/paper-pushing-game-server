@@ -1,8 +1,8 @@
 package server.game.pushing.paper.order_generator.transaction_generator;
 
-import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.chain_of_responsibility.TransactionType;
+import server.game.pushing.paper.store.bank.Bank;
+import server.game.pushing.paper.store.handler.TransactionType;
 
 import java.util.Random;
 
@@ -25,7 +25,7 @@ public class CreateGenerator extends TransactionGenerator {
         checkException();
 
         String transaction = "";
-        while (!validator.handle(transaction)) {
+        while (!validator.handleTransaction(transaction)) {
             String id = getRandomID();
             double cdBalance = getRandomAmount(bank.getMaxCDBalance());
             transaction = String.format("%s %s %s %.2f", transactionType, accountType, id, cdBalance).toLowerCase();
