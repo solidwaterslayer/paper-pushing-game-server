@@ -3,7 +3,7 @@ package server.game.pushing.paper.order_generator;
 import server.game.pushing.paper.order_generator.transaction_generator.*;
 import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.handler.ChainOfResponsibilityFactory;
+import server.game.pushing.paper.store.handler.ChainOfResponsibility;
 import server.game.pushing.paper.store.handler.Handler;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class OrderGenerator {
         Bank bank = new Bank();
         this.random = random;
         transactionFactories = Arrays.asList(new CreateGenerator(bank, random), new DepositGenerator(bank, random), new WithdrawGenerator(bank, random), new TransferGenerator(bank, random), new TimeTravelGenerator(bank, random));
-        processor = (new ChainOfResponsibilityFactory(bank)).getProcessor();
+        processor = (new ChainOfResponsibility(bank)).getProcessor();
         order = new ArrayList<>();
 
         addAllTransactions(size, 2);

@@ -2,7 +2,7 @@ package server.game.pushing.paper.order_generator.transaction_generator;
 
 import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.handler.ChainOfResponsibilityFactory;
+import server.game.pushing.paper.store.handler.ChainOfResponsibility;
 import server.game.pushing.paper.store.handler.Handler;
 import server.game.pushing.paper.store.handler.TransactionType;
 
@@ -18,7 +18,7 @@ public abstract class TransactionGenerator {
     public TransactionGenerator(Bank bank, Random random) {
         this.bank = bank;
         this.random = random;
-        validator = (new ChainOfResponsibilityFactory(bank)).getValidator();
+        validator = (new ChainOfResponsibility(bank)).getValidator();
     }
 
     public abstract String getTransaction();

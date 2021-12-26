@@ -7,10 +7,10 @@ import server.game.pushing.paper.store.handler.validator.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChainOfResponsibilityFactory {
+public class ChainOfResponsibility {
     private final Bank bank;
 
-    public ChainOfResponsibilityFactory(Bank bank) {
+    public ChainOfResponsibility(Bank bank) {
         this.bank = bank;
     }
 

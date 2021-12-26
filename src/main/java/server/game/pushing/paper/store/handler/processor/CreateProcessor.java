@@ -14,7 +14,10 @@ public class CreateProcessor extends Handler {
 
     @Override
     public boolean handleTransaction(String[] transactionArguments) {
-        if (handleCheckingTransaction(transactionArguments) || handleSavingsTransaction(transactionArguments) || handleCDTransaction(transactionArguments)) {
+        if (handleCheckingTransaction(transactionArguments)
+                || handleSavingsTransaction(transactionArguments)
+                || handleCDTransaction(transactionArguments)
+        ) {
             return true;
         }
 

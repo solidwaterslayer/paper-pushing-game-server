@@ -408,7 +408,7 @@ public class BankTests {
     }
 
     @Test
-    protected void during_transfers_banks_should_use_a_different_from_id_and_to_id() {
+    protected void during_transfers_banks_should_use_a_different_paying_id_and_receiving_id() {
         String payingID = checkingID0;
         String receivingID = savingsID1;
         double transferAmount = min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount());

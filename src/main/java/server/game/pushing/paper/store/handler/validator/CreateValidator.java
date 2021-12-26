@@ -17,7 +17,8 @@ public class CreateValidator extends Handler {
         try {
             if (handleCheckingTransaction(transactionArguments)
                     || handleSavingsTransaction(transactionArguments)
-                    || handleCDTransaction(transactionArguments)) {
+                    || handleCDTransaction(transactionArguments)
+            ) {
                 return true;
             } else {
                 return next != null && next.handleTransaction(transactionArguments);

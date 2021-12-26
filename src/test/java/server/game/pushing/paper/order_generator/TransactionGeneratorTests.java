@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import server.game.pushing.paper.order_generator.transaction_generator.*;
 import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.handler.ChainOfResponsibilityFactory;
+import server.game.pushing.paper.store.handler.ChainOfResponsibility;
 import server.game.pushing.paper.store.handler.Handler;
 import server.game.pushing.paper.store.handler.TransactionType;
 
@@ -31,9 +31,9 @@ public class TransactionGeneratorTests {
         bank = new Bank();
         Random random = new Random(0);
         transactionFactories = new ArrayList<>();
-        ChainOfResponsibilityFactory chainOfResponsibilityFactory = new ChainOfResponsibilityFactory(bank);
-        validator = chainOfResponsibilityFactory.getValidator();
-        processor = chainOfResponsibilityFactory.getProcessor();
+        ChainOfResponsibility chainOfResponsibility = new ChainOfResponsibility(bank);
+        validator = chainOfResponsibility.getValidator();
+        processor = chainOfResponsibility.getProcessor();
 
         logger = LoggerFactory.getLogger(this.getClass());
 

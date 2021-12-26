@@ -1,7 +1,7 @@
 package server.game.pushing.paper.store;
 
 import server.game.pushing.paper.store.bank.Bank;
-import server.game.pushing.paper.store.handler.ChainOfResponsibilityFactory;
+import server.game.pushing.paper.store.handler.ChainOfResponsibility;
 import server.game.pushing.paper.store.handler.Handler;
 import server.game.pushing.paper.store.handler.TransactionType;
 
@@ -21,9 +21,9 @@ public class Receipt {
 
     public Receipt(Bank bank) {
         this.BANK = bank;
-        ChainOfResponsibilityFactory chainOfResponsibilityFactory = new ChainOfResponsibilityFactory(BANK);
-        VALIDATOR = chainOfResponsibilityFactory.getValidator();
-        PROCESSOR = chainOfResponsibilityFactory.getProcessor();
+        ChainOfResponsibility chainOfResponsibility = new ChainOfResponsibility(BANK);
+        VALIDATOR = chainOfResponsibility.getValidator();
+        PROCESSOR = chainOfResponsibility.getProcessor();
 
         TRANSACTIONS = new HashMap<>();
         TRANSACTIONS.put(null, new ArrayList<>());

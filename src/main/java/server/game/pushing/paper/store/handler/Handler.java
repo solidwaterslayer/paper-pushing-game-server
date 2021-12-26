@@ -3,8 +3,8 @@ package server.game.pushing.paper.store.handler;
 import server.game.pushing.paper.store.bank.Bank;
 
 public abstract class Handler {
-    protected TransactionType transactionType;
     protected Bank bank;
+    protected TransactionType transactionType;
     protected Handler next;
 
     public Handler(Bank bank) {
