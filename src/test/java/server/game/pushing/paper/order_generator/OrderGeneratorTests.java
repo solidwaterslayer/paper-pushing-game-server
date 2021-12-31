@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.game.pushing.paper.store.Store;
 import server.game.pushing.paper.store.bank.AccountType;
+import server.game.pushing.paper.store.bank.Bank;
 
 import java.util.List;
 import java.util.Random;
@@ -29,7 +30,7 @@ public class OrderGeneratorTests {
             assertEquals(size, order.size());
 
             Store store = new Store();
-            store.getOrder().addAll(order);
+            store.setOrder(order);
             receipt = store.getReceipt();
             for (int j = 0; j < receipt.size(); j++) {
                 transaction = receipt.get(j);

@@ -1,38 +1,21 @@
 package server.game.pushing.paper.store;
 
-import server.game.pushing.paper.store.bank.Bank;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Store {
-    private final Bank BANK;
-    private final List<String> ORDER;
-    private final Receipt RECEIPT;
-    private int receiptInputSize;
+    private List<String> order;
 
-    public Store() {
-        BANK = new Bank();
-        ORDER = new ArrayList<>();
-        RECEIPT = new Receipt(BANK);
-        receiptInputSize = 0;
-    }
-
-    public Bank getBank() {
-        return BANK;
-    }
-
-    public List<String> getOrder() {
-        return ORDER;
+    public void setOrder(List<String> order) {
+        this.order = order;
     }
 
     public List<String> getReceipt() {
-        for (int i = receiptInputSize; i < ORDER.size(); i++) {
-            RECEIPT.addTransaction(ORDER.get(i));
+        Receipt receipt = new Receipt();
 
-            receiptInputSize++;
+        for (String transaction : order) {
+            receipt.addTransaction(transaction);
         }
 
-        return this.RECEIPT.output();
+        return receipt.output();
     }
 }

@@ -2,6 +2,7 @@ package server.game.pushing.paper.game_level;
 
 import server.game.pushing.paper.order_generator.OrderGenerator;
 import server.game.pushing.paper.store.Store;
+import server.game.pushing.paper.store.bank.Bank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ public class GameLevel {
         RANDOM = new Random();
         order = orderGenerator.getOrder(6, RANDOM);
         Store store = new Store();
-        store.getOrder().addAll(order);
+        store.setOrder(order);
         receipt = store.getReceipt();
         transformation = new ArrayList<>();
         for (int i = 0; i < receipt.size(); i++) {
