@@ -176,7 +176,7 @@ public class ValidatorTests {
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
         assertFalse(withdrawValidator.handleTransaction(String.format("%s %s %s", transactionType, id, "")));
-        assertFalse(withdrawValidator.handleTransaction(String.format("%s %s %s", transactionType, id, "all my cheese")));
+        assertFalse(withdrawValidator.handleTransaction(String.format("%s %s %s", transactionType, id, Double.POSITIVE_INFINITY)));
         assertTrue(withdrawValidator.handleTransaction(String.format("%s %s %s", transactionType, id, withdrawAmount)));
     }
 

@@ -24,12 +24,4 @@ public abstract class Handler {
     }
 
     public abstract boolean handleTransaction(String[] transactionArguments);
-
-    public static double parseDouble(String string) {
-        if (string.equalsIgnoreCase("infinity")) {
-            return Double.POSITIVE_INFINITY;
-        }
-
-        return Double.parseDouble(string);
-    }
 }

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static server.game.pushing.paper.store.handler.Handler.parseDouble;
+import static java.lang.Double.parseDouble;
 import static server.game.pushing.paper.store.handler.TransactionType.*;
 
 public class Receipt {
