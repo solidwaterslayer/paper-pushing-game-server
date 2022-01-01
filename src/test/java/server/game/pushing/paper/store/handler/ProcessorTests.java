@@ -2,6 +2,7 @@ package server.game.pushing.paper.store.handler;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.game.pushing.paper.TransactionType;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.handler.processor.*;
 

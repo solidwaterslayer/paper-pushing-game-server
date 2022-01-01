@@ -1,8 +1,7 @@
 package server.game.pushing.paper.game_level;
 
-import server.game.pushing.paper.order_generator.OrderGenerator;
+import server.game.pushing.paper.generator.OrderGenerator;
 import server.game.pushing.paper.store.Store;
-import server.game.pushing.paper.store.bank.Bank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,9 +19,9 @@ public class GameLevel {
     private final int NUMBER_OF_MUTATIONS = 2;
 
     public GameLevel() {
-        OrderGenerator orderGenerator = new OrderGenerator();
         RANDOM = new Random();
-        order = orderGenerator.getOrder(6, RANDOM);
+        OrderGenerator orderGenerator = new OrderGenerator();
+        order = orderGenerator.generateOrder(RANDOM, 6);
         Store store = new Store();
         store.setOrder(order);
         receipt = store.getReceipt();

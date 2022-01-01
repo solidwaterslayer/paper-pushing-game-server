@@ -10,14 +10,14 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.Double.parseDouble;
-import static server.game.pushing.paper.store.handler.TransactionType.*;
+import static server.game.pushing.paper.TransactionType.*;
 
 public class Receipt {
     private final Map<String, List<String>> transactions;
 
     private final Bank bank;
-    private final Handler validator;
-    private final Handler processor;
+    private final Handler validators;
+    private final Handler processors;
 
     public Receipt() {
         transactions = new HashMap<>();
@@ -25,8 +25,8 @@ public class Receipt {
 
         bank = new Bank();
         ChainOfResponsibility chainOfResponsibility = new ChainOfResponsibility(bank);
-        validator = chainOfResponsibility.getValidator();
-        processor = chainOfResponsibility.getProcessor();
+        validators = chainOfResponsibility.getValidators();
+        processors = chainOfResponsibility.getProcessors();
     }
 
     public List<String> output() {
@@ -43,7 +43,7 @@ public class Receipt {
     }
 
     public void addTransaction(String transaction) {
-        if (validator.handleTransaction(transaction) && processor.handleTransaction(transaction)) {
+        if (validators.handleTransaction(transaction) && processors.handleTransaction(transaction)) {
             addValidTransaction(transaction.toLowerCase().split(" "));
         } else {
             transactions.get(null).add("[invalid] " + transaction);

@@ -9,9 +9,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static server.game.pushing.paper.TransactionType.*;
 import static server.game.pushing.paper.store.BankTests.timeTravel;
 import static server.game.pushing.paper.store.bank.AccountType.*;
-import static server.game.pushing.paper.store.handler.TransactionType.*;
 
 public class StoreTests {
     private Store store;

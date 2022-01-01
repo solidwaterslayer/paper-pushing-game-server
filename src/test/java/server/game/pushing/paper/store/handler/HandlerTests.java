@@ -12,20 +12,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static server.game.pushing.paper.TransactionType.Create;
 import static server.game.pushing.paper.store.bank.AccountType.Savings;
-import static server.game.pushing.paper.store.handler.TransactionType.Create;
 
 public class HandlerTests {
     private Bank bank;
-    private Handler validator;
-    private Handler processor;
+    private Handler validators;
+    private Handler processors;
 
     @BeforeEach
     protected void setUp() {
         bank = new Bank();
         ChainOfResponsibility chainOfResponsibility = new ChainOfResponsibility(bank);
-        validator = chainOfResponsibility.getValidator();
-        processor = chainOfResponsibility.getProcessor();
+        validators = chainOfResponsibility.getValidators();
+        processors = chainOfResponsibility.getProcessors();
     }
 
     @Test
@@ -35,8 +35,8 @@ public class HandlerTests {
         String validTransaction = String.format("%s %s %s", Create, Savings, "87549753");
         String invalidTransaction = "totally a valid transaction";
 
-        transferValidator.setNext(validator);
-        transferProcessor.setNext(processor);
+        transferValidator.setNext(validators);
+        transferProcessor.setNext(processors);
 
         assertTrue(transferValidator.handleTransaction(validTransaction));
         assertTrue(transferProcessor.handleTransaction(validTransaction));
@@ -50,16 +50,16 @@ public class HandlerTests {
         String receivingID = "08429843";
         List<String> order = new ArrayList<>(Arrays.asList(
                 String.format("%s %s %s %s", "create", "SAVINGS", payingID, false),
-                String.format("%s %s %s %s %s", "CREATE", "CHECKING", receivingID, "bob", validator),
-                String.format("%s %s %s %s %s %s %s", "transfer", payingID, receivingID, 900, true, processor, "negative bob"),
+                String.format("%s %s %s %s %s", "CREATE", "CHECKING", receivingID, "bob", validators),
+                String.format("%s %s %s %s %s %s %s", "transfer", payingID, receivingID, 900, true, processors, "negative bob"),
                 String.format("%s %s %s %s %s %s", "TIME travel", 2, "the power of friendship", 0, 0, Double.POSITIVE_INFINITY),
                 String.format("%s %s %s %s %s %s %s %s", "dEpOsIt", payingID, 300, 283, -31255132, 3, 234, 1235),
                 String.format("%s %s %s %s %s %s %s %s %s", "WiThDrAw", receivingID, 300, new ArrayList<>(), bank, new HandlerTests(), "tree", '3', null)
         ));
 
         for (String transaction : order) {
-            assertTrue(validator.handleTransaction(transaction));
-            assertTrue(processor.handleTransaction(transaction));
+            assertTrue(validators.handleTransaction(transaction));
+            assertTrue(processors.handleTransaction(transaction));
         }
     }
 }

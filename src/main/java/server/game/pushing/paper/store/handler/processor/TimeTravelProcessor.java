@@ -4,7 +4,7 @@ import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.handler.Handler;
 
 import static java.lang.Integer.parseInt;
-import static server.game.pushing.paper.store.handler.TransactionType.TimeTravel;
+import static server.game.pushing.paper.TransactionType.TimeTravel;
 
 public class TimeTravelProcessor extends Handler {
     public TimeTravelProcessor(Bank bank) {

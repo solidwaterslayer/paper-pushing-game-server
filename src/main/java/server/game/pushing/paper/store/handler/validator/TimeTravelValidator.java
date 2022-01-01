@@ -1,8 +1,8 @@
 package server.game.pushing.paper.store.handler.validator;
 
+import server.game.pushing.paper.TransactionType;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.handler.Handler;
-import server.game.pushing.paper.store.handler.TransactionType;
 
 import static java.lang.Integer.parseInt;
 

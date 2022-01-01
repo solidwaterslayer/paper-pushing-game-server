@@ -1,11 +1,10 @@
-package server.game.pushing.paper.order_generator;
+package server.game.pushing.paper.generator;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.game.pushing.paper.store.Store;
 import server.game.pushing.paper.store.bank.AccountType;
-import server.game.pushing.paper.store.bank.Bank;
 
 import java.util.List;
 import java.util.Random;
@@ -24,7 +23,7 @@ public class OrderGeneratorTests {
         String transaction;
 
         for (int i = 0; i < 99; i++) {
-            order = orderGenerator.getOrder(size, new Random(i));
+            order = orderGenerator.generateOrder(new Random(), size);
             assertTrue(order.get(0).contains(AccountType.Checking.name().toLowerCase()));
             assertTrue(order.get(1).contains(AccountType.Checking.name().toLowerCase()));
             assertEquals(size, order.size());

@@ -1,5 +1,6 @@
 package server.game.pushing.paper.store.handler;
 
+import server.game.pushing.paper.TransactionType;
 import server.game.pushing.paper.store.bank.Bank;
 
 public abstract class Handler {

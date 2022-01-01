@@ -3,7 +3,7 @@ package server.game.pushing.paper.store.handler.processor;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.handler.Handler;
 
-import static server.game.pushing.paper.store.handler.TransactionType.Deposit;
+import static server.game.pushing.paper.TransactionType.Deposit;
 
 public class DepositProcessor extends Handler {
     public DepositProcessor(Bank bank) {

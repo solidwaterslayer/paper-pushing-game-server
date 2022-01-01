@@ -4,7 +4,7 @@ import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.handler.Handler;
 
 import static java.lang.Double.parseDouble;
-import static server.game.pushing.paper.store.handler.TransactionType.Transfer;
+import static server.game.pushing.paper.TransactionType.Transfer;
 
 public class TransferValidator extends Handler {
     public TransferValidator(Bank bank) {
