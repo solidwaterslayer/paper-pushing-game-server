@@ -33,7 +33,7 @@ banks_can_withdraw_from_accounts
         during_withdraws_from_savings_banks_should_use_a_withdraw_amount_between_0_and_1000_excluding_0
         during_withdraws_from_cd_banks_should_use_a_withdraw_amount_greater_than_or_equal_to_the_balance
         banks_can_only_withdraw_from_a_savings_once_a_month
-        banks_can_only_withdraw_from_a_cd_after_a_year
+        banks_can_only_withdraw_from_a_cd_once_after_a_year
 
 banks_can_transfer
     a_transfer_is_a_deposit_and_a_withdraw
@@ -83,3 +83,8 @@ a_transfer_transaction_can_transfer_between_accounts
     invalid_transactions_output_themselves_after_an_invalid_tag
     
     the_output_is_sorted_first_by_validity_second_by_account_third_by_time
+
+
+    an_order_generator_generates_random_and_valid_transactions
+    the_first_2_transactions_are_create_checking_transactions
+    deposit_withdraw_and_transfer_transactions_use_amounts_divisible_by_100

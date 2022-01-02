@@ -20,12 +20,19 @@ public class CDAccount extends Account {
     }
 
     @Override
+    public void withdraw(double withdrawAmount) {
+        super.withdraw(withdrawAmount);
+
+        lifetime = Integer.MIN_VALUE;
+    }
+
+    @Override
     public boolean isDepositAmountValid(double depositAmount) {
         return false;
     }
 
     @Override
     public boolean isWithdrawAmountValid(double withdrawAmount) {
-        return lifetime >= getMonthsPerYear() && withdrawAmount >= this.balance;
+        return lifetime >= getMonthsPerYear() && this.balance <= withdrawAmount;
     }
 }

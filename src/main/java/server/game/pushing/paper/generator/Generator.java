@@ -1,12 +1,13 @@
 package server.game.pushing.paper.generator;
 
 import server.game.pushing.paper.TransactionType;
-import server.game.pushing.paper.store.bank.AccountType;
 import server.game.pushing.paper.store.bank.Bank;
 import server.game.pushing.paper.store.handler.ChainOfResponsibility;
 import server.game.pushing.paper.store.handler.Handler;
 
 import java.util.Random;
+
+import static server.game.pushing.paper.store.bank.AccountType.Checking;
 
 public abstract class Generator {
     protected Random random;
@@ -21,8 +22,8 @@ public abstract class Generator {
     }
 
     protected void checkException() {
-        if (bank.getAccounts().stream().filter(id -> bank.getAccount(id).getAccountType() == AccountType.Checking).count() < 2) {
-            throw new IllegalArgumentException("the bank contains less than 2 checking accounts");
+        if (bank.getAccounts().stream().filter(id -> bank.getAccount(id).getAccountType() == Checking).count() < 2) {
+            throw new IllegalArgumentException("generators should have 2 checking accounts");
         }
     }
 

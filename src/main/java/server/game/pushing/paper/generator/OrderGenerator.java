@@ -26,7 +26,7 @@ public class OrderGenerator {
 
         for (int i = 0; i < size; i++) {
             String transaction = ((CreateGenerator) generators.get(0)).generateTransaction(Checking);
-            if (i >= 2) {
+            if (i > 1) {
                 transaction = generators.get(random.nextInt(generators.size())).generateTransaction();
             }
             processors.handleTransaction(transaction);

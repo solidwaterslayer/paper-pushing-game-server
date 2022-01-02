@@ -346,7 +346,7 @@ public class BankTests {
     }
 
     @Test
-    protected void banks_can_only_withdraw_from_a_cd_after_a_year() {
+    protected void banks_can_only_withdraw_from_a_cd_once_after_a_year() {
         String id = cdID1;
         double withdrawAmount = bank.getAccount(id).getMaxWithdrawAmount();
 
@@ -354,6 +354,9 @@ public class BankTests {
             assertEquals(months >= getMonthsPerYear(), bank.isWithdrawAmountValid(id, withdrawAmount));
             bank.timeTravel(1);
         }
+
+        bank.withdraw(id, withdrawAmount);
+        assertFalse(bank.isWithdrawAmountValid(id, withdrawAmount));
     }
 
     @Test
