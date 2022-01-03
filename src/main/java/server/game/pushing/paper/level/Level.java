@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 import static java.lang.String.join;
 import static java.lang.String.valueOf;
 import static java.util.Collections.swap;
@@ -77,12 +78,12 @@ public class Level {
                 microMutation = AccountType.values()[random.nextInt(AccountType.values().length)].name().toLowerCase();
             }
         } else if (transactionArgument.matches("[0-9]{8}")) {
-            microMutation = String.format("0000000%s", parseDouble(transactionArgument) + 1);
+            microMutation = String.format("0000000%s", parseInt(transactionArgument) + 1);
             microMutation = microMutation.substring(microMutation.length() - 8);
         } else if (transactionArgument.contains("00.00")) {
             microMutation = String.format("%.2f", parseDouble(transactionArgument) + 100);
         } else {
-            microMutation = valueOf(parseDouble(transactionArgument) + 1);
+            microMutation = valueOf(parseInt(transactionArgument) + 1);
         }
 
         transactionArguments.set(microLocation, microMutation);
