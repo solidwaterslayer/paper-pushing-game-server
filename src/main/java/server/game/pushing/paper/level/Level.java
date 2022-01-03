@@ -2,12 +2,15 @@ package server.game.pushing.paper.level;
 
 import server.game.pushing.paper.generator.OrderGenerator;
 import server.game.pushing.paper.store.Store;
+import server.game.pushing.paper.store.bank.AccountType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Double.parseDouble;
+import static java.lang.String.join;
 import static java.lang.String.valueOf;
 import static java.util.Collections.swap;
 import static server.game.pushing.paper.level.Mutation.Move;
@@ -64,14 +67,27 @@ public class Level {
     }
 
     private void placeTypo(int location) {
-        String[] transactionArguments = receipt.get(location).split(" ");
-        location = random.nextInt(transactionArguments.length);
-        String transactionArgument = transactionArguments[location];
+        List<String> transactionArguments = new ArrayList<>(Arrays.asList(receipt.get(location).split(" ")));
+        int microLocation = random.nextInt(transactionArguments.size());
+        String transactionArgument = transactionArguments.get(microLocation);
 
+        String microMutation = transactionArgument;
         if (transactionArgument.matches("[a-zA-Z]*")) {
+            while (microMutation.equals(transactionArgument)) {
+                microMutation = AccountType.values()[random.nextInt(AccountType.values().length)].name().toLowerCase();
+            }
         } else if (transactionArgument.matches("[0-9]{8}")) {
+            microMutation = String.format("0000000%s", parseDouble(transactionArgument) + 1);
+            microMutation = microMutation.substring(microMutation.length() - 8);
+        } else if (transactionArgument.contains("00.00")) {
+            microMutation = String.format("%.2f", parseDouble(transactionArgument) + 100);
         } else {
+            microMutation = valueOf(parseDouble(transactionArgument) + 1);
         }
+
+        transactionArguments.set(microLocation, microMutation);
+        receipt.set(location, join(" ", transactionArguments));
+        transformation.set(location, Typo.name());
     }
 
     private void placeMove(int location) {
