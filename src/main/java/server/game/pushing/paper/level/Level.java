@@ -80,10 +80,8 @@ public class Level {
         } else if (transactionArgument.matches("[0-9]{8}")) {
             microMutation = String.format("0000000%s", parseInt(transactionArgument) + 1);
             microMutation = microMutation.substring(microMutation.length() - 8);
-        } else if (transactionArgument.contains("00.00")) {
-            microMutation = String.format("%.2f", parseDouble(transactionArgument) + 100);
         } else {
-            microMutation = valueOf(parseInt(transactionArgument) + 1);
+            microMutation = String.format("%.2f", parseDouble(transactionArgument) + 100);
         }
 
         transactionArguments.set(microLocation, microMutation);
