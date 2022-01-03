@@ -1,4 +1,4 @@
-package server.game.pushing.paper.game_level;
+package server.game.pushing.paper.level;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/")
-public class GameLevelController {
+public class LevelController {
     @GetMapping
-    public @ResponseBody ResponseEntity<GameLevel> getGameLevel() {
-        return new ResponseEntity<>(new GameLevel(), HttpStatus.OK);
+    public @ResponseBody ResponseEntity<Level> getLevel() {
+        return new ResponseEntity<>(new Level(), HttpStatus.OK);
     }
 }
