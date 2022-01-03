@@ -14,6 +14,7 @@ public class PaperPushingGameServerApplication {
     public static void main(String[] arguments) {
         SpringApplication.run(PaperPushingGameServerApplication.class, arguments);
     }
+/*
 
     @Bean
     public CorsFilter corsFilter() {
@@ -25,4 +26,5 @@ public class PaperPushingGameServerApplication {
 
         return new CorsFilter(urlBasedCorsConfigurationSource);
     }
+*/
 }

@@ -2,7 +2,6 @@ package server.game.pushing.paper.level;
 
 import server.game.pushing.paper.generator.OrderGenerator;
 import server.game.pushing.paper.store.Store;
-import server.game.pushing.paper.store.bank.AccountType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,11 +71,11 @@ public class Level {
         int microLocation = random.nextInt(transactionArguments.size());
         String transactionArgument = transactionArguments.get(microLocation);
 
-        String microMutation = transactionArgument;
+        String microMutation;
         if (transactionArgument.matches("[a-zA-Z]*")) {
-            while (microMutation.equals(transactionArgument)) {
-                microMutation = AccountType.values()[random.nextInt(AccountType.values().length)].name().toLowerCase();
-            }
+            StringBuilder stringBuilder = new StringBuilder(transactionArgument);
+            stringBuilder.deleteCharAt(random.nextInt(stringBuilder.length()));
+            microMutation = stringBuilder.toString();
         } else if (transactionArgument.matches("[0-9]{8}")) {
             microMutation = String.format("0000000%s", parseInt(transactionArgument) + 1);
             microMutation = microMutation.substring(microMutation.length() - 8);
