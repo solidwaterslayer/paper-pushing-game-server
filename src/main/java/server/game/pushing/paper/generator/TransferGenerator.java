@@ -20,7 +20,7 @@ public class TransferGenerator extends Generator {
         while (!validators.handleTransaction(transaction)) {
             String payingID = generateID(false);
             String receivingID = generateID(false);
-            double transferAmount = generateNumber(min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount()));
+            double transferAmount = generateAmount(min(bank.getAccount(payingID).getMaxWithdrawAmount(), bank.getAccount(receivingID).getMaxDepositAmount()));
 
             transaction = String.format("%s %s %s %.2f", transactionType, payingID, receivingID, transferAmount).toLowerCase();
         }

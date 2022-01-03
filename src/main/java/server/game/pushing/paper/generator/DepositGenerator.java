@@ -18,7 +18,7 @@ public class DepositGenerator extends Generator {
         String transaction = "";
         while (!validators.handleTransaction(transaction)) {
             String id = generateID(false);
-            double depositAmount = generateNumber(bank.getAccount(id).getMaxDepositAmount());
+            double depositAmount = generateAmount(bank.getAccount(id).getMaxDepositAmount());
 
             transaction = String.format("%s %s %.2f", transactionType, id, depositAmount).toLowerCase();
         }

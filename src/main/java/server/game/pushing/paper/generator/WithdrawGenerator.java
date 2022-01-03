@@ -18,7 +18,7 @@ public class WithdrawGenerator extends Generator {
         String transaction = "";
         while (!validators.handleTransaction(transaction)) {
             String id = generateID(false);
-            double withdrawAmount = generateNumber(bank.getAccount(id).getMaxDepositAmount());
+            double withdrawAmount = generateAmount(bank.getAccount(id).getMaxDepositAmount());
 
             transaction = String.format("%s %s %.2f", transactionType, id, withdrawAmount).toLowerCase();
         }

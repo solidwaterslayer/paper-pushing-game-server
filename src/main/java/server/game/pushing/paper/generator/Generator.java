@@ -38,7 +38,7 @@ public abstract class Generator {
         return bank.getAccounts().get(random.nextInt(bank.getAccounts().size()));
     }
 
-    protected double generateNumber(double number) {
-        return (int) (number * random.nextDouble() / 100) * 100;
+    protected double generateAmount(double amount) {
+        return (int) (amount * random.nextDouble() / 100) * 100;
     }
 }
