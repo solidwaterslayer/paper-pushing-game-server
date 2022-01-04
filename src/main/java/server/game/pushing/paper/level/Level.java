@@ -90,6 +90,7 @@ public class Level {
 
     private void placeMove(int location) {
         swap(receipt, location, location + 1);
+        swap(transformation, location, location + 1);
         transformation.set(location + 1, Move.name());
     }
 

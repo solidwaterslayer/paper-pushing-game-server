@@ -88,3 +88,8 @@ a_transfer_transaction_can_transfer_between_accounts
     an_order_generator_generates_random_and_valid_transactions
     the_first_2_transactions_are_create_checking_transactions
     deposit_withdraw_and_transfer_transactions_use_amounts_divisible_by_100
+
+
+    the_client_can_get_a_level_from_the_server
+    a_level_contains_an_order_of_size_6_its_receipt_and_a_transformation
+    a_transformation_has_locations_of_receipt_mutations
