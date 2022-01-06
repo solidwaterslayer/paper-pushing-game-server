@@ -85,24 +85,28 @@ public class Level {
 
         transactionArguments.set(microLocation, microMutation);
         receipt.set(location, join(" ", transactionArguments));
-        transformation.set(location, Typo.name());
+        transformation.set(location, Typo.name().toLowerCase());
     }
 
     private void placeMove(int location) {
         swap(receipt, location, location + 1);
-        swap(transformation, location, location + 1);
-        transformation.set(location + 1, Move.name());
+        if (transformation.get(location + 1).equalsIgnoreCase(Typo.name())) {
+            transformation.set(location, Typo.name().toLowerCase());
+        }
+        transformation.set(location + 1, Move.name().toLowerCase());
     }
 
     private void placeMutations() {
-        for (int i = 0; i < size; i++) {
-            Mutation mutation = mutations.get(i);
-            int location = locations.get(i);
+        for (int i = 0; i < Mutation.values().length; i++) {
+            for (int j = 0; j < size; j++) {
+                Mutation mutation = mutations.get(j);
+                int location = locations.get(j);
 
-            if (mutation == Typo) {
-                placeTypo(location);
-            } else {
-                placeMove(location);
+                if (i == 0 && mutation == Typo) {
+                    placeTypo(location);
+                } else if (i == 1 && mutation == Move) {
+                    placeMove(location);
+                }
             }
         }
     }
