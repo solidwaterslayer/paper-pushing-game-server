@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>Handler.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package server.game.pushing.paper.store.handler;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import server.game.pushing.paper.TransactionType;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import server.game.pushing.paper.store.bank.Bank;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public abstract class Handler {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected Bank bank;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected TransactionType transactionType;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected Handler next;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public Handler(Bank bank) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.bank = bank;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public TransactionType getTransactionType() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_16'/>
+16
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_16'>1</a>
+<span>
+
+1. getTransactionType : replaced return value with null for server/game/pushing/paper/store/handler/Handler::getTransactionType &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return transactionType;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public void setNext(Handler next) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.next = next;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public boolean handleTransaction(String transaction) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_24'/>
+24
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_24'>2</a>
+<span>
+
+1. handleTransaction : replaced boolean return with false for server/game/pushing/paper/store/handler/Handler::handleTransaction &rarr; KILLED<br/>
+
+2. handleTransaction : replaced boolean return with true for server/game/pushing/paper/store/handler/Handler::handleTransaction &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return handleTransaction(transaction.split(&#34; &#34;));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public abstract boolean handleTransaction(String[] transactionArguments);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@590dea35_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@590dea35_16'>16</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_16'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTransactionType<br/><b>Killed by : </b>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_argument_in_a_time_travel_transaction_are_valid_months()]</span></span> replaced return value with null for server/game/pushing/paper/store/handler/Handler::getTransactionType &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@590dea35_24'>24</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@590dea35_24'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>handleTransaction<br/><b>Killed by : </b>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_argument_in_a_time_travel_transaction_are_valid_months()]</span></span> replaced boolean return with false for server/game/pushing/paper/store/handler/Handler::handleTransaction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>handleTransaction<br/><b>Killed by : </b>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_argument_in_a_time_travel_transaction_are_valid_months()]</span></span> replaced boolean return with true for server/game/pushing/paper/store/handler/Handler::handleTransaction &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+
+<li class='mutator'>BOOLEAN_FALSE_RETURN</li>
+
+<li class='mutator'>BOOLEAN_TRUE_RETURN</li>
+
+<li class='mutator'>CONDITIONALS_BOUNDARY_MUTATOR</li>
+
+<li class='mutator'>EMPTY_RETURN_VALUES</li>
+
+<li class='mutator'>INCREMENTS_MUTATOR</li>
+
+<li class='mutator'>INVERT_NEGS_MUTATOR</li>
+
+<li class='mutator'>MATH_MUTATOR</li>
+
+<li class='mutator'>NEGATE_CONDITIONALS_MUTATOR</li>
+
+<li class='mutator'>NULL_RETURN_VALUES</li>
+
+<li class='mutator'>PRIMITIVE_RETURN_VALS_MUTATOR</li>
+
+<li class='mutator'>VOID_METHOD_CALL_MUTATOR</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_first_argument_in_a_transfer_transaction_is_the_transaction_type_transfer()] (0 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:the_output_is_sorted_first_by_validity_second_by_account_third_by_time()] (16 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:invalid_transactions_output_themselves_after_an_invalid_tag()] (0 ms)</li><li>server.game.pushing.paper.LevelTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.LevelTests]/[method:typo_mutations_remove_or_increment_1_character_while_move_mutations_swap_a_transaction_with_the_following_transaction()] (90 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:valid_transactions_output_lowercase_without_extra_arguments()] (10 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_argument_in_a_withdraw_transaction_is_a_valid_id()] (0 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_fourth_argument_in_a_transfer_transaction_is_a_valid_transfer_amount()] (6 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:deposit_and_withdraw_transactions_output_themselves()] (0 ms)</li><li>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_withdraw_transaction_can_withdraw_from_accounts()] (0 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_first_and_second_argument_in_a_time_travel_transaction_is_the_transaction_type_time_travel()] (0 ms)</li><li>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_deposit_transaction_can_deposit_to_accounts()] (13 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_argument_in_a_deposit_transaction_is_a_valid_id()] (5 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_third_argument_in_a_withdraw_transaction_is_a_valid_withdraw_amount()] (7 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_argument_in_a_time_travel_transaction_are_valid_months()] (0 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:create_transactions_output_the_account_type_id_and_balance()] (7 ms)</li><li>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_time_travel_transaction_can_time_travel()] (22 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_first_argument_in_a_create_transaction_is_the_transaction_type_create()] (8 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_argument_in_a_create_transaction_is_a_valid_account_type()] (5 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_first_argument_in_a_withdraw_transaction_is_the_transaction_type_withdraw()] (12 ms)</li><li>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_create_transaction_can_create_accounts()] (0 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:transfer_transactions_output_themselves_twice()] (0 ms)</li><li>server.game.pushing.paper.GeneratorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.GeneratorTests]/[method:the_first_2_transactions_are_create_checking_transactions()] (55 ms)</li><li>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_transfer_transaction_can_transfer_between_accounts()] (4 ms)</li><li>server.game.pushing.paper.GeneratorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.GeneratorTests]/[method:an_order_generator_generates_random_and_valid_transactions()] (38 ms)</li><li>server.game.pushing.paper.LevelTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.LevelTests]/[method:a_transformation_has_2_locations_of_receipt_mutations()] (100 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_fourth_argument_in_a_create_cd_transaction_is_a_valid_balance()] (1 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:time_travel_transactions_do_not_have_an_output()] (3 ms)</li><li>server.game.pushing.paper.store.handler.HandlerTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.HandlerTests]/[method:transaction_processors_and_validators_are_handlers_in_a_chain_of_responsibility()] (2 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_third_argument_in_a_create_transaction_is_a_valid_id()] (10 ms)</li><li>server.game.pushing.paper.GeneratorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.GeneratorTests]/[method:deposit_withdraw_and_transfer_transactions_use_amounts_divisible_by_100()] (37 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_third_argument_in_a_deposit_transaction_is_a_valid_deposit_amount()] (2 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_and_third_argument_in_a_transfer_transaction_are_a_valid_paying_id_and_receiving_id()] (0 ms)</li><li>server.game.pushing.paper.LevelTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.LevelTests]/[method:a_get_level_request_contains_a_random_order_of_size_6_its_receipt_and_transformation()] (560 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_first_argument_in_a_deposit_transaction_is_the_transaction_type_deposit()] (0 ms)</li><li>server.game.pushing.paper.store.handler.HandlerTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.HandlerTests]/[method:handlers_are_case_insensitive_and_can_ignore_extra_arguments()] (9 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='http://pitest.org'>PIT</a> 1.6.7
+
+</body>
+</html>

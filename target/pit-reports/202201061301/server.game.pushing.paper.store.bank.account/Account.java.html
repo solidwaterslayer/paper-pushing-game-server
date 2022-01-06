@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>Account.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package server.game.pushing.paper.store.bank.account;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import server.game.pushing.paper.store.bank.AccountType;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import static java.lang.Math.max;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public abstract class Account {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected AccountType accountType;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected final String id;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected double balance;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected double minDepositAmount;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected double maxDepositAmount;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected double minWithdrawAmount;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    protected double maxWithdrawAmount;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    protected Account(AccountType accountType, String id, double balance) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.accountType = accountType;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.id = id;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.balance = balance;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        minDepositAmount = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        minWithdrawAmount = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Override</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public String toString() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_28'/>
+28
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_28'>1</a>
+<span>
+
+1. toString : replaced return value with &#34;&#34; for server/game/pushing/paper/store/bank/account/Account::toString &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return String.format(&#34;%s %s %.2f&#34;, accountType, id, balance).toLowerCase();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public AccountType getAccountType() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_32'/>
+32
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_32'>1</a>
+<span>
+
+1. getAccountType : replaced return value with null for server/game/pushing/paper/store/bank/account/Account::getAccountType &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return accountType;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public String getID() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_36'/>
+36
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_36'>1</a>
+<span>
+
+1. getID : replaced return value with &#34;&#34; for server/game/pushing/paper/store/bank/account/Account::getID &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return id;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public double getBalance() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_40'/>
+40
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_40'>1</a>
+<span>
+
+1. getBalance : replaced double return with 0.0d for server/game/pushing/paper/store/bank/account/Account::getBalance &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return balance;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void timeTravel(int months) {}</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public void deposit(double depositAmount) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_46'/>
+46
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_46'>1</a>
+<span>
+
+1. deposit : Replaced double addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        this.balance += depositAmount;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public void withdraw(double withdrawAmount) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_50'/>
+50
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_50'>1</a>
+<span>
+
+1. withdraw : Replaced double subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        this.balance = max(0, this.balance - withdrawAmount);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public abstract boolean isDepositAmountValid(double depositAmount);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public abstract boolean isWithdrawAmountValid(double withdrawAmount);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public double getMaxDepositAmount() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_58'/>
+58
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_58'>1</a>
+<span>
+
+1. getMaxDepositAmount : replaced double return with 0.0d for server/game/pushing/paper/store/bank/account/Account::getMaxDepositAmount &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return maxDepositAmount;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public double getMaxWithdrawAmount() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_62'/>
+62
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_62'>1</a>
+<span>
+
+1. getMaxWithdrawAmount : replaced double return with 0.0d for server/game/pushing/paper/store/bank/account/Account::getMaxWithdrawAmount &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return maxWithdrawAmount;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_28'>28</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_28'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:an_account_has_an_account_type_like_checking_savings_or_cd_as_well_as_an_id_and_balance()]</span></span> replaced return value with &#34;&#34; for server/game/pushing/paper/store/bank/account/Account::toString &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_32'>32</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_32'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getAccountType<br/><b>Killed by : </b>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:an_account_has_an_account_type_like_checking_savings_or_cd_as_well_as_an_id_and_balance()]</span></span> replaced return value with null for server/game/pushing/paper/store/bank/account/Account::getAccountType &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_36'>36</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_36'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getID<br/><b>Killed by : </b>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_withdraws_from_cd_banks_should_use_a_withdraw_amount_greater_than_or_equal_to_the_balance()]</span></span> replaced return value with &#34;&#34; for server/game/pushing/paper/store/bank/account/Account::getID &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_40'>40</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_40'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getBalance<br/><b>Killed by : </b>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_withdraw_transaction_can_withdraw_from_accounts()]</span></span> replaced double return with 0.0d for server/game/pushing/paper/store/bank/account/Account::getBalance &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_46'>46</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_46'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deposit<br/><b>Killed by : </b>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_withdraw_transaction_can_withdraw_from_accounts()]</span></span> Replaced double addition with subtraction &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_50'>50</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_50'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>withdraw<br/><b>Killed by : </b>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:if_the_withdraw_amount_is_greater_than_the_balance_then_the_bank_will_withdraw_the_balance_instead()]</span></span> Replaced double subtraction with addition &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_58'>58</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_58'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getMaxDepositAmount<br/><b>Killed by : </b>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_transfers_banks_should_use_a_different_paying_id_and_receiving_id()]</span></span> replaced double return with 0.0d for server/game/pushing/paper/store/bank/account/Account::getMaxDepositAmount &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@56f2c9e8_62'>62</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@56f2c9e8_62'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getMaxWithdrawAmount<br/><b>Killed by : </b>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:if_the_withdraw_amount_is_greater_than_the_balance_then_the_bank_will_withdraw_the_balance_instead()]</span></span> replaced double return with 0.0d for server/game/pushing/paper/store/bank/account/Account::getMaxWithdrawAmount &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+
+<li class='mutator'>BOOLEAN_FALSE_RETURN</li>
+
+<li class='mutator'>BOOLEAN_TRUE_RETURN</li>
+
+<li class='mutator'>CONDITIONALS_BOUNDARY_MUTATOR</li>
+
+<li class='mutator'>EMPTY_RETURN_VALUES</li>
+
+<li class='mutator'>INCREMENTS_MUTATOR</li>
+
+<li class='mutator'>INVERT_NEGS_MUTATOR</li>
+
+<li class='mutator'>MATH_MUTATOR</li>
+
+<li class='mutator'>NEGATE_CONDITIONALS_MUTATOR</li>
+
+<li class='mutator'>NULL_RETURN_VALUES</li>
+
+<li class='mutator'>PRIMITIVE_RETURN_VALS_MUTATOR</li>
+
+<li class='mutator'>VOID_METHOD_CALL_MUTATOR</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_first_argument_in_a_transfer_transaction_is_the_transaction_type_transfer()] (0 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_deposits_banks_should_use_a_taken_id()] (8 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:the_output_is_sorted_first_by_validity_second_by_account_third_by_time()] (16 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_withdraws_from_cd_banks_should_use_a_withdraw_amount_greater_than_or_equal_to_the_balance()] (5 ms)</li><li>server.game.pushing.paper.LevelTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.LevelTests]/[method:typo_mutations_remove_or_increment_1_character_while_move_mutations_swap_a_transaction_with_the_following_transaction()] (90 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:valid_transactions_output_lowercase_without_extra_arguments()] (10 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_transfers_banks_should_use_a_different_paying_id_and_receiving_id()] (0 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:deposit_and_withdraw_transactions_output_themselves()] (0 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_fourth_argument_in_a_transfer_transaction_is_a_valid_transfer_amount()] (6 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_argument_in_a_withdraw_transaction_is_a_valid_id()] (0 ms)</li><li>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_withdraw_transaction_can_withdraw_from_accounts()] (0 ms)</li><li>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_deposit_transaction_can_deposit_to_accounts()] (13 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_argument_in_a_deposit_transaction_is_a_valid_id()] (5 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_third_argument_in_a_withdraw_transaction_is_a_valid_withdraw_amount()] (7 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:create_transactions_output_the_account_type_id_and_balance()] (7 ms)</li><li>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_time_travel_transaction_can_time_travel()] (22 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:a_transfer_is_a_deposit_and_a_withdraw()] (12 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_deposits_to_checking_banks_should_use_a_deposit_amount_between_0_and_1000_excluding_0()] (12 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_first_argument_in_a_withdraw_transaction_is_the_transaction_type_withdraw()] (12 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:banks_can_withdraw_from_accounts()] (8 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_time_travel_the_bank_will_withdraw_the_min_balance_fee_from_low_balance_accounts()] (24 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:an_account_has_an_account_type_like_checking_savings_or_cd_as_well_as_an_id_and_balance()] (22 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_deposits_to_savings_banks_should_use_a_deposit_amount_between_0_and_2500_excluding_0()] (6 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_withdraws_banks_should_use_a_taken_id()] (5 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:banks_can_only_withdraw_from_a_savings_once_a_month()] (7 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:transfer_transactions_output_themselves_twice()] (0 ms)</li><li>server.game.pushing.paper.GeneratorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.GeneratorTests]/[method:the_first_2_transactions_are_create_checking_transactions()] (55 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_withdraws_from_savings_banks_should_use_a_withdraw_amount_between_0_and_1000_excluding_0()] (10 ms)</li><li>server.game.pushing.paper.store.handler.ProcessorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ProcessorTests]/[method:a_transfer_transaction_can_transfer_between_accounts()] (4 ms)</li><li>server.game.pushing.paper.LevelTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.LevelTests]/[method:a_transformation_has_2_locations_of_receipt_mutations()] (100 ms)</li><li>server.game.pushing.paper.GeneratorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.GeneratorTests]/[method:an_order_generator_generates_random_and_valid_transactions()] (38 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:if_the_withdraw_amount_is_greater_than_the_balance_then_the_bank_will_withdraw_the_balance_instead()] (0 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:banks_can_transfer()] (6 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:if_the_transfer_amount_is_greater_than_the_paying_account_balance_then_the_bank_will_transfer_the_paying_account_balance_instead()] (4 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:time_travel_transactions_do_not_have_an_output()] (3 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:banks_can_only_withdraw_from_a_cd_once_after_a_year()] (10 ms)</li><li>server.game.pushing.paper.GeneratorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.GeneratorTests]/[method:deposit_withdraw_and_transfer_transactions_use_amounts_divisible_by_100()] (37 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:a_low_balance_account_has_a_balance_less_than_or_equal_to_900()] (36 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_third_argument_in_a_deposit_transaction_is_a_valid_deposit_amount()] (2 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_second_and_third_argument_in_a_transfer_transaction_are_a_valid_paying_id_and_receiving_id()] (0 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:banks_can_deposit_to_checking_and_savings()] (10 ms)</li><li>server.game.pushing.paper.LevelTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.LevelTests]/[method:a_get_level_request_contains_a_random_order_of_size_6_its_receipt_and_transformation()] (560 ms)</li><li>server.game.pushing.paper.store.handler.ValidatorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.ValidatorTests]/[method:the_first_argument_in_a_deposit_transaction_is_the_transaction_type_deposit()] (0 ms)</li><li>server.game.pushing.paper.store.BankTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.BankTests]/[method:during_withdraws_from_checking_banks_should_use_a_withdraw_amount_between_0_and_400_excluding_0()] (0 ms)</li><li>server.game.pushing.paper.store.handler.HandlerTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.HandlerTests]/[method:handlers_are_case_insensitive_and_can_ignore_extra_arguments()] (9 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='http://pitest.org'>PIT</a> 1.6.7
+
+</body>
+</html>

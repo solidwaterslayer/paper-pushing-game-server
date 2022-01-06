@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>ChainOfResponsibility.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package server.game.pushing.paper.store.handler;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import server.game.pushing.paper.store.bank.Bank;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import server.game.pushing.paper.store.handler.processor.*;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import server.game.pushing.paper.store.handler.validator.*;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Arrays;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.List;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class ChainOfResponsibility {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private final Bank bank;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public ChainOfResponsibility(Bank bank) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.bank = bank;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private void connect(List&#60;Handler&#62; handler) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_18'/>
+18
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_18'>4</a>
+<span>
+
+1. connect : changed conditional boundary &rarr; KILLED<br/>
+
+2. connect : Changed increment from 1 to -1 &rarr; KILLED<br/>
+
+3. connect : Replaced integer subtraction with addition &rarr; KILLED<br/>
+
+4. connect : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        for (int i = 0; i &#60; handler.size() - 1; i++) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_19'/>
+19
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_19'>2</a>
+<span>
+
+1. connect : Replaced integer addition with subtraction &rarr; KILLED<br/>
+
+2. connect : removed call to server/game/pushing/paper/store/handler/Handler::setNext &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            handler.get(i).setNext(handler.get(i + 1));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public Handler getValidators() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        List&#60;Handler&#62; validators = Arrays.asList(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new CreateValidator(bank),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new TimeTravelValidator(bank),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new DepositValidator(bank),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new WithdrawValidator(bank),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new TransferValidator(bank)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        );</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_31'/>
+31
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_31'>1</a>
+<span>
+
+1. getValidators : removed call to server/game/pushing/paper/store/handler/ChainOfResponsibility::connect &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        connect(validators);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_32'/>
+32
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_32'>1</a>
+<span>
+
+1. getValidators : replaced return value with null for server/game/pushing/paper/store/handler/ChainOfResponsibility::getValidators &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return validators.get(0);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public Handler getProcessors() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        List&#60;Handler&#62; processors = Arrays.asList(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new CreateProcessor(bank),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new TimeTravelProcessor(bank),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new DepositProcessor(bank),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new WithdrawProcessor(bank),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new TransferProcessor(bank)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        );</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_43'/>
+43
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_43'>1</a>
+<span>
+
+1. getProcessors : removed call to server/game/pushing/paper/store/handler/ChainOfResponsibility::connect &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        connect(processors);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_44'/>
+44
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_44'>1</a>
+<span>
+
+1. getProcessors : replaced return value with null for server/game/pushing/paper/store/handler/ChainOfResponsibility::getProcessors &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return processors.get(0);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f50dd0_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58f50dd0_18'>18</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_18'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>connect<br/><b>Killed by : </b>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:a_store_inputs_a_list_of_transactions_called_an_order_and_outputs_a_receipt()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>connect<br/><b>Killed by : </b>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:a_store_inputs_a_list_of_transactions_called_an_order_and_outputs_a_receipt()]</span></span> Changed increment from 1 to -1 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>connect<br/><b>Killed by : </b>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:a_store_inputs_a_list_of_transactions_called_an_order_and_outputs_a_receipt()]</span></span> Replaced integer subtraction with addition &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>connect<br/><b>Killed by : </b>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:deposit_and_withdraw_transactions_output_themselves()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58f50dd0_19'>19</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_19'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>connect<br/><b>Killed by : </b>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:a_store_inputs_a_list_of_transactions_called_an_order_and_outputs_a_receipt()]</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>connect<br/><b>Killed by : </b>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:deposit_and_withdraw_transactions_output_themselves()]</span></span> removed call to server/game/pushing/paper/store/handler/Handler::setNext &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58f50dd0_31'>31</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_31'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getValidators<br/><b>Killed by : </b>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:deposit_and_withdraw_transactions_output_themselves()]</span></span> removed call to server/game/pushing/paper/store/handler/ChainOfResponsibility::connect &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58f50dd0_32'>32</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_32'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getValidators<br/><b>Killed by : </b>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:invalid_transactions_output_themselves_after_an_invalid_tag()]</span></span> replaced return value with null for server/game/pushing/paper/store/handler/ChainOfResponsibility::getValidators &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58f50dd0_43'>43</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_43'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getProcessors<br/><b>Killed by : </b>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:deposit_and_withdraw_transactions_output_themselves()]</span></span> removed call to server/game/pushing/paper/store/handler/ChainOfResponsibility::connect &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58f50dd0_44'>44</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58f50dd0_44'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getProcessors<br/><b>Killed by : </b>server.game.pushing.paper.store.handler.HandlerTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.HandlerTests]/[method:transaction_processors_and_validators_are_handlers_in_a_chain_of_responsibility()]</span></span> replaced return value with null for server/game/pushing/paper/store/handler/ChainOfResponsibility::getProcessors &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+
+<li class='mutator'>BOOLEAN_FALSE_RETURN</li>
+
+<li class='mutator'>BOOLEAN_TRUE_RETURN</li>
+
+<li class='mutator'>CONDITIONALS_BOUNDARY_MUTATOR</li>
+
+<li class='mutator'>EMPTY_RETURN_VALUES</li>
+
+<li class='mutator'>INCREMENTS_MUTATOR</li>
+
+<li class='mutator'>INVERT_NEGS_MUTATOR</li>
+
+<li class='mutator'>MATH_MUTATOR</li>
+
+<li class='mutator'>NEGATE_CONDITIONALS_MUTATOR</li>
+
+<li class='mutator'>NULL_RETURN_VALUES</li>
+
+<li class='mutator'>PRIMITIVE_RETURN_VALS_MUTATOR</li>
+
+<li class='mutator'>VOID_METHOD_CALL_MUTATOR</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:the_output_is_sorted_first_by_validity_second_by_account_third_by_time()] (16 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:a_store_inputs_a_list_of_transactions_called_an_order_and_outputs_a_receipt()] (4 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:invalid_transactions_output_themselves_after_an_invalid_tag()] (0 ms)</li><li>server.game.pushing.paper.LevelTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.LevelTests]/[method:typo_mutations_remove_or_increment_1_character_while_move_mutations_swap_a_transaction_with_the_following_transaction()] (90 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:valid_transactions_output_lowercase_without_extra_arguments()] (10 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:deposit_and_withdraw_transactions_output_themselves()] (0 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:transfer_transactions_output_themselves_twice()] (0 ms)</li><li>server.game.pushing.paper.GeneratorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.GeneratorTests]/[method:the_first_2_transactions_are_create_checking_transactions()] (55 ms)</li><li>server.game.pushing.paper.LevelTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.LevelTests]/[method:a_transformation_has_2_locations_of_receipt_mutations()] (100 ms)</li><li>server.game.pushing.paper.GeneratorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.GeneratorTests]/[method:an_order_generator_generates_random_and_valid_transactions()] (38 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:create_transactions_output_the_account_type_id_and_balance()] (7 ms)</li><li>server.game.pushing.paper.store.StoreTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.StoreTests]/[method:time_travel_transactions_do_not_have_an_output()] (3 ms)</li><li>server.game.pushing.paper.store.handler.HandlerTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.HandlerTests]/[method:transaction_processors_and_validators_are_handlers_in_a_chain_of_responsibility()] (2 ms)</li><li>server.game.pushing.paper.GeneratorTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.GeneratorTests]/[method:deposit_withdraw_and_transfer_transactions_use_amounts_divisible_by_100()] (37 ms)</li><li>server.game.pushing.paper.LevelTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.LevelTests]/[method:a_get_level_request_contains_a_random_order_of_size_6_its_receipt_and_transformation()] (560 ms)</li><li>server.game.pushing.paper.store.handler.HandlerTests.[engine:junit-jupiter]/[class:server.game.pushing.paper.store.handler.HandlerTests]/[method:handlers_are_case_insensitive_and_can_ignore_extra_arguments()] (9 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='http://pitest.org'>PIT</a> 1.6.7
+
+</body>
+</html>
