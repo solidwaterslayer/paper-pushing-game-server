@@ -7,8 +7,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import server.game.pushing.paper.level.Level;
 import server.game.pushing.paper.level.LevelController;
+import server.game.pushing.paper.level.Mutation;
 import server.game.pushing.paper.store.Store;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Double.parseDouble;
@@ -27,7 +29,7 @@ public class LevelTests {
     private MockMvc mockMvc;
 
     @Test
-    protected void the_client_can_get_a_level_from_the_server() throws Exception {
+    protected void a_get_level_request_contains_a_random_order_of_size_6_its_receipt_and_transformation() throws Exception {
         for (int i = 0; i < 100; i++) {
             RequestBuilder requestBuilder = get("/");
             String level = mockMvc.perform(requestBuilder).andReturn().getResponse().getContentAsString();
@@ -40,25 +42,34 @@ public class LevelTests {
     }
 
     @Test
-    protected void a_level_contains_an_order_of_size_6_its_receipt_and_a_transformation() {
+    protected void a_transformation_has_2_locations_of_receipt_mutations() {
         for (int i = 0; i < 100; i++) {
             Level level = new Level();
+            List<String> order = level.order;
+            List<String> receipt = level.receipt;
+            List<String> transformation = level.transformation;
 
-            assertEquals(6, level.order.size());
-            assertNotNull(level.receipt);
+            assertEquals(6, order.size());
+            assertEquals(receipt.size(), transformation.size());
 
-            for (int j = 0; j < level.transformation.size(); j++) {
-                String potentialMutation = level.transformation.get(j);
-                assertTrue(potentialMutation.equals(valueOf(j))
-                        || potentialMutation.equals(Typo.name().toLowerCase())
-                        || potentialMutation.equals(Move.name().toLowerCase())
-                );
+            List<Mutation> typos = new ArrayList<>();
+            List<Mutation> moves = new ArrayList<>();
+            for (int j = 0; j < transformation.size(); j++) {
+                if (transformation.get(j).equals(Typo.name().toLowerCase())) {
+                    typos.add(Typo);
+                } else if (transformation.get(j).equals(Move.name().toLowerCase())) {
+                    moves.add(Move);
+                } else {
+                    assertEquals(transformation.get(j), valueOf(j));
+                }
             }
+            assertEquals(2, typos.size() + moves.size());
+            assertTrue(moves.size() < 2);
         }
     }
 
     @Test
-    protected void a_transformation_has_locations_of_receipt_mutations() {
+    protected void typo_mutations_remove_or_increment_1_character_while_move_mutations_swap_a_transaction_with_the_following_transaction() {
         for (int i = 0; i < 100; i++) {
             Level level = new Level();
             List<String> order = level.order;
