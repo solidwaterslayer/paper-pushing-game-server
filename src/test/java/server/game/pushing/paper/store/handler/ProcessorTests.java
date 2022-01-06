@@ -37,7 +37,7 @@ public class ProcessorTests {
     }
 
     @Test
-    protected void a_create_transaction_create_accounts() {
+    protected void a_create_transaction_can_create_accounts() {
         TransactionType transactionType = createProcessor.getTransactionType();
         String checkingID = "98439811";
         String savingsID = "11112222";

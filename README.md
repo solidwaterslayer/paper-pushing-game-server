@@ -9,16 +9,31 @@
 > https://github.com/solidwaterslayer/paper-pushing-game-client
 >
 > ---
-banks_can_create_accounts
-    an_account_has_an_account_type_like_checking_savings_or_cd_as_well_as_an_id_and_balance
-    a_bank_is_a_list_of_accounts
-        during_account_creation_banks_should_use_an_unique_8_digit_id
-        during_cd_creation_banks_should_use_a_balance_between_1000_and_10000_inclusive
 
-banks_can_time_travel_between_0_and_60_months_excluding_0
-    the_min_balance_fee_is_100
-    a_low_balance_account_has_a_balance_less_than_or_equal_to_900
-    during_time_travel_the_bank_will_withdraw_the_min_balance_fee_from_low_balance_accounts
+<br>
+<br>
+
+> ---
+>
+> # All Tests And Documentation :sleepy:
+>
+> bank.create tests:
+>
+> 1. banks_can_create_accounts
+> 2. an_account_has_an_account_type_like_checking_savings_or_cd_as_well_as_an_id_and_balance
+> 3. a_bank_is_a_list_of_accounts
+> 4. during_account_creation_banks_should_use_an_unique_8_digit_id
+> 5. during_cd_creation_banks_should_use_a_balance_between_1000_and_10000_inclusive
+>
+> bank.timeTravel tests :mask::
+>
+> 1. banks_can_time_travel_between_0_and_60_months_excluding_0
+> 2. the_min_balance_fee_is_100
+> 3. a_low_balance_account_has_a_balance_less_than_or_equal_to_900
+> 4. during_time_travel_the_bank_will_withdraw_the_min_balance_fee_from_low_balance_accounts
+> 
+> ---
+
 
 banks_can_deposit_to_checking_and_savings
     banks_should_not_deposit_to_cd_accounts
@@ -41,7 +56,7 @@ banks_can_transfer
         during_transfers_banks_should_use_a_different_from_id_and_to_id
 
 
-a_create_transaction_create_accounts
+a_create_transaction_can_create_accounts
 a_time_travel_transaction_can_time_travel
 a_deposit_transaction_can_deposit_to_accounts
 a_withdraw_transaction_can_withdraw_from_accounts
