@@ -32,14 +32,16 @@
 > 3. a_low_balance_account_has_a_balance_less_than_or_equal_to_900
 > 4. during_time_travel_the_bank_will_withdraw_the_min_balance_fee_from_low_balance_accounts
 > 
+> bank.deposit tests :laughing::
+>     banks_can_deposit_to_checking_and_savings
+>     banks_should_not_deposit_to_cd_accounts
+>     during_deposits_banks_should_use_a_taken_id
+>     during_deposits_to_checking_banks_should_use_a_deposit_amount_between_0_and_1000_excluding_0
+>     during_deposits_to_savings_banks_should_use_a_deposit_amount_between_0_and_2500_excluding_0
+>
 > ---
 
 
-banks_can_deposit_to_checking_and_savings
-    banks_should_not_deposit_to_cd_accounts
-        during_deposits_banks_should_use_a_taken_id
-        during_deposits_to_checking_banks_should_use_a_deposit_amount_between_0_and_1000_excluding_0
-        during_deposits_to_savings_banks_should_use_a_deposit_amount_between_0_and_2500_excluding_0
 
 banks_can_withdraw_from_accounts
     if_the_withdraw_amount_is_greater_than_the_balance_then_the_bank_will_withdraw_the_balance_instead

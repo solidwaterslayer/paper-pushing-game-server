@@ -97,16 +97,14 @@ public class Level {
     }
 
     private void placeMutations() {
-        for (int i = 0; i < Mutation.values().length; i++) {
-            for (int j = 0; j < size; j++) {
-                Mutation mutation = mutations.get(j);
-                int location = locations.get(j);
-
-                if (i == 0 && mutation == Typo) {
-                    placeTypo(location);
-                } else if (i == 1 && mutation == Move) {
-                    placeMove(location);
-                }
+        for (int i = 0; i < mutations.size(); i++) {
+            if (mutations.get(i) == Typo) {
+                placeTypo(locations.get(i));
+            }
+        }
+        for (int i = 0; i < locations.size(); i++) {
+            if (mutations.get(i) == Move) {
+                placeMove(locations.get(i));
             }
         }
     }
